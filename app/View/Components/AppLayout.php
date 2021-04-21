@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AppLayout extends Component
 {
+    public $user;
     /**
      * Get the view / contents that represents the component.
      *
@@ -14,7 +15,8 @@ class AppLayout extends Component
      */
     public function render()
     {
-        app()->setLocale(Auth::user()->language);
+        $this->user = Auth::user();
+        app()->setLocale($this->user->language);
         return view('layouts.app');
     }
 }

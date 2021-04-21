@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Bank;
+use Illuminate\Support\Facades\Auth;
 
 class Banks extends Component
 {
@@ -18,8 +19,13 @@ class Banks extends Component
     */
     public function render()
     {
-        $this->banks = Bank::all();
-        return view('livewire.banks.list');
+        if (Auth::user()->administrator) 
+        {
+            $this->banks = Bank::all();
+            return view('livewire.banks.list');
+        } else {
+            return view('livewire.403');
+        }
     }
 
     /**
@@ -73,6 +79,10 @@ class Banks extends Component
      */
     public function store()
     {
+        if (!Auth::user()->administrator) 
+        {
+            die();
+        }
         $this->validate([
             'short_name' => 'required',
             'full_name' => 'required',
@@ -117,6 +127,10 @@ class Banks extends Component
      */
     public function delete($id)
     {
+        if (!Auth::user()->administrator) 
+        {
+            die();
+        }
         Bank::find($id)->delete();
         session()->flash('message', 'Bank deleted Successfully.');
     }
