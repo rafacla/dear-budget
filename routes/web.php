@@ -22,3 +22,4 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/bank', App\Http\Livewire\Banks::class)->name('bank');
+Route::middleware(['auth:sanctum', 'verified'])->get('/category', App\Http\Livewire\Categories::class)->name('category');
