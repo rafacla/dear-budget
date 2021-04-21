@@ -173,7 +173,7 @@ class Categories extends Component
         $this->openSubcategoryModal();
     }
 
-    public function deleteSubcategory() {
+    public function deleteSubcategory($id) {
         subcategory::find($id)->delete();
         session()->flash('message', __('Subcategory deleted successfully.'));
     }

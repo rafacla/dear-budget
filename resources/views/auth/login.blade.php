@@ -40,6 +40,6 @@
                 </x-jet-button>
             </div>
         </form>
-        <a href="{{ route('register') }}" class=" text-sm text-gray-700 underline">Doesn't have an account? Register!</a>
+        <a href="{{ route('register') }}" class=" text-sm text-gray-700 underline">{{__('Doesn\'t have an account? Register!')}}</a>
     </x-jet-authentication-card>
 </x-guest-layout>

@@ -1,6 +1,6 @@
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Manage Categories
+        {{__('Manage Categories')}}
     </h2>
 </x-slot>
 <div class="py-12">
@@ -15,7 +15,7 @@
                   </div>
                 </div>
             @endif
-            <button wire:click="create()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create New Category</button>
+            <button wire:click="create()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">{{__('Create New Category')}}</button>
             @if($isOpen)
                 @include('livewire.categories.createCategory')
             @endif
@@ -25,9 +25,9 @@
             <table class="table-fixed w-full">
                 <thead>
                     <tr class="bg-gray-100">
-                        <th class="px-2 py-1">Name</th>
-                        <th class="px-4 py-1">Description</th>
-                        <th class="px-2 py-1">Action</th>
+                        <th class="px-2 py-1">{{__('Name')}}</th>
+                        <th class="px-4 py-1">{{__('Description')}}</th>
+                        <th class="px-2 py-1"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,9 +36,9 @@
                         <td class="border px-2 py-1">{{ $category->name }}</td>
                         <td class="border px-4 py-1">{{ $category->description }}</td>
                         <td class="border px-2 py-1" style="text-align: right;">
-                            <button wire:click="addSubcategory({{ $category->id }})" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add Sub</button>
-                            <button wire:click="edit({{ $category->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>
-                            <button wire:click="delete({{ $category->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                            <button wire:click="addSubcategory({{ $category->id }})" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">{{__('Add Sub')}}</button>
+                            <button wire:click="edit({{ $category->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{__('Edit')}}</button>
+                            <button wire:click="delete({{ $category->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{{__('Delete')}}</button>
                         </td>
                     </tr>
                         @foreach($category->subcategories as $subcategory)
@@ -46,8 +46,8 @@
                             <td class="border px-2 py-1"><i class="fas fa-level-up-alt fa-rotate-90"></i> {{ $subcategory->name }}</td>
                             <td class="border px-4 py-1">{{ $subcategory->description }}</td>
                             <td class="border px-2 py-1" style="text-align: right;">
-                                <button wire:click="editSubcategory({{ $subcategory->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>
-                                <button wire:click="deleteSubcategory({{ $subcategory->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                                <button wire:click="editSubcategory({{ $subcategory->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{__('Edit')}}</button>
+                                <button wire:click="deleteSubcategory({{ $subcategory->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{{__('Delete')}}</button>
                             </td>
                         </tr>
                         @endforeach
