@@ -11,4 +11,14 @@ class Category extends Model
     protected $fillable = [
         'name', 'description', 'order', 'user_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function subcategories()
+    {
+        return $this->hasMany(Subcategory::class)->orderBy('order');
+    }
 }

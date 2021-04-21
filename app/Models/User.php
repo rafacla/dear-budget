@@ -58,4 +58,12 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    /* 
+    * Get all categories from given user
+    */
+    public function categories() 
+    {
+        return $this->hasMany(Category::class, 'user_id', 'id')->orderBy('order');
+    }
 }
