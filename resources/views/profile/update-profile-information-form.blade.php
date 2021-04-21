@@ -65,6 +65,17 @@
             <x-jet-input id="email" type="email" class="mt-1 block w-full" wire:model.defer="state.email" />
             <x-jet-input-error for="email" class="mt-2" />
         </div>
+
+        <!-- Language -->
+        <div class="col-span-6 sm:col-span-4">
+            <x-jet-label for="language" value="{{ __('Language') }}" />
+            <select id="language" class="mt-1 block w-full" wire:model.defer="state.language">
+                <option value="en">{{__('English')}}</option>
+                <option value="pt_BR">{{__('Brazilian Portuguese')}}</option>
+            </select>
+            <x-jet-input-error for="langue" class="mt-2" />
+        </div>
+
     </x-slot>
 
     <x-slot name="actions">

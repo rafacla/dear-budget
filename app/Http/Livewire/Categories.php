@@ -103,6 +103,11 @@ class Categories extends Component
     }
     public function store()
     {
+        $category = Category::findOrFail($this->category_id);
+        if ($category->user_id != Auth::id()) {
+            abort(403, __('You don\'t have privileges for this') );
+            die();
+        }
         $this->validate([
             'category_name' => 'required',
             'category_description' => 'required',
@@ -116,7 +121,7 @@ class Categories extends Component
         ]);
   
         session()->flash('message', 
-            $this->category_id ? 'category Updated Successfully.' : 'category Created Successfully.');
+            $this->category_id ? __('Category updated Successfully.') : __('Category created Successfully.') );
   
         $this->closeModal();
         $this->resetInputFields();
@@ -147,6 +152,11 @@ class Categories extends Component
      */
     public function delete($id)
     {
+        $category = Category::findOrFail($this->id);
+        if ($category->user_id != Auth::id()) {
+            abort(403, __('You don\'t have privileges for this') );
+            die();
+        }
         category::find($id)->delete();
         session()->flash('message', __('Category deleted successfully.'));
     }
