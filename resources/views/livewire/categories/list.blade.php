@@ -33,9 +33,9 @@
                 <tbody>
                     @foreach($categories as $category)
                     <tr>
-                        <td class="border px-2 py-1 text-sm">{{ $category->name }}</td>
-                        <td class="border px-4 py-1 text-sm">{{ $category->description }}</td>
-                        <td class="border px-2 py-1 text-sm" style="text-align: right;">
+                        <td class="border px-2 py-1 text-sm font-bold">{{ $category->name }}</td>
+                        <td class="border px-4 py-1 text-sm font-bold">{{ $category->description }}</td>
+                        <td class="border px-2 py-1 text-sm font-bold" style="text-align: right;">
                             <button wire:click="addSubcategory({{ $category->id }})" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded"><i class="far fa-plus-square"></i></button>
                             <button wire:click="edit({{ $category->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"><i class="far fa-edit"></i></button>
                             <button wire:click="delete({{ $category->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"><i class="far fa-trash-alt"></i></button>
@@ -45,7 +45,7 @@
                     </tr>
                         @foreach($category->subcategories as $subcategory)
                         <tr>
-                            <td class="border px-2 py-1 text-sm"><i class="fas fa-level-up-alt fa-rotate-90"></i> {{ $subcategory->name }}</td>
+                            <td class="border px-8 py-1 text-sm"> {{ $subcategory->name }}</td>
                             <td class="border px-4 py-1 text-sm">{{ $subcategory->description }}</td>
                             <td class="border px-2 py-1 text-sm" style="text-align: right;">
                                 <button wire:click="editSubcategory({{ $subcategory->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"><i class="far fa-edit"></i></button>
