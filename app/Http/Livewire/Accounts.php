@@ -19,13 +19,15 @@ class Accounts extends Component
     public $items;
     public $itemID;
     public $form = array(
-        'name'          => '',
-        'description'   => '',
-        'currency_id'   => '',
-        'number'        => '',
-        'role'          => '',
-        'bank_id'       => '',
-        'user_id'       => ''
+        'name'                  => '',
+        'description'           => '',
+        'currency_id'           => '',
+        'number'                => '',
+        'role'                  => '',
+        'bank_id'               => '',
+        'user_id'               => '',
+        'statementClosingDay'   => null,
+        'statementDueDay'       => null,
     );
     public $isOpen = 0;
 
@@ -39,7 +41,7 @@ class Accounts extends Component
         elseif ($this->accountFilter == 'expenseAccount')
             $this->items = Auth::user()->accounts->where('role','=','expenseAccount');
         else 
-            $this->items = Auth::user()->accounts->where('role','=','revenueAccount');
+            $this->items = Auth::user()->accounts->where('role','=','incomeAccount');
         return view('livewire.accounts.list');
     }
 
@@ -90,14 +92,18 @@ class Accounts extends Component
         $this->validate([
             'form.name'                 => 'required',
             'form.currency_id'          => 'required',
-            'form.number'               => 'required',
             'form.role'                 => 'required',
             'form.statementDueDay'      => 'exclude_unless:form.role,creditCard|required',
             'form.statementClosingDay'  => 'exclude_unless:form.role,creditCard|required'
         ]);
         
         $this->form['user_id'] = Auth::user()->id;
-        
+        if (!is_int($this->form['statementClosingDay']))
+            $this->form['statementClosingDay'] = null;
+        if (!is_int($this->form['statementDueDay']))
+            $this->form['statementDueDay'] = null;
+        if (!is_int($this->form['bank_id']))
+            $this->form['bank_id'] = null;
         $this->modelClass::updateOrCreate(['id' => $this->itemID], $this->form);
   
         session()->flash('message', 
