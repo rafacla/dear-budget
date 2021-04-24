@@ -19,29 +19,27 @@
             @if($isOpen)
                 @include('livewire.accounts.create')
             @endif
-            <table class="table-fixed w-full">
+            <table class="table-auto w-full">
                 <thead>
                     <tr class="bg-gray-100">
-                        <th class="px-4 py-2 w-20">Id.</th>
-                        <th class="px-4 py-2">{{__('Name')}}</th>
-                        <th class="px-4 py-2">{{__('Account Role')}}</th>
-                        <th class="px-2 py-2">{{__('Account Number')}}</th>
-                        <th class="px-4 py-2">{{__('Current Balance')}}</th>
-                        <th class="px-4 py-2">{{__('Last Transaction Date')}}</th>
-                        <th class="px-4 py-2"></th>
+                        <th class="px-4 py-2 text-sm">{{__('Name')}}</th>
+                        <th class="px-4 py-2 text-sm">{{__('Account Role')}}</th>
+                        <th class="px-2 py-2 text-sm">{{__('Account Number')}}</th>
+                        <th class="px-4 py-2 text-sm">{{__('Current Balance')}}</th>
+                        <th class="px-4 py-2 text-sm">{{__('Last Transaction Date')}}</th>
+                        <th class="px-4 py-2 text-sm"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($items as $item)
                     <tr>
-                        <td class="border px-4 py-2">{{ $item->id }}</td>
-                        <td class="border px-4 py-2">{{ $item->name }}</td>
-                        <td class="border px-4 py-2">{{ __($accountRoles[$item->role]) }}</td>
-                        <td class="border px-2 py-2">{{ $item->number }}</td>
-                        <td class="border px-4 py-2"></td>
-                        <td class="border px-4 py-2"></td>
-                        <td class="border px-4 py-2">
-                        <button wire:click="edit({{ $item->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">{{__('Edit')}}</button>
+                        <td class="border px-4 py-2 text-sm">{{ $item->name }}</td>
+                        <td class="border px-4 py-2 text-sm">{{ __($accountRoles[$item->role]) }}</td>
+                        <td class="border px-2 py-2 text-sm">{{ $item->number }}</td>
+                        <td class="border px-4 py-2 text-sm"></td>
+                        <td class="border px-4 py-2 text-sm"></td>
+                        <td class="border px-4 py-2 text-sm" style="text-align: right;">
+                            <button wire:click="edit({{ $item->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">{{__('Edit')}}</button>
                             <button wire:click="delete({{ $item->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">{{__('Delete')}}</button>
                         </td>
                     </tr>
