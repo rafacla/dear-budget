@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Account extends Model
 {
     use HasFactory;
+    protected $fillable = ['name', 'description', 'currency_id', 'number','role','bank_id','user_id', 'statementClosingDay','statementDueDay'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
+
+

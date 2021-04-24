@@ -21,10 +21,16 @@ class CreateAccountsTable extends Migration
                 ->constrained('currencies');
             $table->string('number');
             $table->string('role');
+            $table->smallInteger('statementClosingDay')->nullable();
+            $table->smallInteger('statementDueDay')->nullable();
             $table->foreignId('bank_id')->nullable()
                 ->constrained('banks')
                     ->onUpdate('CASCADE')
                     ->onDelete('SET NULL');
+            $table->foreignId('user_id')
+                ->constrained('users')
+                    ->onUpdate('CASCADE')
+                    ->onDelete('CASCADE');
             $table->timestamps();
         });
     }

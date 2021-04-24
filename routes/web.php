@@ -17,3 +17,4 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/', App\Http\Livewire\Cate
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/bank', App\Http\Livewire\Banks::class)->name('bank');
 Route::middleware(['auth:sanctum', 'verified'])->get('/category', App\Http\Livewire\Categories::class)->name('category');
+Route::middleware(['auth:sanctum', 'verified'])->get('/account', App\Http\Livewire\Accounts::class)->name('account');

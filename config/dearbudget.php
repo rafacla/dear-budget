@@ -13,6 +13,11 @@
         * Wallet Cash for transactions on cash
         * Investment Account for any kind of account where you keep savings (this account is off budget)
         */
-        'accountKinds'            => ['checkingAccount', 'creditCard', 'walletCash', 'investmentAccount'],
+        'accountRoles'            => [
+            'checkingAccount'       => '🏦 Checking Account', 
+            'creditCard'            => '💳 Credit Card', 
+            'walletCash'            => '👛 Cash Wallet', 
+            'investmentAccount'     => '📈 Investment Account'
+        ],
     ]
 ?>

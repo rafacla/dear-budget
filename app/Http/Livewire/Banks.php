@@ -97,7 +97,7 @@ class Banks extends Component
         ]);
   
         session()->flash('message', 
-            $this->bank_id ? 'Bank updated Successfully.' : 'Bank created Successfully.');
+            $this->bank_id ? __('Bank updated successfully.') : __('Bank created successfully.'));
   
         $this->closeModal();
         $this->resetInputFields();
@@ -132,6 +132,6 @@ class Banks extends Component
             die();
         }
         Bank::find($id)->delete();
-        session()->flash('message', 'Bank deleted Successfully.');
+        session()->flash('message', __('Bank deleted successfully.'));
     }
 }

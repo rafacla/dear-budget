@@ -67,4 +67,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Category::class, 'user_id', 'id')->orderBy('order');
     }
+
+    /*
+     * Get all accounts from given user
+    */
+    public function accounts()
+    {
+        return $this->hasMany(Account::class, 'user_id', 'id')->orderBy('name');
+    }
 }
