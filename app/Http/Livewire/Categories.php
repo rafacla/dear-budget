@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
+
 class Categories extends Component
 {
     public $categories, $category_name, $category_description, $category_id, $category_order;
@@ -16,59 +17,33 @@ class Categories extends Component
     public $isOpen = 0;
     public $isOpenSubcategory = 0;
     
-
-    public function render()
-    {
+    public function render() {
         $this->categories = Auth::user()->categories;
         return view('livewire.categories.list');
     }
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    public function create()
-    {
+     public function create() {
         $this->resetInputFields();
         $this->openModal();
         $this->category_order = $this->categories->max('order')+1;
     }
   
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    public function openModal()
-    {
+    public function openModal() {
         $this->isOpen = true;
         $this->isOpenSubcategory = false;
     }
-    public function openSubcategoryModal()
-    {
+
+    public function openSubcategoryModal() {
         $this->isOpen = false;
         $this->isOpenSubcategory = true;
-    }
-    
+    }    
   
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    public function closeModal()
-    {
+    public function closeModal() {
         $this->isOpen = false;
         $this->isOpenSubcategory = false;
     }
   
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    private function resetInputFields(){
+    private function resetInputFields() {
         $this->category_name = '';
         $this->category_description = '';
         $this->category_id = '';
@@ -80,8 +55,7 @@ class Categories extends Component
         $this->subcategory_order = '';
     }
      
-    public function storeSub()
-    {
+    public function storeSub() {
         $this->validate([
             'subcategory_name' => 'required',
             'subcategory_description' => 'required',
@@ -101,8 +75,8 @@ class Categories extends Component
         $this->closeModal();
         $this->resetInputFields();
     }
-    public function store()
-    {
+
+    public function store() {
         $category = Category::findOrFail($this->category_id);
         if ($category->user_id != Auth::id()) {
             abort(403, __('You don\'t have privileges for this') );
@@ -126,13 +100,8 @@ class Categories extends Component
         $this->closeModal();
         $this->resetInputFields();
     }
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    public function edit($id)
-    {
+  
+    public function edit($id) {
         $category = Category::findOrFail($id);
         if ($category->user_id != Auth::id()) {
             abort(403, __('You don\'t have privileges for this') );
@@ -145,13 +114,7 @@ class Categories extends Component
         $this->openModal();
     }
      
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    public function delete($id)
-    {
+    public function delete($id) {
         $category = Category::findOrFail($this->id);
         if ($category->user_id != Auth::id()) {
             abort(403, __('You don\'t have privileges for this') );
@@ -186,5 +149,69 @@ class Categories extends Component
     public function deleteSubcategory($id) {
         subcategory::find($id)->delete();
         session()->flash('message', __('Subcategory deleted successfully.'));
+    }
+
+    public function moveSubcategoryDown($id) {
+        $subcategory = Subcategory::findOrFail($id);
+        $subcategoryAbove = $subcategory->category->subcategories->sortBy('order')->firstWhere('order', '>', $subcategory->order);
+        if (!is_null($subcategory) && !is_null($subcategoryAbove))
+        {
+            if ($subcategoryAbove->order > $subcategory->order) {
+                Subcategory::where('id',$subcategory->id)->update([
+                    'order' => $subcategory->order+1
+                ]);
+                Subcategory::where('id',$subcategoryAbove->id)->update([
+                    'order' => $subcategoryAbove->order-1
+                ]);
+            }
+        }
+    }
+
+    public function moveSubcategoryUp($id) {
+        $subcategory = Subcategory::findOrFail($id);
+        $subcategoryBelow = $subcategory->category->subcategories->sortByDesc('order')->firstWhere('order', '<', $subcategory->order);
+        if (!is_null($subcategory) && !is_null($subcategoryBelow))
+        {
+            if ($subcategoryBelow->order < $subcategory->order) {
+                Subcategory::where('id',$subcategory->id)->update([
+                    'order' => $subcategory->order-1
+                ]);
+                Subcategory::where('id',$subcategoryBelow->id)->update([
+                    'order' => $subcategoryBelow->order+1
+                ]);
+            }
+        }
+    }
+
+    public function moveCategoryUp($id) {
+        $category = Category::findOrFail($id);
+        $categoryBelow = $this->categories->sortByDesc('order')->firstWhere('order', '<', $category->order);
+        if (!is_null($category) && !is_null($categoryBelow))
+        {
+           if ($categoryBelow->order < $category->order) {
+                Category::where('id',$category->id)->update([
+                    'order' => $category->order-1
+                ]);
+                Category::where('id',$categoryBelow->id)->update([
+                    'order' => $categoryBelow->order+1
+                ]);
+            }
+        }
+    }
+
+    public function moveCategoryDown($id) {
+        $category = Category::findOrFail($id);
+        $categoryAbove = $this->categories->sortBy('order')->firstWhere('order', '>', $category->order);
+        if (!is_null($category) && !is_null($categoryAbove))
+        {
+            if ($categoryAbove->order > $category->order) {
+                Category::where('id',$category->id)->update([
+                    'order' => $category->order+1
+                ]);
+                Category::where('id',$categoryAbove->id)->update([
+                    'order' => $categoryAbove->order-1
+                ]);
+            }
+        }
     }
 }

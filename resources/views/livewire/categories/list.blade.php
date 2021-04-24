@@ -36,9 +36,11 @@
                         <td class="border px-2 py-1">{{ $category->name }}</td>
                         <td class="border px-4 py-1">{{ $category->description }}</td>
                         <td class="border px-2 py-1" style="text-align: right;">
-                            <button wire:click="addSubcategory({{ $category->id }})" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">{{__('Add Sub')}}</button>
-                            <button wire:click="edit({{ $category->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{__('Edit')}}</button>
-                            <button wire:click="delete({{ $category->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{{__('Delete')}}</button>
+                            <button wire:click="addSubcategory({{ $category->id }})" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"><i class="far fa-plus-square"></i></button>
+                            <button wire:click="edit({{ $category->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"><i class="far fa-edit"></i></button>
+                            <button wire:click="delete({{ $category->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"><i class="far fa-trash-alt"></i></button>
+                            <button wire:click="moveCategoryUp({{ $category->id }})" class="bg-gray-200 hover:bg-gray-400 text-gray-600 font-bold py-2 px-4 rounded"><i class="fas fa-arrow-up"></i></button>
+                            <button wire:click="moveCategoryDown({{ $category->id }})" class="bg-gray-200 hover:bg-gray-400 text-gray-600 font-bold py-2 px-4 rounded"><i class="fas fa-arrow-down"></i></button>
                         </td>
                     </tr>
                         @foreach($category->subcategories as $subcategory)
@@ -46,8 +48,10 @@
                             <td class="border px-2 py-1"><i class="fas fa-level-up-alt fa-rotate-90"></i> {{ $subcategory->name }}</td>
                             <td class="border px-4 py-1">{{ $subcategory->description }}</td>
                             <td class="border px-2 py-1" style="text-align: right;">
-                                <button wire:click="editSubcategory({{ $subcategory->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{__('Edit')}}</button>
-                                <button wire:click="deleteSubcategory({{ $subcategory->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{{__('Delete')}}</button>
+                                <button wire:click="editSubcategory({{ $subcategory->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"><i class="far fa-edit"></i></button>
+                                <button wire:click="deleteSubcategory({{ $subcategory->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"><i class="far fa-trash-alt"></i></button>
+                                <button wire:click="moveSubcategoryUp({{ $subcategory->id }})" class="bg-gray-200 hover:bg-gray-400 text-gray-600 font-bold py-2 px-4 rounded"><i class="fas fa-arrow-up"></i></button>
+                                <button wire:click="moveSubcategoryDown({{ $subcategory->id }})" class="bg-gray-200 hover:bg-gray-400 text-gray-600 font-bold py-2 px-4 rounded"><i class="fas fa-arrow-down"></i></button>
                             </td>
                         </tr>
                         @endforeach
