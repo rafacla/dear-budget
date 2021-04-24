@@ -37,7 +37,7 @@
                         <td class="border px-4 py-2">{{ $bank->short_name }}</td>
                         <td class="border px-4 py-2">{{ $bank->full_name }}</td>
                         <td class="border px-4 py-2">{{ $bank->country }}</td>
-                        <td class="border px-4 py-2">{{ $bank->icon }}</td>
+                        <td class="border px-4 py-2"><img class="h-8" src="{{asset('/assets/banks/'.$bank->icon)}}"\></td>
                         <td class="border px-4 py-2">
                         <button wire:click="edit({{ $bank->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{{__('Edit')}}</button>
                             <button wire:click="delete({{ $bank->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{{__('Delete')}}</button>
