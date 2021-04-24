@@ -12,7 +12,7 @@ class Accounts extends Component
 {
     public $modelClass = Account::Class;
     public $itemClassName = 'Account';
-    public $accountFilter = 'assetAccount';
+    public $accountFilter = 'assetLiabilityAccount';
     public $accountRoles;
     public $banks;
     public $currencies;
@@ -36,12 +36,28 @@ class Accounts extends Component
         $this->currencies = Currency::where('active', 1)->orderBy('default', 'DESC')->get();
         $this->accountRoles = config('dearbudget.accountRoles');
         $this->banks = Bank::all();
-        if ($this->accountFilter == 'assetAccount')
-            $this->items = Auth::user()->accounts->whereIn('role',['checkingAccount','creditCard','walletCash','investmentAccount']);
+        
+        if ($this->accountFilter == 'assetLiabilityAccount')
+            {
+                $this->items = Auth::user()->accounts
+                    ->whereIn('role',['checkingAccount','creditCard','walletCash','investmentAccount']);
+            }
+        elseif ($this->accountFilter == 'assetAccount')
+            {
+                $this->items = Auth::user()->accounts->whereIn('role',['checkingAccount','walletCash','investmentAccount']);
+            }
+        elseif ($this->accountFilter == 'liabilityAccount')
+            {
+                $this->items = Auth::user()->accounts->where('role','=','creditCard');
+            }
         elseif ($this->accountFilter == 'expenseAccount')
-            $this->items = Auth::user()->accounts->where('role','=','expenseAccount');
+            {
+                $this->items = Auth::user()->accounts->where('role','=','expenseAccount');
+            }
         else 
-            $this->items = Auth::user()->accounts->where('role','=','incomeAccount');
+            {
+                $this->items = Auth::user()->accounts->where('role','=','incomeAccount');
+            }
         return view('livewire.accounts.list');
     }
 
