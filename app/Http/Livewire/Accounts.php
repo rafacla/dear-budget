@@ -12,6 +12,7 @@ class Accounts extends Component
 {
     public $modelClass = Account::Class;
     public $itemClassName = 'Account';
+    public $accountFilter = 'assetAccount';
     public $accountRoles;
     public $banks;
     public $currencies;
@@ -33,7 +34,12 @@ class Accounts extends Component
         $this->currencies = Currency::where('active', 1)->orderBy('default', 'DESC')->get();
         $this->accountRoles = config('dearbudget.accountRoles');
         $this->banks = Bank::all();
-        $this->items = Auth::user()->accounts;
+        if ($this->accountFilter == 'assetAccount')
+            $this->items = Auth::user()->accounts->whereIn('role',['checkingAccount','creditCard','walletCash','investmentAccount']);
+        elseif ($this->accountFilter == 'expenseAccount')
+            $this->items = Auth::user()->accounts->where('role','=','expenseAccount');
+        else 
+            $this->items = Auth::user()->accounts->where('role','=','revenueAccount');
         return view('livewire.accounts.list');
     }
 

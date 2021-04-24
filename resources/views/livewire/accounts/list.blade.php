@@ -15,7 +15,18 @@
                   </div>
                 </div>
             @endif
-            <button wire:click="create()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">{{__('Create New Account')}}</button>
+            <div class="grid grid-flow-col auto-cols-max">
+                <div class="self-center">
+                    <button wire:click="create()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">{{__('Create New Account')}}</button>
+                </div>
+                <div class="self-center mx-2">
+                    <select class="shadow appearance-none border rounded w-full py-2 px-5 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1"  wire:model="accountFilter">
+                        <option value="assetAccount">{{__('Asset accounts')}}</option>
+                        <option value="expenseAccount">{{__('Expense accounts')}}</option>
+                        <option value="revenueAccount">{{__('Revenue accounts')}}</option>
+                    </select>
+                </div>
+            </div>            
             @if($isOpen)
                 @include('livewire.accounts.create')
             @endif
