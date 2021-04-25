@@ -15,8 +15,7 @@ class AppLayout extends Component
      */
     public function render()
     {
-        $this->user = Auth::user();
-        app()->setLocale($this->user->language);
+        
         return view('layouts.app');
     }
 }
