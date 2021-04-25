@@ -25,6 +25,7 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'language'  => ['required','string'],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['required', 'accepted'] : '',
         ])->validate();
@@ -32,46 +33,62 @@ class CreateNewUser implements CreatesNewUsers
         $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
+            'language' => $input['language'],
             'password' => Hash::make($input['password']),
         ]);
 
         $category_order = 0;
-
+        app()->setLocale($input['language']);
+        
         $category = Category::create([
-            'name' => 'Despesas Mensais',
-            'description' => 'Categoria para suas despesas fixas',
+            'name' => __('Monthly Expenses'),
+            'description' => __('Category for your fixed expenses'),
+            'expense' => true,
             'order' => $category_order++,
             'user_id' => $user->id
         ]);
         $subcategory_order = 0;
-        Subcategory::create(['name' => 'Água / Luz / Eletricidade / Gás', 'description' => 'Contas de Consumo de Concessionárias','order' => $subcategory_order++, 'category_id' => $category->id]);
-        Subcategory::create(['name' => 'Aluguel / Financiamento / Condomínio', 'description' => 'Gastos com moradia, condomínio, financiamento.', 'order' => $subcategory_order++, 'category_id' => $category->id]);
-        Subcategory::create(['name' => 'Mensalidades', 'description' => 'Gastos com mensalidade como Spotify, YouTube, Netflix, etc..', 'order' => $subcategory_order++, 'category_id' => $category->id]);
-        Subcategory::create(['name' => 'Internet / TV / Telefone', 'description' => 'Gastos com assinatura de Internet, TV, Celular', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Utilities'), 'description' => '','order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Home Rent / Mortgage'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Membership fees'), 'description' => 'Netflix, Youtube, Sportify...', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Internet / Cable TV / Cellphone'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
         $category = Category::create([
-            'name' => 'Despesas Variáveis',
-            'description' => 'Categoria para suas despesas que variam como Mercado, Jantar',
+            'name' => __('Daily Expenses'),
+            'description' => __('Category for your not fixed expenses like groceries, dinner, doctor appointments'),
+            'expense' => true,
             'order' => $category_order++,
             'user_id' => $user->id
         ]);
         $subcategory_order = 0;
-        Subcategory::create(['name' => 'Mercado', 'description' => 'Gastos com compras em mercados e padarias', 'order' => $subcategory_order++, 'category_id' => $category->id]);
-        Subcategory::create(['name' => 'Delivery / Alimentação', 'description' => 'Gastos com Delivery, Restaurantes, Lanchonetes', 'order' => $subcategory_order++, 'category_id' => $category->id]);
-        Subcategory::create(['name' => 'Transporte / Taxis', 'description' => 'Gastos com Taxi, Uber, Gasolina, Seguro, Locação de Carro, IPVA', 'order' => $subcategory_order++, 'category_id' => $category->id]);
-        Subcategory::create(['name' => 'Compras Eventuais', 'description' => 'Gastos com compras que não se encaixam em uma categoria', 'order' => $subcategory_order++, 'category_id' => $category->id]);
-        Subcategory::create(['name' => 'Saúde / Farmácia', 'description' => 'Gastos com consultas médicas, exames, remédios', 'order' => $subcategory_order++, 'category_id' => $category->id]);
-        Subcategory::create(['name' => 'Vestiário', 'description' => 'Gastos com Roupas, Calçados', 'order' => $subcategory_order++, 'category_id' => $category->id]);
-        Subcategory::create(['name' => 'Casa: Reformas e Manutenções', 'description' => 'Gastos reformando e fazendo manutenção da casa', 'order' => $subcategory_order++, 'category_id' => $category->id]);
-        Subcategory::create(['name' => 'Presentes / Doações', 'description' => 'Gastos com presentes, doações e caridade', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Groceries'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Dinner, Meals and Food delivery'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Taxis and Car related expenses'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Random purchases'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Health and medicine'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Clothing'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Home: repairs and materials'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Gifts and donations'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
         $category = Category::create([
-            'name' => 'Longo Prazo e Economias',
-            'description' => 'Categoria para programar os gastos a longo prazo ou capital para emergência',
+            'name' => __('Long term and savings'),
+            'description' => __('Category for saving for future expenses and emergency fund'),
+            'expense' => 1,
             'order' => $category_order++,
             'user_id' => $user->id
         ]);
         $subcategory_order = 0;
-        Subcategory::create(['name' => 'Férias', 'description' => 'Para aqueles valores parados em sua conta para futuras férias', 'order' => $subcategory_order++, 'category_id' => $category->id]);
-        Subcategory::create(['name' => 'Seguros e Capital de Giro', 'description' => 'Para aqueles valores que você ainda não transferiu para uma conta de investimento', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Vacation saving'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Saving for later expenses'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        $category = Category::create([
+            'name' => __('Incomes'),
+            'description' => __('Category for income transactions'),
+            'expense' => 0,
+            'order' => $category_order++,
+            'user_id' => $user->id
+        ]);
+        $subcategory_order = 0;
+        Subcategory::create(['name' => __('Salary'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Earnings from investments'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        Subcategory::create(['name' => __('Other sources'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
 
         return $user;
     }

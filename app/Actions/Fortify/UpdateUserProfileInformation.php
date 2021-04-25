@@ -39,6 +39,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'language' => $input['language']
             ])->save();
         }
+        app()->setLocale($input['language']);
     }
 
     /**

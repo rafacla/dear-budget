@@ -16,9 +16,10 @@ class Categories extends Component
     public $subcategory_name, $subcategory_description, $subcategory_id, $subcategory_order, $subcategory_category_id;
     public $isOpen = 0;
     public $isOpenSubcategory = 0;
-    
+    public $categoryFilter = 'expenses';
+
     public function render() {
-        $this->categories = Auth::user()->categories;
+        $this->categories = Auth::user()->categories->where('expense',$this->categoryFilter=='expenses');
         return view('livewire.categories.list');
     }
 

@@ -18,6 +18,7 @@ class CreateCategoriesTable extends Migration
             $table->string('name');
             $table->string('description')->nullable()->default('');
             $table->integer('order');
+            $table->boolean('expense')->default(1);
             $table->string('hidden')->nullable()->default(0);
             $table->foreignId('user_id')
                 ->constrained('users')

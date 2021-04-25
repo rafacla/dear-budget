@@ -7,6 +7,10 @@
      */
 
     return [
+        'availableLanguages'    => [
+            'en'    =>  'English',
+            'pt_BR' =>  'Brazilian Portuguese',
+        ],
         /* 
         * Checking Account for your account where you make debit transactions
         * Credit Card for your credit transactions

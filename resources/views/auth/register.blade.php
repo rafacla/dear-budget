@@ -19,6 +19,20 @@
                 <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
             </div>
 
+            <?php 
+                $availableLanguages = config('dearbudget.availableLanguages');
+            ?>
+            <div class="mt-4">
+                <x-jet-label for="language" value="{{ __('Language') }}" />
+                
+                <select id="language" class="block mt-1 w-full" name="language" :value="old('language')" required>
+                    @foreach ($availableLanguages as $key => $item)
+                        <option value="{{$key}}" {{(config('app.locale')==$key) ? 'selected': '' }}>{{$item}}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+
             <div class="mt-4">
                 <x-jet-label for="password" value="{{ __('Password') }}" />
                 <x-jet-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
