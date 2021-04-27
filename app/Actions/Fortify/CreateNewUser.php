@@ -42,8 +42,8 @@ class CreateNewUser implements CreatesNewUsers
         
         $category = Category::create([
             'name' => __('Monthly Expenses'),
-            'description' => __('Category for your fixed expenses'),
             'expense' => true,
+            'description' => __('Category for your fixed expenses'),
             'order' => $category_order++,
             'user_id' => $user->id
         ]);
