@@ -19,8 +19,11 @@ class SetLocale
     public function handle($request, Closure $next)
     {
         $this->user = Auth::user();
-        app()->setLocale($this->user->language);
-        $locale = $request->route('locale') ?: Session::get('locale');
+        if (isset($this->user)) {
+            $locale = $this->user->language;
+        } else {
+            $locale = $request->route('locale') ?: Session::get('locale');
+        }
 
         if ($locale) {
             App::setLocale($locale);
