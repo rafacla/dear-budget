@@ -16,8 +16,8 @@ class CreateBudgetsTable extends Migration
         Schema::create('budgets', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->decimal('budget_value', $precision = 8, $scale = 2);
-            $table->decimal('transactions_value', $precision = 8, $scale = 2);
+            $table->decimal('budget_value', $precision = 8, $scale = 2)->default(0);
+            $table->decimal('transactions_value', $precision = 8, $scale = 2)->default(0);
             $table->foreignId('subcategory_id')
                 ->constrained('subcategories')
                     ->onUpdate('CASCADE')

@@ -75,4 +75,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Account::class, 'user_id', 'id')->orderBy('name');
     }
+
+    public function budgets($date)
+    {
+        return $this->hasMany(Budget::class)
+            ->where('date',$date)->get();
+    }
 }

@@ -27,7 +27,7 @@
                 
                 <select id="language" class="block mt-1 w-full" name="language" :value="old('language')" required>
                     @foreach ($availableLanguages as $key => $item)
-                        <option value="{{$key}}" {{(config('app.locale')==$key) ? 'selected': '' }}>{{$item}}</option>
+                        <option value="{{$key}}" {{(config('app.locale')==$key) ? 'selected': '' }}>{{__($item)}}</option>
                     @endforeach
                 </select>
             </div>

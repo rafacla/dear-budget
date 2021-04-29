@@ -16,4 +16,10 @@ class Subcategory extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function budgets($date)
+    {
+        return $this->hasMany(Budget::class)
+            ->where('date',$date);
+    }
 }
