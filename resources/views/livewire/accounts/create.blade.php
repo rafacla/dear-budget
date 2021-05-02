@@ -40,15 +40,15 @@
               </select>
               @error('form.currency_id') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
             </div>
-          </div>
-          <div style="width: 25px">
-          </div>
-          <div class="" style="width: 48%;">
             <div class="mb-4">
               <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">{{__('Account Number')}}:</label>
               <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1" placeholder="{{__('Account Number')}}" wire:model="form.number">
               @error('form.number') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
             </div>
+          </div>
+          <div style="width: 25px">
+          </div>
+          <div class="" style="width: 48%;">
             <div class="mb-4">
               <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">{{__('Bank')}}:</label>
               <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1" placeholder="{{__('Bank')}}" wire:model="form.bank_id">
@@ -58,6 +58,16 @@
                 @endforeach
               </select>          
               @error('form.bank_id') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror 
+            </div>
+            <div class="mb-4">
+              <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">{{__('Opening Balance')}}:</label>
+              <input type="number" step="0.01" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1" placeholder="{{__('Opening Balance')}}" wire:model="form.openingbalance">
+              @error('form.openingbalance') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
+            </div>
+            <div class="mb-4">
+              <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">{{__('Opening Balance Date')}}:</label>
+              <input type="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1" placeholder="{{__('Opening Balance Date')}}" wire:model="form.openingbalancedate">
+              @error('form.openingbalancedate') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
             </div>
             @if ($form['role'] == 'creditCard')
             <div>

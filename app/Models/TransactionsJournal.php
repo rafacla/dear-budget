@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class TransactionsJournal extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'user_id', 'deleted_at', 'date', 'budget_date', 'description', 'transaction_number'
+    ];
 
     public function user()
     {

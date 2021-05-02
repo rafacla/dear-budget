@@ -51,8 +51,14 @@
                                 <span class="bg-gray-400 text-white rounded-full text-xs py-0.5 px-2"
                                     @popper({{__('This is a Transfer! As you are just moving funds between accounts, it doesn\'t affect your budget!')}})
                                 >
-                                        <i class="fas fa-exchange-alt"></i> {{__('Transfer')}}
-                                    </span>
+                                    <i class="fas fa-exchange-alt"></i> {{__('Transfer')}}
+                                </span>
+                                @elseif($transactionTypes[$item->transactions->first()->type]['type']=='initialBalance')
+                                <span class="bg-gray-400 text-white rounded-full text-xs py-0.5 px-2"
+                                @popper({{__('This is the initial transaction of the destination account, you don\'t have to pick a category for this.')}})
+                                >
+                                    <i class="fas fa-certificate"></i> {{__('Opening Balance')}}
+                                </span>
                                 @else
                                     @if ($item->transactions->first()->subcategory==null)
                                         <span class="bg-red-500 text-white rounded-full text-xs py-0.5 px-2"
@@ -69,6 +75,7 @@
                             @endif
                         </td>
                         <td class="px-2 py-1 text-xs">
+                            @if ($item->transactions->first()->creditAccount != null)
                             <span @popper(
                                 {{sizeof($item->transactions) == 1 ? 
                                     __($accountRoles[$item->transactions->first()->creditAccount->role]['name']) :
@@ -78,8 +85,10 @@
                                     ($accountRoles[$item->transactions->first()->creditAccount->role]['icon'] . $item->transactions->first()->creditAccount->name) : 
                                     __('Multiple Accounts')}}
                             </span>
+                            @endif
                         </td>
                         <td class="px-2 py-1 text-xs">
+                            @if ($item->transactions->first()->debitAccount != null)
                             <span @popper(
                                 {{sizeof($item->transactions) == 1 ? 
                                     __($accountRoles[$item->transactions->first()->debitAccount->role]['name']) :
@@ -89,6 +98,7 @@
                                 ($accountRoles[$item->transactions->first()->debitAccount->role]['icon'] . $item->transactions->first()->debitAccount->name) : 
                                 __('Multiple Accounts')}}
                             </span>
+                            @endif
                         </td>
                         <td class="px-2 py-1 text-xs text-right">
                             <?php

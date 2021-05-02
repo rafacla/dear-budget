@@ -17,11 +17,11 @@ class CreateTransactionsTable extends Migration
             $table->id();
             $table->date('deleted_at')->nullable();
             $table->boolean('reconciled')->default(0);
-            $table->foreignId('credit_account_id')
+            $table->foreignId('credit_account_id')->nullable()
                 ->constrained('accounts')
                 ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
-            $table->foreignId('debit_account_id')
+            $table->foreignId('debit_account_id')->nullable()
                 ->constrained('accounts')
                 ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');

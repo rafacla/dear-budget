@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'deleted_at', 'reconciled', 'credit_account_id', 'debit_account_id', 'type', 'transactions_journal_id', 'amount', 
+        'foreign_amount', 'foreign_currency_id', 'subcategory_id'
+    ];
 
     public function transactionsJournal()
     {
