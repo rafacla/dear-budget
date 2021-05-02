@@ -12,6 +12,7 @@ class Transactions extends Component
 {
     public $modelClass = Budget::Class;
     public $itemClassName = 'Transaction';
+    public $accountRoles;
     public $currentDate;
     public $items;
     public $itemID;
@@ -26,6 +27,8 @@ class Transactions extends Component
             $this->currentDate  = mktime(0,0,0,$month,1,$year);
         else
             $this->currentDate = time();
+
+        $this->accountRoles = config('dearbudget.accountRoles');
     }
 
     public function render()

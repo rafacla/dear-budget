@@ -44,10 +44,18 @@
                             
                         </td>
                         <td class="px-2 py-1 text-sm">
-                            {{sizeof($item->transactions) == 1 ? $item->transactions->first()->creditAccount->name : 'Multiple Accounts'}}
+                            <span @popper({{__($accountRoles[$item->transactions->first()->creditAccount->role]['name'])}})>
+                                {{sizeof($item->transactions) == 1 ? 
+                                    ($accountRoles[$item->transactions->first()->creditAccount->role]['icon'] . $item->transactions->first()->creditAccount->name) : 
+                                    'Multiple Accounts'}}
+                            </span>
                         </td>
                         <td class="px-2 py-1 text-sm">
-                            {{sizeof($item->transactions) == 1 ? $item->transactions->first()->debitAccount->name : 'Multiple Accounts'}}
+                            <span @popper({{__($accountRoles[$item->transactions->first()->debitAccount->role]['name'])}})>
+                                {{sizeof($item->transactions) == 1 ? 
+                                ($accountRoles[$item->transactions->first()->debitAccount->role]['icon'] . $item->transactions->first()->debitAccount->name) : 
+                                'Multiple Accounts'}}
+                            </span>
                         </td>
                         <td class="px-2 py-1 text-sm">
                             

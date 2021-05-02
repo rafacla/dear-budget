@@ -50,6 +50,6 @@
         @stack('modals')
 
         @livewireScripts
-        
+        @include('popper::assets')        
     </body>
 </html>
