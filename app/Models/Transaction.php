@@ -14,11 +14,11 @@ class Transaction extends Model
         return $this->belongsTo(TransactionsJournal::class);
     }
 
-    public function creditAccounts() {
-        return $this->hasMany(Account::class, 'credit_account_id');
+    public function creditAccount() {
+        return $this->hasOne(Account::class, 'id','credit_account_id');
     }
 
-    public function debitAccounts() {
-        return $this->hasMany(Account::class, 'debit_account_id');
+    public function debitAccount() {
+        return $this->hasOne(Account::class, 'id','debit_account_id');
     }
 }

@@ -114,11 +114,12 @@ class Accounts extends Component
         ]);
         
         $this->form['user_id'] = Auth::user()->id;
-        if (!is_int($this->form['statementClosingDay']))
+        
+        if (!is_numeric($this->form['statementClosingDay']))
             $this->form['statementClosingDay'] = null;
-        if (!is_int($this->form['statementDueDay']))
+        if (!is_numeric($this->form['statementDueDay']))
             $this->form['statementDueDay'] = null;
-        if (!is_int($this->form['bank_id']))
+        if (!is_numeric($this->form['bank_id']))
             $this->form['bank_id'] = null;
         $this->modelClass::updateOrCreate(['id' => $this->itemID], $this->form);
   

@@ -20,12 +20,12 @@
         * Income Account for credits (accounts that pay/give you money off budget like 3rd parts)
         */
         'accountRoles'            => [
-            'checkingAccount'       => '🏦 Checking Account',  
-            'walletCash'            => '👛 Cash Wallet', 
-            'investmentAccount'     => '📈 Investment Account',
-            'creditCard'            => '💳 Credit Card',
-            'expenseAccount'        => '📤 Expense Account',
-            'incomeAccount'         => '📥 Income Account'
+            'checkingAccount'       => ['name' => '🏦 Checking Account', 'icon' => '🏦'],  
+            'walletCash'            => ['name' => '👛 Cash Wallet', 'icon' => '👛'], 
+            'investmentAccount'     => ['name' => '📈 Investment Account', 'icon' => '📈'],
+            'creditCard'            => ['name' => '💳 Credit Card', 'icon' => '💳'],
+            'expenseAccount'        => ['name' => '📤 Expense Account', 'icon' => '📤'],
+            'incomeAccount'         => ['name' => '📥 Income Account', 'icon' => '📥'],
         ],
     ]
 ?>

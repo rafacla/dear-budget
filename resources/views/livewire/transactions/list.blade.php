@@ -29,10 +29,10 @@
                     <tr class="border">
                         <th class="px-2 py-1 w-24 text-sm text-left">{{__('Date')}}</th>
                         <th class="px-4 py-1 w-48 text-sm text-left">{{__('Description')}}</th>
-                        <th class="px-2 py-1 w-36 text-sm">{{__('Amount')}}</th>
+                        <th class="px-2 py-1 w-36 text-sm">{{__('Category')}}</th>
                         <th class="px-2 py-1 w-48 text-sm">{{__('Source Account')}}</th>
                         <th class="px-2 py-1 w-48 text-sm">{{__('Destination Account')}}</th>
-                        <th class="px-2 py-1 w-36 text-sm">{{__('Category')}}</th>
+                        <th class="px-2 py-1 w-36 text-sm">{{__('Amount')}}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,10 +44,10 @@
                             
                         </td>
                         <td class="px-2 py-1 text-sm">
-                            
+                            {{sizeof($item->transactions) == 1 ? $item->transactions->first()->creditAccount->name : 'Multiple Accounts'}}
                         </td>
                         <td class="px-2 py-1 text-sm">
-                            
+                            {{sizeof($item->transactions) == 1 ? $item->transactions->first()->debitAccount->name : 'Multiple Accounts'}}
                         </td>
                         <td class="px-2 py-1 text-sm">
                             

@@ -47,7 +47,7 @@
                     @foreach($items as $item)
                     <tr>
                         <td class="border px-4 py-0.5 text-sm">{{ $item->name }}</td>
-                        <td class="border px-4 py-0.5 text-sm">{{ __($accountRoles[$item->role]) }}</td>
+                        <td class="border px-4 py-0.5 text-sm">{{ __($accountRoles[$item->role]['name']) }}</td>
                         <td class="border px-2 py-0.5 text-sm">{{ $item->number }}</td>
                         <td class="border px-4 py-0.5 text-sm"></td>
                         <td class="border px-4 py-0.5 text-sm"></td>
