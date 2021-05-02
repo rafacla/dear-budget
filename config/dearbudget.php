@@ -27,5 +27,16 @@
             'expenseAccount'        => ['name' => '📤 Expense Account', 'icon' => '📤'],
             'incomeAccount'         => ['name' => '📥 Income Account', 'icon' => '📥'],
         ],
+        /*
+        * Transaction types
+        *   transfer: transfer values from an asset account to another
+        *   expense: transfer value from an asset account (credit) to an expense account (debit)
+        *   income: transfer falue from an income account (credit) to an asset account (debit)
+        */
+        'transactionTypes'          => [
+            0     =>  ['type' => 'transfer'],
+            1     =>  ['type' => 'expense'],
+            2     =>  ['type' => 'income'],
+        ],
     ]
 ?>

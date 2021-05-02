@@ -27,40 +27,78 @@
             <table class="table-fixed w-full">
                 <thead>
                     <tr class="border">
-                        <th class="px-2 py-1 w-24 text-sm text-left">{{__('Date')}}</th>
-                        <th class="px-4 py-1 w-48 text-sm text-left">{{__('Description')}}</th>
-                        <th class="px-2 py-1 w-36 text-sm">{{__('Category')}}</th>
-                        <th class="px-2 py-1 w-48 text-sm">{{__('Source Account')}}</th>
-                        <th class="px-2 py-1 w-48 text-sm">{{__('Destination Account')}}</th>
-                        <th class="px-2 py-1 w-36 text-sm">{{__('Amount')}}</th>
+                        <th class="px-2 py-1 w-24 text-xs text-left">{{__('Date')}}</th>
+                        <th class="px-4 py-1  text-xs text-left">{{__('Description')}}</th>
+                        <th class="px-2 py-1 w-56 text-xs text-left">{{__('Category')}}</th>
+                        <th class="px-2 py-1 w-36 text-xs text-left">{{__('Source Account')}}</th>
+                        <th class="px-2 py-1 w-36 text-xs text-left">{{__('Destination Account')}}</th>
+                        <th class="px-2 py-1 w-36 text-xs">{{__('Amount')}}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($items as $item)
+                    @if (sizeof($item->transactions)>0)
                     <tr class="border">
-                        <td class="px-2 py-1 text-sm">{{ $item->date }}</td>
-                        <td class="px-4 py-1 text-sm">{{ $item->description }}</td>
-                        <td class="px-2 py-1 text-sm">
-                            
+                        <td class="px-2 py-1 text-xs">{{ $item->date }}</td>
+                        <td class="px-4 py-1 text-xs">{{ $item->description }}</td>
+                        <td class="px-2 py-1 text-xs">
+                            @if (sizeof($item->transactions) > 1)
+                            <span>{{__('Multiple Items')}}</span>
+                            @else
+                                @if ($transactionTypes[$item->transactions->first()->type]['type']=='transfer')
+                                <span class="bg-gray-400 text-white rounded-full text-xs py-0.5 px-2"
+                                    @popper({{__('This is a Transfer! As you are just moving funds between accounts, it doesn\'t affect your budget!')}})
+                                >
+                                        <i class="fas fa-exchange-alt"></i> {{__('Transfer')}}
+                                    </span>
+                                @else
+                                    @if ($item->transactions->first()->subcategory==null)
+                                        <span class="bg-red-500 text-white rounded-full text-xs py-0.5 px-2"
+                                            @popper({{__('For any expense transaction, you have to pick a category, otherwise your budget will not be accurate!')}})
+                                        >
+                                            <i class="fas fa-exclamation-triangle"></i> {{__('No category defined!')}}
+                                        </span>
+                                    @else
+                                        <span class="text-xs py-1">
+                                            {{$item->transactions->first()->subcategory->name}}
+                                        </span>
+                                    @endif
+                                @endif
+                            @endif
                         </td>
-                        <td class="px-2 py-1 text-sm">
-                            <span @popper({{__($accountRoles[$item->transactions->first()->creditAccount->role]['name'])}})>
+                        <td class="px-2 py-1 text-xs">
+                            <span @popper(
+                                {{sizeof($item->transactions) == 1 ? 
+                                    __($accountRoles[$item->transactions->first()->creditAccount->role]['name']) :
+                                    __('This transaction has been splitted, it has more than one account assigned.')
+                                }})>
                                 {{sizeof($item->transactions) == 1 ? 
                                     ($accountRoles[$item->transactions->first()->creditAccount->role]['icon'] . $item->transactions->first()->creditAccount->name) : 
-                                    'Multiple Accounts'}}
+                                    __('Multiple Accounts')}}
                             </span>
                         </td>
-                        <td class="px-2 py-1 text-sm">
-                            <span @popper({{__($accountRoles[$item->transactions->first()->debitAccount->role]['name'])}})>
+                        <td class="px-2 py-1 text-xs">
+                            <span @popper(
+                                {{sizeof($item->transactions) == 1 ? 
+                                    __($accountRoles[$item->transactions->first()->debitAccount->role]['name']) :
+                                    __('This transaction has been splitted, it has more than one account assigned.')
+                                }})>
                                 {{sizeof($item->transactions) == 1 ? 
                                 ($accountRoles[$item->transactions->first()->debitAccount->role]['icon'] . $item->transactions->first()->debitAccount->name) : 
-                                'Multiple Accounts'}}
+                                __('Multiple Accounts')}}
                             </span>
                         </td>
-                        <td class="px-2 py-1 text-sm">
-                            
+                        <td class="px-2 py-1 text-xs text-right">
+                            <?php
+                                $sumAmount =0;
+                                foreach ($item->transactions as $transaction) {
+                                    $sumAmount += $transaction->amount;
+                                }
+                            ?>
+                            {{number_format($sumAmount,2)}}
                         </td>
                     </tr>
+                    @endif
                     @endforeach
                     @if (sizeof($items)==0)
                     <tr class="border">

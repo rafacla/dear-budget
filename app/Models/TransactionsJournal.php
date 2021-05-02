@@ -15,6 +15,7 @@ class TransactionsJournal extends Model
     }
     
     public function transactions() {
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(Transaction::class)
+            ->where('deleted_at',null);
     }
 }

@@ -13,6 +13,7 @@ class Transactions extends Component
     public $modelClass = Budget::Class;
     public $itemClassName = 'Transaction';
     public $accountRoles;
+    public $transactionTypes;
     public $currentDate;
     public $items;
     public $itemID;
@@ -29,6 +30,7 @@ class Transactions extends Component
             $this->currentDate = time();
 
         $this->accountRoles = config('dearbudget.accountRoles');
+        $this->transactionTypes = config('dearbudget.transactionTypes');
     }
 
     public function render()
@@ -36,6 +38,11 @@ class Transactions extends Component
         if (!isset($this->currentDate))
             $this->currentDate  = time();
         $filter = [
+            [
+                'filterField'   => 'deleted_at',
+                'filterAs'      => '=',
+                'filterTo'      => null
+            ],
             [
                 'filterField'   => 'date',
                 'filterAs'      => '>=',

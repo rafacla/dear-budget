@@ -21,4 +21,8 @@ class Transaction extends Model
     public function debitAccount() {
         return $this->hasOne(Account::class, 'id','debit_account_id');
     }
+
+    public function subcategory() {
+        return $this->hasOne(Subcategory::class, 'id','subcategory_id');
+    }
 }
