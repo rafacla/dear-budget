@@ -23,7 +23,10 @@
                     <x-jet-nav-link href="{{ route('account') }}" :active="request()->routeIs('account')">
                         {{ __('Accounts') }}
                     </x-jet-nav-link>
-                    <x-jet-nav-link href="{{ route('budget') }}" :active="request()->routeIs('budget')">
+                    <x-jet-nav-link href="{{ route('transaction') }}" :active="request()->routeIs('transaction') || request()->routeIs('transaction.date')">
+                        {{ __('Transactions') }}
+                    </x-jet-nav-link>
+                    <x-jet-nav-link href="{{ route('budget') }}" :active="request()->routeIs('budget') || request()->routeIs('budget.date')">
                         {{ __('Budgets') }}
                     </x-jet-nav-link>
                 </div>

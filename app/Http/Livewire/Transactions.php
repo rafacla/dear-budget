@@ -8,19 +8,12 @@ use App\Models\Budget;
 use App\Helpers\Helper;
 use Illuminate\Support\Facades\Route;
 
-class Budgets extends Component
+class Transactions extends Component
 {
     public $modelClass = Budget::Class;
-    public $itemClassName = 'Budget';
+    public $itemClassName = 'Transaction';
     public $currentDate;
     public $items;
-    public $toBudget = 0;
-    public $incomeMonth = 0;
-    public $overspentLMonth = 0;
-    public $budgetedMonth = 0;
-    public $budgets = [];
-    public $transactions = [];
-    public $available = [];
     public $itemID;
     public $form = array(
         'budget_value'          => '',
@@ -39,25 +32,20 @@ class Budgets extends Component
     {   
         if (!isset($this->currentDate))
             $this->currentDate  = time();
-        
-        $this->items = Auth::user()->categories->where('expense',true);
-        foreach ($this->items as $item) {
-            foreach ($item->subcategories as $subcategory) {
-                $budget = $subcategory->budgets(date('Y-m-1',$this->currentDate))->first();
-                $budgetValue = $budget != null ? $budget->budget_value : 0;
-                $this->budgets[$subcategory->id] = number_format($budgetValue,2,'.','');
-                $this->transactions[$subcategory->id] = number_format(0,2,'.','');
-                $this->available[$subcategory->id] = number_format(100+$budgetValue,2,'.','');
-            }
-        }
-        $this->toBudget = 1000;
-        return view('livewire.budgets.list');
-    }
-
-    public function updatedBudgets($value, $name)
-    {
-        $this->modelClass::updateOrCreate(['date' => $this->currentDate, 'subcategory_id' => $name, 'user_id' => Auth::user()->id],
-         ['budget_value' => $value]);
+        $filter = [
+            [
+                'filterField'   => 'date',
+                'filterAs'      => '>=',
+                'filterTo'      => date('Y-m-1',$this->currentDate)
+            ],
+            [
+                'filterField'   => 'date',
+                'filterAs'      => '<=',
+                'filterTo'      => date('Y-m-t',$this->currentDate)
+            ],
+            ];
+        $this->items = Auth::user()->transactionsJournals($filter);
+        return view('livewire.transactions.list');
     }
 
     public function store()

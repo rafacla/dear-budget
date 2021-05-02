@@ -81,4 +81,14 @@ class User extends Authenticatable
         return $this->hasMany(Budget::class)
             ->where('date',$date)->get();
     }
+
+    public function transactionsJournals($filter = null) {
+        $transactions = $this->hasMany(TransactionsJournal::class);
+        if ($filter != null){
+            foreach ($filter as $value) {
+                $transactions->where($value['filterField'],$value['filterAs'],$value['filterTo']);
+            }
+        }
+        return $transactions->get();
+    }
 }
