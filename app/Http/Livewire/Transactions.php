@@ -14,6 +14,8 @@ class Transactions extends Component
     public $itemClassName = 'Transaction';
     public $accountRoles;
     public $transactionTypes;
+    public $selected = [];
+    public $selectedAll;
     public $currentDate;
     public $items;
     public $itemID;
@@ -23,6 +25,23 @@ class Transactions extends Component
     );
     public $isOpen = 0;
 
+    public function updatedSelectedAll($selectedAllValue) {
+        foreach ($this->items as $item) {
+            $this->selected[$item->id] = $selectedAllValue;
+        }
+    }
+
+    public function updatedSelected($value, $key) {
+        $allSelected = true;
+        foreach ($this->selected as $key => $value) {
+            if (!$value)
+                $allSelected = false;
+        }
+        $this->selectedAll = $allSelected;
+    }
+
+    
+
     public function mount($year = null,$month = null) {
         if ($year != null)
             $this->currentDate  = mktime(0,0,0,$month,1,$year);
@@ -31,12 +50,7 @@ class Transactions extends Component
 
         $this->accountRoles = config('dearbudget.accountRoles');
         $this->transactionTypes = config('dearbudget.transactionTypes');
-    }
 
-    public function render()
-    {   
-        if (!isset($this->currentDate))
-            $this->currentDate  = time();
         $filter = [
             [
                 'filterField'   => 'deleted_at',
@@ -55,6 +69,15 @@ class Transactions extends Component
             ],
             ];
         $this->items = Auth::user()->transactionsJournals($filter);
+        foreach ($this->items as $item) {
+            $this->selected[$item->id] = false;
+        }
+        $this->selectedAll = false;
+    }
+
+    public function render()
+    {   
+        
         return view('livewire.transactions.list');
     }
 

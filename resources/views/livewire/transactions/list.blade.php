@@ -27,6 +27,7 @@
             <table class="table-fixed w-full">
                 <thead>
                     <tr class="border">
+                        <th class="px-1 py-0.5 w-4 text-xs"><input type="checkbox" wire:model="selectedAll"></th>
                         <th class="px-2 py-1 w-24 text-xs text-left">{{__('Date')}}</th>
                         <th class="px-4 py-1  text-xs text-left">{{__('Description')}}</th>
                         <th class="px-2 py-1 w-56 text-xs text-left">{{__('Category')}}</th>
@@ -39,6 +40,7 @@
                     @foreach($items as $item)
                     @if (sizeof($item->transactions)>0)
                     <tr class="border">
+                        <td class="px-1 py-0.5 text-xs"><input type="checkbox" wire:model="selected.{{$item->id}}"></td>
                         <td class="px-2 py-1 text-xs">{{ $item->date }}</td>
                         <td class="px-4 py-1 text-xs">{{ $item->description }}</td>
                         <td class="px-2 py-1 text-xs">
