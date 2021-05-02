@@ -33,13 +33,7 @@ class Budgets extends Component
             $this->currentDate  = mktime(0,0,0,$month,1,$year);
         else
             $this->currentDate = time();
-    }
 
-    public function render()
-    {   
-        if (!isset($this->currentDate))
-            $this->currentDate  = time();
-        
         $this->items = Auth::user()->categories->where('expense',true);
         foreach ($this->items as $item) {
             foreach ($item->subcategories as $subcategory) {
@@ -51,12 +45,16 @@ class Budgets extends Component
             }
         }
         $this->toBudget = 1000;
+    }
+
+    public function render()
+    {   
         return view('livewire.budgets.list');
     }
 
     public function updatedBudgets($value, $name)
     {
-        $this->modelClass::updateOrCreate(['date' => $this->currentDate, 'subcategory_id' => $name, 'user_id' => Auth::user()->id],
+        $this->modelClass::updateOrCreate(['date' => date('Y-m-1',$this->currentDate), 'subcategory_id' => $name, 'user_id' => Auth::user()->id],
          ['budget_value' => $value]);
     }
 

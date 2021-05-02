@@ -69,7 +69,7 @@
                     <tr class="border bg-blue-50">
                         <td class="px-2 py-1 text-sm font-bold">{{ $item->name }}</td>
                         <td class="px-4 py-1 text-sm font-bold">
-                            <input type="number" step=".01" value="{{number_format($sumOfSubcategoriesBudget,2)}}" 
+                            <input type="number" step=".01" value="{{number_format($sumOfSubcategoriesBudget,2,".","")}}" 
                                     class="appearance-none border-none rounded w-full px-3 text-blue-800 bg-blue-50 text-right leading-tight focus:outline-none focus:shadow-outline" disabled>
                         </td>
                         <td class="px-2 py-1 text-sm font-bold">
