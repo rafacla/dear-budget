@@ -22,3 +22,4 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/budget', App\Http\Livewir
 Route::middleware(['auth:sanctum', 'verified'])->get('/budget/{year}/{month}', App\Http\Livewire\Budgets::class)->name('budget.date');
 Route::middleware(['auth:sanctum', 'verified'])->get('/transaction', App\Http\Livewire\Transactions::class)->name('transaction');
 Route::middleware(['auth:sanctum', 'verified'])->get('/transaction/{year}/{month}', App\Http\Livewire\Transactions::class)->name('transaction.date');
+Route::middleware(['auth:sanctum', 'verified'])->get('/account/autocomplete', [App\Http\Controllers\AutoCompleteAccountSearch::class,'search']);

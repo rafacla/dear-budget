@@ -4,6 +4,7 @@
     </h2>
 </x-slot>
 <div class="py-12">
+    @livewire('components.account-auto-complete')
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="w-full -mt-12 text-right">
             <a href="{{route('transaction.date',['year' => date("Y",$currentDate), 'month'=>(date("m",$currentDate)-1)])}}">
@@ -124,16 +125,3 @@
         </div>
     </div>
 </div>
-<script>
-    $(function() {
-        $('#datepicker').datepicker( {
-            changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true,
-            dateFormat: 'MM yy',
-            onClose: function(dateText, inst) { 
-                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
-            }
-        });
-    });
-</script>

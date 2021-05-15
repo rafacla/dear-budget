@@ -31,7 +31,7 @@ class CreateTransactionsTable extends Migration
                 ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
             $table->decimal('amount', 8, 2);	
-            $table->decimal('foreign_amount', 8, 2)->nullable;
+            $table->decimal('foreign_amount', 8, 2)->nullable();
             $table->foreignId('foreign_currency_id')
                 ->nullable()
                 ->constrained('currencies')
