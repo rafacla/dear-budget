@@ -20,7 +20,6 @@
         <script src="https://kit.fontawesome.com/63eade88da.js" crossorigin="anonymous"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
-
     </head>
     <body class="font-sans antialiased">
         <x-jet-banner />

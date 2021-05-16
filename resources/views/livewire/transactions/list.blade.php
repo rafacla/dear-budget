@@ -3,9 +3,17 @@
         {{__('Manage Transactions')}}
     </h2>
 </x-slot>
-<div class="py-12">
-    @livewire('components.account-auto-complete')
+<div class="py-12" x-data="{ open: false }">
+    <div x-show="open" @click.away="open = false">
+        @include('livewire.transactions.create')
+    </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="self-center">
+            <button @click="open = true" 
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
+                {{__('Create New Transaction')}}
+            </button>
+        </div>
         <div class="w-full -mt-12 text-right">
             <a href="{{route('transaction.date',['year' => date("Y",$currentDate), 'month'=>(date("m",$currentDate)-1)])}}">
                 <i class="text-gray-700 text-2xl far fa-arrow-alt-circle-left"></i>

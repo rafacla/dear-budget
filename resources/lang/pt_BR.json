@@ -69,6 +69,7 @@
     "Opening Balance Date required":"Data do Saldo inicial necessário",
     "This is the initial transaction of the destination account, you don't have to pick a category for this.":"Esta é a transação inicial da consta destino, você não precisa classificar esta transação.",
     "None":"Nenhum",
+    "Create New Transaction":"Criar Nova Transação",
     "Current Balance":"Saldo Atual",
     "Asset accounts":"Contas de Ativos",
     "Expense accounts":"Contas de Despesas",
