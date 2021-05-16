@@ -3,13 +3,13 @@
         {{__('Manage Transactions')}}
     </h2>
 </x-slot>
-<div class="py-12" x-data="{ open: false }">
-    <div x-show="open" @click.away="open = false">
+<div class="py-12" x-data="{ isOpen: @entangle('isOpen') }">
+    <div x-show="isOpen" @click.away="isOpen = false">
         @include('livewire.transactions.create')
     </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="self-center">
-            <button @click="open = true" 
+            <button wire:click="new()" 
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
                 {{__('Create New Transaction')}}
             </button>
@@ -48,7 +48,16 @@
                 <tbody>
                     @foreach($items as $item)
                     @if (sizeof($item->transactions)>0)
-                    <tr class="border">
+                    <tr 
+                        class="border hover:bg-blue-50 
+                            {{ ($transactionTypes[$item->transactions->first()->type]['type']=='initialBalance') ? 'cursor-not-allowed' : 'cursor-pointer' }}
+                        " 
+                        @if($transactionTypes[$item->transactions->first()->type]['type']=='initialBalance')
+                            {{Popper::delay(500,0)->pop(__('To edit this initial balance transaction, please edit the account.'))}}
+                        @else
+                            wire:click="edit({{ $item->id }})")
+                        @endif
+                        >
                         <td class="px-1 py-0.5 text-xs"><input type="checkbox" wire:model="selected.{{$item->id}}"></td>
                         <td class="px-2 py-1 text-xs">{{ $item->date }}</td>
                         <td class="px-4 py-1 text-xs">{{ $item->description }}</td>

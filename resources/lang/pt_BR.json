@@ -70,6 +70,11 @@
     "This is the initial transaction of the destination account, you don't have to pick a category for this.":"Esta é a transação inicial da consta destino, você não precisa classificar esta transação.",
     "None":"Nenhum",
     "Create New Transaction":"Criar Nova Transação",
+    "Use this field whenever a transaction is meant to be taken in budget in a different month than when it happened":
+        "Use este campo sempre que uma transação deve ser considerada no orçamento em um mês diferente de quando aconteceu",
+    "Transaction Number":"Número da Transação",
+    "Budget Date":"Data de Orçamento",
+    "To edit this initial balance transaction, please edit the account.":"Para editar esta transação de Saldo Inicial, por favor edite a conta.",
     "Current Balance":"Saldo Atual",
     "Asset accounts":"Contas de Ativos",
     "Expense accounts":"Contas de Despesas",

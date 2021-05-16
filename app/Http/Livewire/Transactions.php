@@ -4,14 +4,14 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Budget;
+use App\Models\TransactionsJournal;
 use App\Helpers\Helper;
 use Illuminate\Support\Facades\Route;
 
 class Transactions extends Component
 {
-    public $modelClass = Budget::Class;
-    public $itemClassName = 'Transaction';
+    public $modelClass = TransactionsJournal::Class;
+    public $itemClassName = 'Transactions';
     public $accountRoles;
     public $transactionTypes;
     public $selected = [];
@@ -20,8 +20,12 @@ class Transactions extends Component
     public $items;
     public $itemID;
     public $form = array(
-        'budget_value'          => '',
-        'subcategory_id'        => '',
+        'date'                   => '',
+        'user_id'                => '',
+        'budget_date'            => '',
+        'description'            => '',
+        'transaction_number'     => '',
+        'transactions'           => []
     );
     public $isOpen = 0;
 
@@ -107,7 +111,31 @@ class Transactions extends Component
         $this->resetInputFields();
     }
 
-    /*
+    public function new() {
+        $this->resetInputFields();
+        $this->isOpen = true;
+    }
+
+    private function resetInputFields() {
+        foreach ($this->form as $key => $value) {
+            if (is_array($this->form[$key])) {
+                if ($key == 'transactions') {
+                    $this->form[$key] = [
+                        'credit_account_id'         => '',
+                        'debit_account_id'          => '',
+                        'transactions_journal_id'   => '',
+                        'amount'                    => 0,
+                        'subcategory_id'            => ''
+                    ];
+                } else {
+                    $this->form[$key] = [];
+                }
+            } else {
+                $this->form[$key] = '';
+            }
+        }
+    }
+
     public function edit($id)
     {
         $item = $this->modelClass::findOrFail($id);
@@ -115,8 +143,7 @@ class Transactions extends Component
         foreach ($this->form as $key => $value) {
             $this->form[$key] = $item[$key];
         }
-    
-        $this->openModal();
+        $this->isOpen = true;
     }
 
     public function delete($id)
@@ -124,5 +151,5 @@ class Transactions extends Component
         $this->modelClass::find($id)->delete();
         session()->flash('message', $this->itemClassName.' deleted successfully.');
     }
-    */
+    
 }
