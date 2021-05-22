@@ -120,13 +120,13 @@ class Transactions extends Component
         foreach ($this->form as $key => $value) {
             if (is_array($this->form[$key])) {
                 if ($key == 'transactions') {
-                    $this->form[$key] = [
-                        'credit_account_id'         => '',
-                        'debit_account_id'          => '',
+                    $this->form[$key] = [[
+                        'credit_account'         => null,
+                        'debit_account'          => null,
                         'transactions_journal_id'   => '',
                         'amount'                    => 0,
-                        'subcategory_id'            => ''
-                    ];
+                        'subcategory'            => ''
+                    ]];
                 } else {
                     $this->form[$key] = [];
                 }
@@ -141,7 +141,21 @@ class Transactions extends Component
         $item = $this->modelClass::findOrFail($id);
         $this->itemID = $id;
         foreach ($this->form as $key => $value) {
-            $this->form[$key] = $item[$key];
+            if ($key == 'transactions') {
+                $transactions = [];
+                foreach ($item[$key] as $transaction) {
+                    array_push($transactions, [
+                        'id'    => $transaction->id,
+                        'credit_account' => $transaction->creditAccount,
+                        'debit_account' => $transaction->debitAccount,
+                        'amount' => $transaction->amount,
+                        'subcategory' => $transaction->subcategory,
+                    ]);
+                }
+                $this->form[$key] = $transactions;
+            } else {
+                $this->form[$key] = $item[$key];
+            }
         }
         $this->isOpen = true;
     }

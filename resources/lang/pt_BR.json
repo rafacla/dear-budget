@@ -75,6 +75,8 @@
     "Transaction Number":"Número da Transação",
     "Budget Date":"Data de Orçamento",
     "To edit this initial balance transaction, please edit the account.":"Para editar esta transação de Saldo Inicial, por favor edite a conta.",
+    "Nothing to show":"Nada encontrado",
+    "Account Name":"Nome da Conta",
     "Current Balance":"Saldo Atual",
     "Asset accounts":"Contas de Ativos",
     "Expense accounts":"Contas de Despesas",

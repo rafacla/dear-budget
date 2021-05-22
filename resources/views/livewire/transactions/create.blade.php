@@ -8,7 +8,7 @@
         <!-- This element is to trick the browser into centering the modal contents. -->
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>​
 
-        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-full sm:w-full"
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-full sm:w-11/12"
             role="dialog" aria-modal="true" aria-labelledby="modal-headline">
             <form>
                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
@@ -51,10 +51,33 @@
                         </div>
                         <div class="w-3/4 px-2 divide-y">  
                           <label class="block text-gray-700 text-sm font-bold mb-2">{{__('Transactions')}}:</label>
-                          @foreach ($form['transactions'] as $item)
-                            {{print_r($item)}}    
-                          @endforeach
-                          @livewire('components.account-auto-complete')
+                          <table class="w-full">
+                            <thead>
+                              <th>{{__('Source Account')}}</th>
+                              <th>{{__('Destination Account')}}</th>
+                              <th>{{__('Amount')}}</th>
+                              <th>{{__('Category')}}</th>
+                            </thead>
+                            <tbody>
+                              @foreach ($form['transactions'] as $key => $item)
+                                <tr>
+                                    <td>
+                                        @livewire('components.account-auto-complete', ['value'=>($item['credit_account'] != null ? $item['credit_account']->name : ''), 'displayExpenseAndIncomeAccounts'=>'income'])
+                                    </td>
+                                    <td>
+                                        @livewire('components.account-auto-complete', ['value'=>($item['debit_account'] != null ? $item['debit_account']->name : ''), 'displayExpenseAndIncomeAccounts'=>'expense'])
+                                    </td>
+                                    <td>
+                                        <input 
+                                            class="text-right shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            type="number" step="0.01"
+                                            wire:model="form.transactions.{{$key}}.amount">
+                                    </td>
+                                    <td>{{($item['subcategory'] != null ? $item['subcategory']->name : '')}}</td>  
+                                </tr>
+                              @endforeach
+                            </tbody>
+                          </table>
                         </div>
                     </div>
                 </div>
@@ -78,3 +101,30 @@
     </div>
 </div>
 </div>
+<style>
+    .typeahead.input-group {
+        position: relative;
+    }
+    .tt-menu {
+        background-color: white;
+        margin: 5px;
+        padding: 5px;
+        z-index: 2002;
+        position: absolute;
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 5px 10px rgb(0 0 0 / 20%);
+    }
+    .tt-cursor, .tt-suggestion:hover {
+        background-color: aliceBlue;
+    }
+    .tt-suggestion {
+        padding-left: 10px;
+        cursor: pointer;
+    }
+
+    .twitter-typeahead {
+        width: 100%;
+        margin-right: 15px;
+    }
+</style>
