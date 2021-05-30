@@ -70,6 +70,12 @@
     "This is the initial transaction of the destination account, you don't have to pick a category for this.":"Esta é a transação inicial da consta destino, você não precisa classificar esta transação.",
     "None":"Nenhum",
     "Create New Transaction":"Criar Nova Transação",
+    "No account found.":"Nenhuma conta encontrada.",
+    "It'll create a new Income Account":"Irá criar uma nova Conta de Receita",
+    "It'll create a new Expense Account":"Irá criar uma nova Conta de Despesa",
+    "Income Accounts":"Contas de Receitas",
+    "Expense Accounts":"Contas de Despesas",
+    "Asset and Liability Accounts":"Contas de Ativos ou Passivos",
     "Use this field whenever a transaction is meant to be taken in budget in a different month than when it happened":
         "Use este campo sempre que uma transação deve ser considerada no orçamento em um mês diferente de quando aconteceu",
     "Transaction Number":"Número da Transação",
@@ -125,7 +131,7 @@
     "New Password": "Senha Nova",
     "Current Password": "Senha Atual",
     "Enable": "Ativar",
-    "If necessary, you may log out of all of your other browser sessions across all of your devices. Some of your recent sessions are listed below; however, this list may not be exhaustive. If you feel your account has been compromised, you should also update your password.": 
+    "If necessary, you may log out of all of your other browser sessions across all of your devices. Some of your recent sessions are listed below; however, this list may not be exhaustive. If you feel your account has been compromised, you should also update your password.":
      "Se necessário, você pode sair de todas as sessões de todos os eus dispositivos. As sessões mais recentes são listadas abaixo, porém, esta pode não ser a lista inteira. Se você acredita que sua conta pode ter sido comprometida, você deve mudar sua senha também.",
     "Two Factor Authentication": "Autenticação em Duas Etapas",
     "Add additional security to your account using two factor authentication.": "Adicione uma camada extra de segurança à sua conta usando autenticaação em duas etapas",
@@ -159,7 +165,7 @@
     "Permanently delete your account.": "Apaga sua conta permanentemente",
     "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.":
      "Uma vez que sua conta for apagada, todos os seus recursos e dados serão permanentemente apagados. Antes de apagar sua conta, por favor salve qualquer dado ou informação que você deseje manter.",
-    "DELETE ACCOUNT": "APAGAR CONTA", 
+    "DELETE ACCOUNT": "APAGAR CONTA",
     "Doesn't have an account? Register!": "Não tem uma conta? Crie uma!",
     "Name": "Nome",
     "E-Mail Address": "Email",

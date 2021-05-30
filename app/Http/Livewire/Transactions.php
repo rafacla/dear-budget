@@ -13,9 +13,9 @@ class Transactions extends Component
 {
     protected $listeners = [
         'selectedAccount' => 'updateField',
-        
+
       ];
-    public $modelClass = TransactionsJournal::Class;
+    public $modelClass = TransactionsJournal::class;
     public $itemClassName = 'Transactions';
     public $assetAccounts;
     public $expenseAccounts;
@@ -38,25 +38,27 @@ class Transactions extends Component
     public $isOpen = 0;
 
     //Function to receive from AutoComplete component selected Value and update $form Object
-    public function updateField(array $field) {
-        
+    public function updateField($field) {
         $path = &$this->form;
-        foreach ($field['path'] as $value) {
+        $nestedPath = explode("-",$field['wiredTo']);
+        \Debugbar::info($nestedPath);
+        foreach ($nestedPath as $value) {
             $path = &$path[$value];
         }
         $path = Account::find($field['selectedAccount']['id']);
         //Wonderful: as we received user choice, now we've got to validate it, meaning:
         //1) Credit Account can't be equal to Debit Account
         //2) If Credit Account = Income Acconunt, Debit Account can't be Expense Account or Vice-Versa (At least I guess)
-        if ($field['path'][2] == 'credit_account') {
-            if ($this->form['transactions'][$field['path'][1]]['debit_account']['id'] == $path->id) {
-                $this->form['transactions'][$field['path'][1]]['debit_account'] = null;
-                $this->emitTo('components.account-auto-complete', '$refresh');
+        if ($nestedPath[2] == 'credit_account') {
+            if ($this->form['transactions'][$nestedPath[1]]['debit_account']['id'] == $path->id) {
+                $this->form['transactions'][$nestedPath[1]]['debit_account'] = null;
             }
-            \Debugbar::info($this->form['transactions'][$field['path'][1]]['debit_account']);
         } else {
-            \Debugbar::info($this->form['transactions'][$field['path'][1]]['credit_account']);
+            if ($this->form['transactions'][$nestedPath[1]]['credit_account']['id'] == $path->id) {
+                $this->form['transactions'][$nestedPath[1]]['credit_account'] = null;
+            }
         }
+
     }
 
     //function to update the checkbox, not really reliable, TODO: study a better way to control this objects using Alpine.JS
@@ -74,7 +76,7 @@ class Transactions extends Component
         $this->selectedAll = $allSelected;
     }
 
-    
+
 
     public function mount($year = null,$month = null) {
         if ($year != null)
@@ -117,8 +119,8 @@ class Transactions extends Component
     }
 
     public function render()
-    {   
-        
+    {
+
         return view('livewire.transactions.list');
     }
 
@@ -131,7 +133,7 @@ class Transactions extends Component
             'form.statementDueDay'      => 'exclude_unless:form.role,creditCard|required',
             'form.statementClosingDay'  => 'exclude_unless:form.role,creditCard|required'
         ]);
-        
+
         $this->form['user_id'] = Auth::user()->id;
         if (!is_int($this->form['statementClosingDay']))
             $this->form['statementClosingDay'] = null;
@@ -140,10 +142,10 @@ class Transactions extends Component
         if (!is_int($this->form['bank_id']))
             $this->form['bank_id'] = null;
         $this->modelClass::updateOrCreate(['id' => $this->itemID], $this->form);
-  
-        session()->flash('message', 
+
+        session()->flash('message',
             $this->itemID ? __($this->itemClassName.' updated successfully.') : __($this->itemClassName.' created Successfully.'));
-  
+
         $this->closeModal();
         $this->resetInputFields();
     }
@@ -204,5 +206,5 @@ class Transactions extends Component
         $this->modelClass::find($id)->delete();
         session()->flash('message', $this->itemClassName.' deleted successfully.');
     }
-    
+
 }

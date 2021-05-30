@@ -62,7 +62,14 @@
                               @foreach ($form['transactions'] as $key => $item)
                                 <tr>
                                     <td>
-                                        @livewire('account-auto-complete', ['wiredTo' => 'transactions-{{$key}}-credit_account', 'initialQuery' => $item['credit_account']['name']])
+                                        @livewire('account-auto-complete', 
+                                            [
+                                                'wiredTo' => 'transactions-'.$key.'-credit_account', 
+                                                'initialQuery' => $item['credit_account']['name'],
+                                                'showExpenseAccounts' => false
+                                            ],
+                                            key('transactions-'.$key.'-credit_account')
+                                        )
                                     </td>
                                     <td>
                                         <div id="custom-search-input">

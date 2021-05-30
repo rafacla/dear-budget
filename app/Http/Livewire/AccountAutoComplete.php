@@ -13,12 +13,19 @@ class AccountAutoComplete extends Component
     public $highlightIndex;
     public $openSuggestions;
     public $wiredTo;
-
+    public $showExpenseAccounts = true;
+    public $showIncomeAccounts = true;
+    public $hasIncomeAccounts;
+    public $hasExpenseAccounts;
+    public $hasAssetAndLiabiliyAccounts;
     public function resetTo() {
         $this->query = $this->initialQuery;
         $this->accounts = [];
         $this->highlightIndex = 0;
         $this->openSuggestions = false;
+        $this->hasAssetAndLiabiliyAccounts = false;
+        $this->hasExpenseAccounts = false;
+        $this->hasIncomeAccounts = false;
     }
 
     public function incrementHighlight() {
@@ -51,10 +58,34 @@ class AccountAutoComplete extends Component
     }
 
     public function updatedQuery() {
-        $this->accounts = Account::where('name', 'like', '%' . $this->query . '%')
+        $this->hasAssetAndLiabiliyAccounts = false;
+        $this->hasIncomeAccounts = false;
+        $this->hasExpenseAccounts = false;
+        $this->accounts = Account::where('name', 'like', '%' . $this->query . '%');
+        if (!$this->showExpenseAccounts)
+            $this->accounts->where('role','!=','expenseAccount');
+        if (!$this->showIncomeAccounts)
+            $this->accounts->where('role','!=','incomeAccount');
+        $this->accounts = $this->accounts
+            ->orderBy('name')
             ->get()
             ->toArray();
         $this->openSuggestions = true;
+        usort($this->accounts, function ($a, $b) {
+            if ($a['role'] == 'expenseAccount' || $a['role'] == 'incomeAccount') {
+                if ($a['role'] == 'incomeAccount' || $b['role'] == 'incomeAccount')
+                    $this->hasIncomeAccounts = true;
+                if ($a['role'] == 'expenseAccount' || $b['role'] == 'expenseAccount')
+                    $this->hasExpenseAccounts = true;
+                if ($b['role'] == 'expenseAccount' || $b['role'] == 'incomeAccount') {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            }
+            $this->hasAssetAndLiabiliyAccounts = true;
+            return 1;
+        });
     }
 
     public function render()
