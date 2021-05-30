@@ -17,10 +17,7 @@
 
         <!-- Scripts -->
         <script src="{{ mix('js/app.js') }}" defer></script>
-        <script src="https://kit.fontawesome.com/63eade88da.js" crossorigin="anonymous"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-        <script src="/js/typeahead.bundle.js" defer></script>
-        
+        <script src="https://kit.fontawesome.com/63eade88da.js" crossorigin="anonymous"></script>        
     </head>
     <body class="font-sans antialiased">
         <x-jet-banner />
