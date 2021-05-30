@@ -1,4 +1,4 @@
-<div class="fixed z-10 inset-0 overflow-y-auto ease-out duration-400">
+<div class="fixed z-10 inset-0 overflow-y-auto ease-out duration-400" x-cloak >
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
 
         <div class="fixed inset-0 transition-opacity">
@@ -51,7 +51,7 @@
                         </div>
                         <div class="w-3/4 px-2 divide-y">  
                           <label class="block text-gray-700 text-sm font-bold mb-2">{{__('Transactions')}}:</label>
-                          <table class="w-full">
+                          <table class="w-full" >
                             <thead>
                               <th>{{__('Source Account')}}</th>
                               <th>{{__('Destination Account')}}</th>
@@ -62,10 +62,30 @@
                               @foreach ($form['transactions'] as $key => $item)
                                 <tr>
                                     <td>
-                                        @livewire('components.account-auto-complete', ['value'=>($item['credit_account'] != null ? $item['credit_account']->name : ''), 'displayExpenseAndIncomeAccounts'=>'income'])
+                                        <div id="custom-search-input">
+                                            <div class="input-group">
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Account Name" 
+                                                    id = "transactions-{{$key}}-credit_account"
+                                                    class="typeahead-credit shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                    wire:model.lazy="form.transactions.{{$key}}.credit_account.name"
+                                                    autocomplete="off"/>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td>
-                                        @livewire('components.account-auto-complete', ['value'=>($item['debit_account'] != null ? $item['debit_account']->name : ''), 'displayExpenseAndIncomeAccounts'=>'expense'])
+                                        <div id="custom-search-input">
+                                            <div class="input-group">
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Account Name" 
+                                                    id = "transactions-{{$key}}-debit_account"
+                                                    class="typeahead-debit shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                    wire:model.lazy="form.transactions.{{$key}}.debit_account.name"
+                                                    autocomplete="off"/>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td>
                                         <input 
@@ -73,7 +93,7 @@
                                             type="number" step="0.01"
                                             wire:model="form.transactions.{{$key}}.amount">
                                     </td>
-                                    <td>{{($item['subcategory'] != null ? $item['subcategory']->name : '')}}</td>  
+                                    <td>{{($item['subcategory'] != null ? $item['subcategory']['name'] : '')}}</td>  
                                 </tr>
                               @endforeach
                             </tbody>
@@ -102,6 +122,9 @@
 </div>
 </div>
 <style>
+    [x-cloak] {
+        display: none !important;
+    }
     .typeahead.input-group {
         position: relative;
     }
@@ -128,3 +151,131 @@
         margin-right: 15px;
     }
 </style>
+
+<script type="text/javascript" defer>
+    document.addEventListener("DOMContentLoaded", function(event) { 
+        Livewire.on('editTransaction', transactionJournalId => {
+            loadTypeahead();
+        })
+        function loadTypeahead() {
+            var sourceA = {!! $this->assetAccounts !!};
+            var sourceE = {!! $this->expenseAccounts !!};
+            var sourceI = {!! $this->incomeAccounts !!};
+            var sourceA = new Bloodhound({
+                datumTokenizer: function (obj) {
+                    var test = Bloodhound.tokenizers.whitespace(obj.name);
+                    $.each(test, function (k, v) {
+                        let i = 1; // start with 1 insted of 0 because test already contains 1st value
+                        while (i < v.length - 1) {
+                            test.push(v.substr(i, v.length));
+                            i++;
+                        }
+                        $.unique(test); // removes duplicate values
+                    });
+                    return test;
+                },
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                identify: function(obj) { return obj.id; },
+                local: sourceA
+            });                
+            var sourceE = new Bloodhound({
+                datumTokenizer: function (obj) {
+                    var test = Bloodhound.tokenizers.whitespace(obj.name);
+                    $.each(test, function (k, v) {
+                        let i = 1; // start with 1 insted of 0 because test already contains 1st value
+                        while (i < v.length - 1) {
+                            test.push(v.substr(i, v.length));
+                            i++;
+                        }
+                        $.unique(test); // removes duplicate values
+                    });
+                    return test;
+                },
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                identify: function(obj) { return obj.id; },
+                local: sourceE
+            });
+            var sourceI = new Bloodhound({
+                datumTokenizer: function (obj) {
+                    var test = Bloodhound.tokenizers.whitespace(obj.name);
+                    $.each(test, function (k, v) {
+                        let i = 1; // start with 1 insted of 0 because test already contains 1st value
+                        while (i < v.length - 1) {
+                            test.push(v.substr(i, v.length));
+                            i++;
+                        }
+                        $.unique(test); // removes duplicate values
+                    });
+                    return test;
+                },
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                identify: function(obj) { return obj.id; },
+                local: sourceI
+            });
+            
+            var expenseAccount = {
+                    name: 'expenseAccount',
+                    source: sourceE,
+                    display: 'name',
+                    templates: {
+                        header: '<strong>{{__('Expense Accounts')}}</strong>',
+                    }
+                };
+            var incomeAccount = {
+                    name: 'incomeAccount',
+                    source: sourceI,
+                    display: 'name',
+                    templates: {
+                        header: '<strong>{{__('Income Accounts')}}</strong>',
+                    }
+                };
+            var notFoundTemplate = '{{__('No account found, this will create a new one...')}}';
+            $('.typeahead-credit').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+                },
+                {
+                    name: 'checkingAccount',
+                    source: sourceA,
+                    display: 'name',
+                    templates: {
+                        header: '<strong>{{__('Asset Accounts')}}</strong>',
+                        notFound: notFoundTemplate
+                    }
+                },
+                incomeAccount
+            ).on('typeahead:render', function(element, objs, async, name) {
+                if($('.tt-suggestion').length){
+                    $('.empty-message').hide();
+                } else {
+                    $('.empty-message').show();
+                }
+            }).on('typeahaed:autocomplete', function (element, suggestion) {
+                console.log(suggestion);
+            });            ;
+            $('.typeahead-debit').typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                },
+                {
+                    name: 'checkingAccount',
+                    source: sourceA,
+                    display: 'name',
+                    templates: {
+                        header: '<strong>{{__('Asset Accounts')}}</strong>',
+                        notFound: notFoundTemplate
+                    }
+                },
+                expenseAccount
+            ).on('typeahead:render', function(element, objs, async, name) {
+                if($('.tt-suggestion').length){
+                    $('.empty-message').hide();
+                } else {
+                    $('.empty-message').show();
+                }
+            });
+        }
+    });
+</script>

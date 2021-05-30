@@ -11,11 +11,15 @@ class AccountAutoComplete extends Component
     public $assetAccounts;
     public $expenseAccounts;
     public $incomeAccounts;
-    public $randomComponentId;
     public $displayExpenseAndIncomeAccounts = 'both';
+    public $wireModel;
+
+    protected $listeners = ['$refresh'];
+
+
     public function render()
     {
-        $this->randomComponentId = uniqid();
+        \Debugbar::info("rendered an autocomplete: ".implode("-",$this->wireModel)." ".$this->value);
         $this->assetAccounts = Account::where('role','checkingAccount')
                                     ->orWhere('role','walletCash')
                                     ->orWhere('role','investmentAccount')
@@ -23,16 +27,15 @@ class AccountAutoComplete extends Component
                                     ->get()->toJSON();
         $this->expenseAccounts = Account::where('role','expenseAccount')->get()->toJSON();
         $this->incomeAccounts = Account::where('role','incomeAccount')->get()->toJSON();
-        
         return <<<'blade'
         <div id="custom-search-input">
             <div class="input-group">
                 <input 
                     type="text" 
                     placeholder="Account Name" 
-                    id = "{{$this->randomComponentId}}"
+                    id = "{{implode("-",$this->wireModel)}}"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    value="{{$this->value}}"
+                    wire:model.lazy="value"
                     autocomplete="off"/>
             </div>
         </div>
@@ -110,7 +113,7 @@ class AccountAutoComplete extends Component
                     }
                 };
             var notFoundTemplate = (displayExpenseAndIncomeAccounts == 'both') ? '{{__('No account found')}}' : '{{__('No account found, this will create a new one...')}}';
-            $('#{{$this->randomComponentId}}').typeahead({
+            $('#{{implode("-",$this->wireModel)}}').typeahead({
                 hint: true,
                 highlight: true,
                 minLength: 1
@@ -133,7 +136,7 @@ class AccountAutoComplete extends Component
                 $('.empty-message').show();
             }
         }).on('typeahead:select typeahead:autocomplete', function(event, object) {
-            console.log(object);    
+            livewire.emit('selectedAccount', {'path': {!!json_encode($this->wireModel)!!}, 'selectedAccount': object});
         });
         
         

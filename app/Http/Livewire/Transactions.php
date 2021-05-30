@@ -5,13 +5,21 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\TransactionsJournal;
+use App\Models\Account;
 use App\Helpers\Helper;
 use Illuminate\Support\Facades\Route;
 
 class Transactions extends Component
 {
+    protected $listeners = [
+        'selectedAccount' => 'updateField',
+        
+      ];
     public $modelClass = TransactionsJournal::Class;
     public $itemClassName = 'Transactions';
+    public $assetAccounts;
+    public $expenseAccounts;
+    public $incomeAccounts;
     public $accountRoles;
     public $transactionTypes;
     public $selected = [];
@@ -29,12 +37,34 @@ class Transactions extends Component
     );
     public $isOpen = 0;
 
+    //Function to receive from AutoComplete component selected Value and update $form Object
+    public function updateField(array $field) {
+        
+        $path = &$this->form;
+        foreach ($field['path'] as $value) {
+            $path = &$path[$value];
+        }
+        $path = Account::find($field['selectedAccount']['id']);
+        //Wonderful: as we received user choice, now we've got to validate it, meaning:
+        //1) Credit Account can't be equal to Debit Account
+        //2) If Credit Account = Income Acconunt, Debit Account can't be Expense Account or Vice-Versa (At least I guess)
+        if ($field['path'][2] == 'credit_account') {
+            if ($this->form['transactions'][$field['path'][1]]['debit_account']['id'] == $path->id) {
+                $this->form['transactions'][$field['path'][1]]['debit_account'] = null;
+                $this->emitTo('components.account-auto-complete', '$refresh');
+            }
+            \Debugbar::info($this->form['transactions'][$field['path'][1]]['debit_account']);
+        } else {
+            \Debugbar::info($this->form['transactions'][$field['path'][1]]['credit_account']);
+        }
+    }
+
+    //function to update the checkbox, not really reliable, TODO: study a better way to control this objects using Alpine.JS
     public function updatedSelectedAll($selectedAllValue) {
         foreach ($this->items as $item) {
             $this->selected[$item->id] = $selectedAllValue;
         }
     }
-
     public function updatedSelected($value, $key) {
         $allSelected = true;
         foreach ($this->selected as $key => $value) {
@@ -54,6 +84,13 @@ class Transactions extends Component
 
         $this->accountRoles = config('dearbudget.accountRoles');
         $this->transactionTypes = config('dearbudget.transactionTypes');
+        $this->assetAccounts = Account::where('role','checkingAccount')
+        ->orWhere('role','walletCash')
+        ->orWhere('role','investmentAccount')
+        ->orWhere('role','creditCard')
+        ->get()->toJSON();
+        $this->expenseAccounts = Account::where('role','expenseAccount')->get()->toJSON();
+        $this->incomeAccounts = Account::where('role','incomeAccount')->get()->toJSON();
 
         $filter = [
             [
@@ -114,6 +151,7 @@ class Transactions extends Component
     public function new() {
         $this->resetInputFields();
         $this->isOpen = true;
+        $this->emit('editTransaction', $transactionJournalId = null);
     }
 
     private function resetInputFields() {
@@ -158,6 +196,7 @@ class Transactions extends Component
             }
         }
         $this->isOpen = true;
+        $this->emit('editTransaction', $transactionJournalId = $id);
     }
 
     public function delete($id)
