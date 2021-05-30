@@ -7,6 +7,7 @@
     <div x-show.transition="isOpen">
         @include('livewire.transactions.create')
     </div>
+</div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="self-center">
             <button wire:click="new()" 

@@ -120,34 +120,3 @@
 
     </div>
 </div>
-</div>
-<style>
-    [x-cloak] {
-        display: none !important;
-    }
-    .typeahead.input-group {
-        position: relative;
-    }
-    .tt-menu {
-        background-color: white;
-        margin: 5px;
-        padding: 5px;
-        z-index: 2002;
-        position: absolute;
-        width: 100%;
-        border-radius: 8px;
-        box-shadow: 0 5px 10px rgb(0 0 0 / 20%);
-    }
-    .tt-cursor, .tt-suggestion:hover {
-        background-color: aliceBlue;
-    }
-    .tt-suggestion {
-        padding-left: 10px;
-        cursor: pointer;
-    }
-
-    .twitter-typeahead {
-        width: 100%;
-        margin-right: 15px;
-    }
-</style>
