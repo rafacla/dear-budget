@@ -41,14 +41,14 @@ class Transactions extends Component
     public function updateField($field) {
         $path = &$this->form;
         $nestedPath = explode("-",$field['wiredTo']);
-        \Debugbar::info($nestedPath);
+
         foreach ($nestedPath as $value) {
             $path = &$path[$value];
         }
-        $path = Account::find($field['selectedAccount']['id']);
+        $path = $field['selectedAccount'] != null ? Account::find($field['selectedAccount']['id']) : null;
         //Wonderful: as we received user choice, now we've got to validate it, meaning:
         //1) Credit Account can't be equal to Debit Account
-        //2) If Credit Account = Income Acconunt, Debit Account can't be Expense Account or Vice-Versa (At least I guess)
+        //2) TODO: If Credit Account = Income Acconunt, Debit Account can't be Expense Account or Vice-Versa (At least I guess)
         if ($nestedPath[2] == 'credit_account') {
             if ($this->form['transactions'][$nestedPath[1]]['debit_account']['id'] == $path->id) {
                 $this->form['transactions'][$nestedPath[1]]['debit_account'] = null;

@@ -76,6 +76,7 @@
     "Income Accounts":"Contas de Receitas",
     "Expense Accounts":"Contas de Despesas",
     "Asset and Liability Accounts":"Contas de Ativos ou Passivos",
+    "Transfer":"Transferência",
     "Use this field whenever a transaction is meant to be taken in budget in a different month than when it happened":
         "Use este campo sempre que uma transação deve ser considerada no orçamento em um mês diferente de quando aconteceu",
     "Transaction Number":"Número da Transação",

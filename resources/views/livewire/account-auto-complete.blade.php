@@ -12,7 +12,7 @@
         wire:keydown.arrow-down.prevent="incrementHighlight"
     />
     @if (!empty($query) && $openSuggestions)
-        <div class="absolute z-10 list-group bg-white w-full rounded-t-none shadow-lg p-1">
+        <div class="absolute z-50 list-group bg-white w-full rounded-t-none h-44 shadow-lg p-1 text-sm overflow-y-scroll">
         @if (!empty($accounts))
             @if ($hasIncomeAccounts)
                 <div class="font-bold">{{__('Income Accounts')}}</div>

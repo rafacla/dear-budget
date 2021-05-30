@@ -49,7 +49,7 @@
                                     class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>
-                        <div class="w-3/4 px-2 divide-y">  
+                        <div class="w-3/4 px-2 divide-y">
                           <label class="block text-gray-700 text-sm font-bold mb-2">{{__('Transactions')}}:</label>
                           <table class="w-full" >
                             <thead>
@@ -62,35 +62,51 @@
                               @foreach ($form['transactions'] as $key => $item)
                                 <tr>
                                     <td>
-                                        @livewire('account-auto-complete', 
+                                        @livewire('account-auto-complete',
                                             [
-                                                'wiredTo' => 'transactions-'.$key.'-credit_account', 
-                                                'initialQuery' => $item['credit_account']['name'],
+                                                'wiredTo' => 'transactions-'.$key.'-credit_account',
+                                                'initialQuery' => $item['credit_account'] != null ? $item['credit_account']['name'] : '',
                                                 'showExpenseAccounts' => false
                                             ],
                                             key('transactions-'.$key.'-credit_account')
                                         )
                                     </td>
                                     <td>
-                                        <div id="custom-search-input">
-                                            <div class="input-group">
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Account Name" 
-                                                    id = "transactions-{{$key}}-debit_account"
-                                                    class="typeahead-debit shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                                    wire:model.lazy="form.transactions.{{$key}}.debit_account.name"
-                                                    autocomplete="off"/>
-                                            </div>
-                                        </div>
+                                        @livewire('account-auto-complete',
+                                            [
+                                                'wiredTo' => 'transactions-'.$key.'-debit_account',
+                                                'initialQuery' => $item['debit_account'] != null ? $item['debit_account']['name'] : '',
+                                                'showIncomeAccounts' => false
+                                            ],
+                                            key('transactions-'.$key.'-debit_account')
+                                        )
                                     </td>
                                     <td>
-                                        <input 
+                                        <input
                                             class="text-right shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                             type="number" step="0.01"
                                             wire:model="form.transactions.{{$key}}.amount">
                                     </td>
-                                    <td>{{($item['subcategory'] != null ? $item['subcategory']['name'] : '')}}</td>  
+                                    <td>
+                                        @if ($item['credit_account'] != null && $item['debit_account'] != null && $item['credit_account']['role'] != 'incomeAccount' && $item['debit_account']['role'] != 'expenseAccount')
+                                            <!-- this is a Transfer -->
+                                            <input
+                                                class="cursor-not-allowed bg-gray-50 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                                type="text"
+                                                value="{{__('Transfer')}}"
+                                                disabled>
+                                        @else
+                                            <!-- this is an Expense or an Income -->
+                                            @livewire('category-auto-complete',
+                                                [
+                                                    'wiredTo' => 'transactions-'.$key.'-subcategory',
+                                                    'initialQuery' => $item['subcategory'] != null ? $item['subcategory']['name']: '',
+                                                    'expenseCategories' => ($item['credit_account'] != null && $item['credit_account']['role']==='incomeAccount') ? false : true
+                                                ],
+                                                key('transactions-'.$key.'-subcategory')
+                                            )
+                                        @endif
+                                    </td>
                                 </tr>
                               @endforeach
                             </tbody>
