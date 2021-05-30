@@ -62,17 +62,7 @@
                               @foreach ($form['transactions'] as $key => $item)
                                 <tr>
                                     <td>
-                                        <div id="custom-search-input">
-                                            <div class="input-group">
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Account Name" 
-                                                    id = "transactions-{{$key}}-credit_account"
-                                                    class="typeahead-credit shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                                    wire:model.lazy="form.transactions.{{$key}}.credit_account.name"
-                                                    autocomplete="off"/>
-                                            </div>
-                                        </div>
+                                        @livewire('account-auto-complete', ['wiredTo' => 'transactions-{{$key}}-credit_account', 'initialQuery' => $item['credit_account']['name']])
                                     </td>
                                     <td>
                                         <div id="custom-search-input">
