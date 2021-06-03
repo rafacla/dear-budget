@@ -1,7 +1,7 @@
 <div class="relative">
     <input
         type="text"
-        placeholder="Category"
+        placeholder={{__('Category')}}
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         autocomplete="off"
         wire:model="query"
@@ -12,7 +12,7 @@
         wire:keydown.arrow-down.prevent="incrementHighlight"
     />
     @if (!empty($query) && $openSuggestions)
-        <div class="absolute z-50 list-group bg-white w-full rounded-t-none shadow-lg p-1 h-44 overflow-y-scroll text-sm">
+        <div class="absolute z-50 list-group bg-white w-full rounded-t-none shadow-lg p-1 max-h-44 overflow-y-scroll text-sm">
         @if (!empty($subcategories))
             @php
                 $lastCategoryName = '';

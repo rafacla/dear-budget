@@ -16,10 +16,10 @@ class CreateAccountsTable extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->foreignId('currency_id')->nullable()
                 ->constrained('currencies');
-            $table->string('number');
+            $table->string('number')->nullable();
             $table->string('role');
             $table->smallInteger('statementClosingDay')->nullable();
             $table->smallInteger('statementDueDay')->nullable();

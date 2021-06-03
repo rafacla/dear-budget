@@ -12,7 +12,7 @@ use App\Models\Transaction;
 
 class Accounts extends Component
 {
-    public $modelClass = Account::Class;
+    public $modelClass = Account::class;
     public $itemClassName = 'Account';
     public $accountFilter = 'assetLiabilityAccount';
     public $transactionTypes;
@@ -61,7 +61,7 @@ class Accounts extends Component
             {
                 $this->items = Auth::user()->accounts->where('role','=','expenseAccount');
             }
-        else 
+        else
             {
                 $this->items = Auth::user()->accounts->where('role','=','incomeAccount');
             }
@@ -72,14 +72,14 @@ class Accounts extends Component
     {
         $this->resetInputFields();
         $this->openModal();
-        $this->itemID = ''; 
+        $this->itemID = '';
         $this->openingBalanceTransactionId = '';
         $this->form['openingbalance'] = number_format(0,2,".","");
         $this->form['openingbalancedate'] = Date('Y-m-d');
         $this->form['currency_id'] = $this->currencies[0]->id;
         $this->form['role'] = array_keys($this->accountRoles)[0];
     }
-  
+
     public function openModal()
     {
         $this->isOpen = true;
@@ -89,7 +89,7 @@ class Accounts extends Component
     {
         $this->isOpen = false;
     }
-  
+
     private function resetInputFields(){
         foreach ($this->form as $key => $value) {
             $this->form[$key] = '';
@@ -115,6 +115,8 @@ class Accounts extends Component
         ];
     }
 
+
+
     public function store()
     {
         $this->validate([
@@ -126,9 +128,9 @@ class Accounts extends Component
             'form.openingbalance'       =>  'required',
             'form.openingbalancedate'   =>  'required|date'
         ]);
-        
+
         $this->form['user_id'] = Auth::user()->id;
-        
+
         if (!is_numeric($this->form['statementClosingDay']))
             $this->form['statementClosingDay'] = null;
         if (!is_numeric($this->form['statementDueDay']))
@@ -154,9 +156,9 @@ class Accounts extends Component
             TransactionsJournal::updateOrCreate(['id' => $transaction->transactionsJournal->id],['date' => $this->form['openingbalancedate']]);
             Transaction::updateOrCreate(['id' => $transaction->id],['amount' => $this->form['openingbalance']]);
         }
-        session()->flash('message', 
+        session()->flash('message',
             $this->itemID ? __($this->itemClassName.' updated successfully.') : __($this->itemClassName.' created Successfully.'));
-  
+
         $this->closeModal();
         $this->resetInputFields();
     }
@@ -182,7 +184,7 @@ class Accounts extends Component
             $this->form['openingbalance'] = 0;
             $this->form['openingbalancedate'] = date('Y-m-d');
         }
-        
+
         $this->openModal();
     }
 

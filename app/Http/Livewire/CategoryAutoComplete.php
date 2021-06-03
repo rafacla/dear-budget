@@ -10,7 +10,7 @@ class CategoryAutoComplete extends Component
     public $initialQuery;
     public $query;
     public $subcategories;
-    public $expenseCategories = true;
+    public $expenseCategories;
     public $highlightIndex;
     public $openSuggestions;
     public $wiredTo;
@@ -46,10 +46,13 @@ class CategoryAutoComplete extends Component
             $selectedItem = $this->highlightIndex;
         }
         $subcategory = $this->subcategories[$selectedItem] ?? null;
-        if ($subcategory != null)
+        if ($this->openSuggestions == false || empty($this->accounts) || $this->query == '') {
+            $this->emit('selectedSubcategory', ['wiredTo' => $this->wiredTo, 'selectedSubcategory' => null]);
+        } elseif ($subcategory != null) {
             $this->query = $subcategory['name'];
+            $this->emit('selectedSubcategory', ['wiredTo' => $this->wiredTo, 'selectedSubcategory' => $subcategory]);
+        }
         $this->openSuggestions = false;
-        //$this->emit('selectedSubcategory', ['wiredTo' => $this->wiredTo, 'selectedSubcategory' => $subcategory]);
     }
 
     public function mount() {

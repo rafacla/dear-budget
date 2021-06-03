@@ -77,6 +77,11 @@
     "Expense Accounts":"Contas de Despesas",
     "Asset and Liability Accounts":"Contas de Ativos ou Passivos",
     "Transfer":"Transferência",
+    "Add Split Transaction":"Adicionar Subtransação",
+    "You can't have a transaction that transfers money from an income account to an expense account":
+        "Você não pode ter uma transação que transfere dinheiro de uma conta de receitas para uma de despesas",
+    "You have to define a debit account for all transactions":"Você deve definir uma conta de destino para todas transações",
+    "You have to define a credit account for all transactions":"Você deve definir uma conta de origem para todas transações",
     "Use this field whenever a transaction is meant to be taken in budget in a different month than when it happened":
         "Use este campo sempre que uma transação deve ser considerada no orçamento em um mês diferente de quando aconteceu",
     "Transaction Number":"Número da Transação",

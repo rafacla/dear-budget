@@ -1,7 +1,7 @@
 <div class="relative">
     <input
         type="text"
-        placeholder="Account Name"
+        placeholder={{__('Account Name')}}
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         autocomplete="off"
         wire:model="query"
@@ -12,7 +12,7 @@
         wire:keydown.arrow-down.prevent="incrementHighlight"
     />
     @if (!empty($query) && $openSuggestions)
-        <div class="absolute z-50 list-group bg-white w-full rounded-t-none h-44 shadow-lg p-1 text-sm overflow-y-scroll">
+        <div class="absolute z-50 list-group bg-white w-full rounded-t-none min-h-2 max-h-44 shadow-lg p-1 text-sm overflow-y-scroll">
         @if (!empty($accounts))
             @if ($hasIncomeAccounts)
                 <div class="font-bold">{{__('Income Accounts')}}</div>

@@ -23,9 +23,9 @@ class AccountAutoComplete extends Component
         $this->accounts = [];
         $this->highlightIndex = 0;
         $this->openSuggestions = false;
-        $this->hasAssetAndLiabiliyAccounts = false;
-        $this->hasExpenseAccounts = false;
-        $this->hasIncomeAccounts = false;
+        $this->hasAssetAndLiabiliyAccounts;
+        $this->hasExpenseAccounts;
+        $this->hasIncomeAccounts;
     }
 
     public function incrementHighlight() {
@@ -47,10 +47,16 @@ class AccountAutoComplete extends Component
             $selectedItem = $this->highlightIndex;
         }
         $account = $this->accounts[$selectedItem] ?? null;
-        if ($account != null)
+
+        if ($this->openSuggestions == true && (empty($this->accounts) || $this->query == '')) {
+            $this->emit('selectedAccount', ['wiredTo' => $this->wiredTo, 'selectedAccount' => null, 'query'=> $this->query]);
+        }
+        elseif ($account != null) {
             $this->query = $account['name'];
+            $this->emit('selectedAccount', ['wiredTo' => $this->wiredTo, 'selectedAccount' => $account, 'query'=> $this->query]);
+        }
         $this->openSuggestions = false;
-        $this->emit('selectedAccount', ['wiredTo' => $this->wiredTo, 'selectedAccount' => $account]);
+
     }
 
     public function mount() {
@@ -71,20 +77,25 @@ class AccountAutoComplete extends Component
             ->get()
             ->toArray();
         $this->openSuggestions = true;
+        foreach ($this->accounts as $account) {
+            if ($account['role'] == 'expenseAccount') {
+                $this->hasExpenseAccounts = true;
+            } elseif ($account['role'] == 'incomeAccount') {
+                $this->hasIncomeAccounts = true;
+            } else {
+                $this->hasAssetAndLiabiliyAccounts = true;
+            }
+        }
         usort($this->accounts, function ($a, $b) {
             if ($a['role'] == 'expenseAccount' || $a['role'] == 'incomeAccount') {
-                if ($a['role'] == 'incomeAccount' || $b['role'] == 'incomeAccount')
-                    $this->hasIncomeAccounts = true;
-                if ($a['role'] == 'expenseAccount' || $b['role'] == 'expenseAccount')
-                    $this->hasExpenseAccounts = true;
                 if ($b['role'] == 'expenseAccount' || $b['role'] == 'incomeAccount') {
                     return 0;
                 } else {
                     return -1;
                 }
+            } else {
+                return 1;
             }
-            $this->hasAssetAndLiabiliyAccounts = true;
-            return 1;
         });
     }
 
