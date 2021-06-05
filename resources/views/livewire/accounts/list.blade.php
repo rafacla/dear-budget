@@ -28,7 +28,7 @@
                         <option value="incomeAccount">{{__('Income accounts')}}</option>
                     </select>
                 </div>
-            </div>            
+            </div>
             @if($isOpen)
                 @include('livewire.accounts.create')
             @endif
@@ -49,8 +49,8 @@
                         <td class="border px-4 py-0.5 text-sm">{{ $item->name }}</td>
                         <td class="border px-4 py-0.5 text-sm">{{ __($accountRoles[$item->role]['name']) }}</td>
                         <td class="border px-2 py-0.5 text-sm">{{ $item->number }}</td>
-                        <td class="border px-4 py-0.5 text-sm"></td>
-                        <td class="border px-4 py-0.5 text-sm"></td>
+                        <td class="border px-4 py-0.5 text-sm text-right">{{ number_format($item->balance(), 2) }}</td>
+                        <td class="border px-4 py-0.5 text-sm text-center">{{ $item->lastTransactionDate() }}</td>
                         <td class="border px-4 py-0.5 text-sm" style="text-align: right;">
                             <button wire:click="edit({{ $item->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-0.5 px-1 rounded">{{__('Edit')}}</button>
                             <button wire:click="delete({{ $item->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-0.5 px-1 rounded">{{__('Delete')}}</button>
