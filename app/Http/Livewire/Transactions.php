@@ -67,12 +67,14 @@ class Transactions extends Component
                     $this->form['transactions'][$nestedPath[1]]['debit_account']['id'] == $path->id) {
                 $this->form['transactions'][$nestedPath[1]]['debit_account'] = null;
                 $this->form['transactions'][$nestedPath[1]]['debit_account_name'] = '';
+                $this->emit('updatedSelectedAccount', ['nestedPath' => $nestedPath[0] . '-' . $nestedPath[1] . '-debit_account' , 'value' => null]);
             }
         } else {
             if ($this->form['transactions'][$nestedPath[1]]['credit_account'] != null && $path != null &&
                     $this->form['transactions'][$nestedPath[1]]['credit_account']['id'] == $path->id) {
                 $this->form['transactions'][$nestedPath[1]]['credit_account'] = null;
                 $this->form['transactions'][$nestedPath[1]]['credit_account_name'] = '';
+                $this->emit('updatedSelectedAccount', ['nestedPath' => $nestedPath[0] . '-' . $nestedPath[1] . '-credit_account' , 'value' => null]);
             }
         }
     }

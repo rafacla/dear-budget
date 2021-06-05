@@ -7,6 +7,10 @@ use App\Models\Account;
 
 class AccountAutoComplete extends Component
 {
+    protected $listeners = [
+        'updatedSelectedAccount' => 'updatedSelectedAccount'
+    ];
+
     public $initialQuery;
     public $query;
     public $accounts;
@@ -18,6 +22,7 @@ class AccountAutoComplete extends Component
     public $hasIncomeAccounts;
     public $hasExpenseAccounts;
     public $hasAssetAndLiabiliyAccounts;
+
     public function resetTo() {
         $this->query = $this->initialQuery;
         $this->accounts = [];
@@ -97,6 +102,12 @@ class AccountAutoComplete extends Component
                 return 1;
             }
         });
+    }
+
+    public function updatedSelectedAccount($field) {
+        if ($field['nestedPath'] == $this->wiredTo) {
+            $this->query = $field['value'];
+        }
     }
 
     public function render()

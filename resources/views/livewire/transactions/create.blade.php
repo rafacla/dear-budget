@@ -69,7 +69,6 @@
                                     @foreach ($form['transactions'] as $key => $item)
                                         <tr>
                                             <td>
-                                                {{$item['credit_account'] != null ? $item['credit_account']['name'] : ''}}
                                                 @livewire('account-auto-complete',
                                                 [
                                                 'wiredTo' => 'transactions-'.$key.'-credit_account',
@@ -81,9 +80,6 @@
                                                 )
                                             </td>
                                             <td>
-                                                {{$item['debit_account'] != null ? $item['debit_account']['name'] : ''}}
-                                                {{($item != null && $item['debit_account'] != null) ?
-                                                $item['debit_account']['name'] : ''}}
                                                 @livewire('account-auto-complete',
                                                 [
                                                 'wiredTo' => 'transactions-'.$key.'-debit_account',
@@ -112,7 +108,6 @@
                                                             $expenseCategories = 1;
                                                         }
                                                     }
-
                                                 @endphp
                                                 @if ($item != null && $item['credit_account'] != null && $item['debit_account'] != null && $item['credit_account']['role'] != 'incomeAccount' && $item['debit_account']['role'] != 'expenseAccount')
                                                     <!-- this is a Transfer -->
@@ -121,6 +116,8 @@
                                                         type="text" value="{{ __('Transfer') }}" disabled>
                                                 @else
                                                     <!-- this is an Expense or an Income -->
+                                                    {{(($item != null && $item['subcategory'] != null) ?
+                                                                    $item['subcategory']['name']: '')}}
                                                     @livewire('category-auto-complete',
                                                     [
                                                     'wiredTo' => 'transactions-'.$key.'-subcategory',
