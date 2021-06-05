@@ -46,9 +46,7 @@ class CategoryAutoComplete extends Component
             $selectedItem = $this->highlightIndex;
         }
         $subcategory = $this->subcategories[$selectedItem] ?? null;
-        if ($this->openSuggestions == false || empty($this->accounts) || $this->query == '') {
-            $this->emit('selectedSubcategory', ['wiredTo' => $this->wiredTo, 'selectedSubcategory' => null]);
-        } elseif ($subcategory != null) {
+        if ($subcategory != null) {
             $this->query = $subcategory['name'];
             $this->emit('selectedSubcategory', ['wiredTo' => $this->wiredTo, 'selectedSubcategory' => $subcategory]);
         }

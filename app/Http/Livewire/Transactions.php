@@ -205,19 +205,57 @@ class Transactions extends Component
                     ]);
 
                     //it doesn't exist yet:
-                    $transactionJournal = TransactionsJournal::create([
+                    $subTransactionJournal = TransactionsJournal::create([
                         'user_id'   => Auth::user()->id,
                         'date' => $this->form['date'],
                         'description' => __('Opening Balance')
                     ]);
-                    $updatedTransaction['credit_account'] = Transaction::create([
+                    Transaction::create([
                         'debit_account_id' => $account->id,
                         'type' => array_search('initialBalance',array_column($this->transactionTypes,'type')),
-                        'transactions_journal_id' => $transactionJournal->id,
+                        'transactions_journal_id' => $subTransactionJournal->id,
                         'amount' => 0
                     ]);
+                    $updatedTransaction['credit_account'] = $account;
                 }
-                Transaction::updateOrCreate(['id' => $updatedTransaction['id']], $updatedTransaction);
+                if ($updatedTransaction['debit_account'] == null && $updatedTransaction['debit_account_name'] != null) {
+                    $currencies = Currency::where('active', 1)->orderBy('default', 'DESC')->get();
+                    $account = Account::create([
+                        'name'       => $updatedTransaction['debit_account_name'],
+                        'role'       => 'expenseAccount',
+                        'curreny_id' => $currencies[0]->id,
+                        'user_id'    => Auth::user()->id
+                    ]);
+
+                    //it doesn't exist yet:
+                    $subTransactionJournal = TransactionsJournal::create([
+                        'user_id'   => Auth::user()->id,
+                        'date' => $this->form['date'],
+                        'description' => __('Opening Balance')
+                    ]);
+                    Transaction::create([
+                        'debit_account_id' => $account->id,
+                        'type' => array_search('initialBalance',array_column($this->transactionTypes,'type')),
+                        'transactions_journal_id' => $subTransactionJournal->id,
+                        'amount' => 0
+                    ]);
+                    $updatedTransaction['debit_account'] = $account;
+                }
+                $updatedTransaction['transactions_journal_id'] = $transactionJournal->id;
+
+                if ($updatedTransaction['credit_account']['role'] == 'incomeAccount') {
+                    $updatedTransaction['type'] = array_search('income',array_column($this->transactionTypes,'type'));
+                } elseif ($updatedTransaction['debit_account']['role'] == 'expenseAccount') {
+                    $updatedTransaction['type'] = array_search('expense',array_column($this->transactionTypes,'type'));
+                } else {
+                    $updatedTransaction['type'] = array_search('transfer',array_column($this->transactionTypes,'type'));
+                }
+                $updatedTransaction['credit_account_id'] = $updatedTransaction['credit_account']['id'];
+                $updatedTransaction['debit_account_id'] = $updatedTransaction['debit_account']['id'];
+                if ($updatedTransaction['subcategory'] != null) {
+                    $updatedTransaction['subcategory_id'] = $updatedTransaction['subcategory']['id'];
+                }
+                Transaction::updateOrCreate(['id' => $updatedTransaction['id'] ?? null], $updatedTransaction);
             }
 
             session()->flash('message',
@@ -231,6 +269,7 @@ class Transactions extends Component
     public function closeModal() {
         $this->isOpen = false;
     }
+
     public function new() {
         $this->resetInputFields();
         $this->isOpen = true;
@@ -260,8 +299,7 @@ class Transactions extends Component
 
     }
 
-    public function edit($id)
-    {
+    public function edit($id) {
         $this->transactionsValidation = '';
         $item = $this->modelClass::findOrFail($id);
         $this->itemID = $id;
@@ -304,10 +342,24 @@ class Transactions extends Component
         unset($this->form['transactions'][$id]);
     }
 
-    public function delete($id)
-    {
+    public function delete($id) {
         $this->modelClass::find($id)->delete();
         session()->flash('message', $this->itemClassName.' deleted successfully.');
     }
 
+    public function deleteSelected() {
+        foreach ($this->items as $value) {
+            if ($this->selected[$value['id']]) {
+                $allowed = true;
+                foreach ($value['transactions'] as $transaction) {
+                    if ($transaction['type'] == array_search('initialBalance',array_column($this->transactionTypes,'type'))) {
+                        $allowed = false;
+                    }
+                }
+                if ($allowed) {
+                    $this->delete($value['id']);
+                }
+            }
+        }
+    }
 }

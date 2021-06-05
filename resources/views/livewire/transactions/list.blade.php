@@ -10,10 +10,18 @@
 </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="self-center">
-            <button wire:click="new()" 
+            <button wire:click="new()"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
                 {{__('Create New Transaction')}}
             </button>
+            @if (count(array_filter($selected, function($item) {
+                return $item;
+            })) > 0)
+            <button wire:click="deleteSelected()"
+                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded my-3">
+                {{__('Delete Selected Transactions')}}
+            </button>
+            @endif
         </div>
         <div class="w-full -mt-12 text-right">
             <a href="{{route('transaction.date',['year' => date("Y",$currentDate), 'month'=>(date("m",$currentDate)-1)])}}">
@@ -47,19 +55,33 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $noTransactions = true;
+                    @endphp
                     @foreach($items as $item)
-                    @if (sizeof($item->transactions)>0)
-                    <tr 
-                        class="border hover:bg-blue-50 
+                    @if (sizeof($item->transactions)>0 && $item->deleted_at == null
+                        && ($transactionTypes[$item->transactions->first()->type]['type']!='initialBalance'
+                            || ($item->transactions->first()->debitAccount != null
+                                && ($item->transactions->first()->debitAccount->role != 'incomeAccount'
+                                    && $item->transactions->first()->debitAccount->role != 'expenseAccount')
+                                )
+                            )
+                        )
+                    @php
+
+                        $noTransactions = false;
+                    @endphp
+                    <tr
+                        class="border hover:bg-blue-50
                             {{ ($transactionTypes[$item->transactions->first()->type]['type']=='initialBalance') ? 'cursor-not-allowed' : 'cursor-pointer' }}
-                        " 
+                        "
                         @if($transactionTypes[$item->transactions->first()->type]['type']=='initialBalance')
                             {{Popper::delay(500,0)->pop(__('To edit this initial balance transaction, please edit the account.'))}}
                         @else
                             wire:click="edit({{ $item->id }})")
                         @endif
                         >
-                        <td class="px-1 py-0.5 text-xs"><input type="checkbox" wire:model="selected.{{$item->id}}"></td>
+                        <td class="px-1 py-0.5 text-xs" onclick="event.cancelBubble=true;"><input type="checkbox" wire:model="selected.{{$item->id}}"></td>
                         <td class="px-2 py-1 text-xs">{{ $item->date }}</td>
                         <td class="px-4 py-1 text-xs">{{ $item->description }}</td>
                         <td class="px-2 py-1 text-xs">
@@ -96,12 +118,12 @@
                         <td class="px-2 py-1 text-xs">
                             @if ($item->transactions->first()->creditAccount != null)
                             <span @popper(
-                                {{sizeof($item->transactions) == 1 ? 
+                                {{sizeof($item->transactions) == 1 ?
                                     __($accountRoles[$item->transactions->first()->creditAccount->role]['name']) :
                                     __('This transaction has been splitted, it has more than one account assigned.')
                                 }})>
-                                {{sizeof($item->transactions) == 1 ? 
-                                    ($accountRoles[$item->transactions->first()->creditAccount->role]['icon'] . $item->transactions->first()->creditAccount->name) : 
+                                {{sizeof($item->transactions) == 1 ?
+                                    ($accountRoles[$item->transactions->first()->creditAccount->role]['icon'] . $item->transactions->first()->creditAccount->name) :
                                     __('Multiple Accounts')}}
                             </span>
                             @endif
@@ -109,12 +131,12 @@
                         <td class="px-2 py-1 text-xs">
                             @if ($item->transactions->first()->debitAccount != null)
                             <span @popper(
-                                {{sizeof($item->transactions) == 1 ? 
+                                {{sizeof($item->transactions) == 1 ?
                                     __($accountRoles[$item->transactions->first()->debitAccount->role]['name']) :
                                     __('This transaction has been splitted, it has more than one account assigned.')
                                 }})>
-                                {{sizeof($item->transactions) == 1 ? 
-                                ($accountRoles[$item->transactions->first()->debitAccount->role]['icon'] . $item->transactions->first()->debitAccount->name) : 
+                                {{sizeof($item->transactions) == 1 ?
+                                ($accountRoles[$item->transactions->first()->debitAccount->role]['icon'] . $item->transactions->first()->debitAccount->name) :
                                 __('Multiple Accounts')}}
                             </span>
                             @endif
@@ -131,9 +153,9 @@
                     </tr>
                     @endif
                     @endforeach
-                    @if (sizeof($items)==0)
+                    @if ($noTransactions)
                     <tr class="border">
-                        <td colspan="6" class="px-2">
+                        <td colspan="7" class="px-2">
                             {{__('No items found to show')}}
                         </td>
                     </tr>

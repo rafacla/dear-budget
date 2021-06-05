@@ -98,14 +98,14 @@
                                             </td>
                                             <td>
                                                 @php
-                                                    $expenseCategories = 0;
+                                                    $expenseCategories = true;
                                                     if ($item['credit_account'] != null) {
                                                         if ($item['credit_account']['role'] == 'incomeAccount') {
-                                                            $expenseCategories = 1;
+                                                            $expenseCategories = false;
                                                         }
                                                     } else {
                                                         if ($item['credit_account_name'] != '' && $item['credit_account_name'] != null) {
-                                                            $expenseCategories = 1;
+                                                            $expenseCategories = false;
                                                         }
                                                     }
                                                 @endphp
@@ -116,17 +116,27 @@
                                                         type="text" value="{{ __('Transfer') }}" disabled>
                                                 @else
                                                     <!-- this is an Expense or an Income -->
-                                                    {{(($item != null && $item['subcategory'] != null) ?
-                                                                    $item['subcategory']['name']: '')}}
+                                                    @if ($expenseCategories)
                                                     @livewire('category-auto-complete',
                                                     [
                                                     'wiredTo' => 'transactions-'.$key.'-subcategory',
                                                     'initialQuery' => (($item != null && $item['subcategory'] != null) ?
                                                                     $item['subcategory']['name']: ''),
-                                                    'expenseCategories' => $expenseCategories
+                                                    'expenseCategories' => true
                                                     ],
-                                                    key('transactions-'.$key.'-subcategory')
+                                                    key('transactions-'.$key.'-subcategory-debit')
                                                     )
+                                                    @else
+                                                    @livewire('category-auto-complete',
+                                                    [
+                                                    'wiredTo' => 'transactions-'.$key.'-subcategory',
+                                                    'initialQuery' => (($item != null && $item['subcategory'] != null) ?
+                                                                    $item['subcategory']['name']: ''),
+                                                    'expenseCategories' => false
+                                                    ],
+                                                    key('transactions-'.$key.'-subcategory-credit')
+                                                    )
+                                                    @endif
                                                 @endif
                                             </td>
                                             <td>
