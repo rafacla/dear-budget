@@ -19,19 +19,19 @@ class Account extends Model
     public function balance() {
         $balance = 0;
         $credits = $this->hasMany(Transaction::class, 'credit_account_id', 'id')->where('deleted_at', null)->get()->toArray();
-        $debits = $this->hasMany(Transaction::class, 'id', 'credit_account_id')->where('deleted_at', null)->get()->toArray();
+        $debits = $this->hasMany(Transaction::class, 'debit_account_id', 'id')->where('deleted_at', null)->get()->toArray();
         foreach ($credits as $key => $value) {
             $balance -= $value['amount'];
         }
         foreach ($debits as $key => $value) {
-            $balance -= $value['amount'];
+            $balance += $value['amount'];
         }
         return $balance;
     }
 
     public function lastTransactionDate() {
         $credits = $this->hasMany(Transaction::class, 'credit_account_id', 'id')->where('deleted_at', null)->with('transactionsJournal')->get()->toArray();
-        $debits = $this->hasMany(Transaction::class, 'id', 'credit_account_id')->where('deleted_at', null)->with('transactionsJournal')->get()->toArray();
+        $debits = $this->hasMany(Transaction::class, 'debit_account_id', 'id')->where('deleted_at', null)->with('transactionsJournal')->get()->toArray();
         $creditDates = array_column(array_column($credits,'transactions_journal'),'date');
         $debitDates = array_column(array_column($debits,'transactions_journal'),'date');
         $dates = array_merge($creditDates, $debitDates);
