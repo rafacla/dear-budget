@@ -156,13 +156,6 @@ class Budgets extends Component
 
         $this->items = Auth::user()->categories->where('expense',true);
 
-        // foreach ($this->items as $item) {
-        //     foreach ($item->subcategories as $subcategory) {
-        //         $budgetValue = $subcategory->budgets($this->currentDate->format('Y-m-1'))->first()->budget_value ?? 0;
-        //         $this->budgets[$subcategory->id] = number_format($budgetValue,2,'.','');
-        //         $this->available[$subcategory->id] = number_format($budgetValue,2,'.','');
-        //     }
-        // }
         $this->toBudget = $this->incomeCumulative - $this->budgetedCumulative - $this->overspentCumulative;
     }
 
@@ -174,7 +167,7 @@ class Budgets extends Component
     {
         $this->modelClass::updateOrCreate(['date' => $this->currentDate->format('Y-m-1'), 'subcategory_id' => $name, 'user_id' => Auth::user()->id],
          ['budget_value' => $value]);
-        $this->mount();
+        $this->mount($this->currentDate->format('Y'), $this->currentDate->format('m'));
     }
 
     public function store()
