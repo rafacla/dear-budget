@@ -26,15 +26,15 @@
                             <td class="py-0 text-sm text-left italic">{{__('Budgeted this Month')}}</td>
                         </tr>
                     </table>
-                </div> 
+                </div>
             </div>
         </div>
         <div class="w-full -mt-12 text-right">
-            <a href="{{route('budget.date',['year' => date("Y",$currentDate), 'month'=>(date("m",$currentDate)-1)])}}">
+            <a href="{{route('budget.date',['year' => $currentDate->format('Y'), 'month'=>($currentDate->format('m')-1)])}}">
                 <i class="text-gray-700 text-2xl far fa-arrow-alt-circle-left"></i>
             </a>
-            <input class="text-gray-700 text-xl w-36 outline-none bg-transparent border-none" type="text" value="{{date('M-Y',$currentDate)}}" disabled>
-            <a href="{{route('budget.date',['year' => date("Y",$currentDate), 'month'=>(date("m",$currentDate)+1)])}}">
+            <input class="text-gray-700 text-xl w-36 outline-none bg-transparent border-none" type="text" value="{{$currentDate->format('M-Y')}}" disabled>
+            <a href="{{route('budget.date',['year' => $currentDate->format('Y'), 'month'=>($currentDate->format('m')+1)])}}">
                 <i class="text-gray-700 text-2xl far fa-arrow-alt-circle-right"></i>
             </a>
         </div>
@@ -58,9 +58,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     @foreach($items as $item)
-                    <?php 
+                    <?php
                         $sumOfSubcategoriesBudget = 0;
                         foreach ($item->subcategories as $value) {
                             $sumOfSubcategoriesBudget += $budgets[$value->id];
@@ -69,25 +69,25 @@
                     <tr class="border bg-blue-50">
                         <td class="px-2 py-1 text-sm font-bold">{{ $item->name }}</td>
                         <td class="px-4 py-1 text-sm font-bold">
-                            <input type="number" step=".01" value="{{number_format($sumOfSubcategoriesBudget,2,".","")}}" 
+                            <input type="number" step=".01" value="{{number_format($sumOfSubcategoriesBudget,2,".","")}}"
                                     class="appearance-none border-none rounded w-full px-3 text-blue-800 bg-blue-50 text-right leading-tight focus:outline-none focus:shadow-outline" disabled>
                         </td>
                         <td class="px-2 py-1 text-sm font-bold">
-                            
+
                         </td>
                         <td class="px-2 py-1 text-sm font-bold">
-                            
+
                         </td>
                     </tr>
                         @foreach($item->subcategories as $subcategory)
                         <tr class="border">
                             <td class="px-8 py-1 text-sm"> {{ $subcategory->name }}</td>
                             <td class="px-4 py-1 text-sm">
-                                <input type="number" step=".01" wire:model.lazy="budgets.{{$subcategory->id}}" 
+                                <input type="number" step=".01" wire:model.lazy="budgets.{{$subcategory->id}}"
                                     class="{{$budgets[$subcategory->id] == 0 ? 'text-gray-200' : 'text-gray-700'}} focus:text-blue-700 appearance-none border-none rounded w-full px-3 text-right leading-tight focus:outline-none focus:shadow-outline">
                             </td>
                             <td class="px-2 py-1 text-sm" style="text-align: right;">
-
+                                {{number_format($transactions[$subcategory->id] ?? 0,2)}}
                             </td>
                             <td class="px-2 py-1 text-sm" style="text-align: right;">
                                 <div class="inline-block px-2 py-1 rounded-full text-sm  {{$available[$subcategory->id] > 0 ? 'bg-green-500 text-white' : ($available[$subcategory->id] < 0 ? 'bg-red-500 text-white' : 'bg-gray-300 text-gray-700')}}">
@@ -102,16 +102,3 @@
         </div>
     </div>
 </div>
-<script>
-    $(function() {
-        $('#datepicker').datepicker( {
-            changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true,
-            dateFormat: 'MM yy',
-            onClose: function(dateText, inst) { 
-                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
-            }
-        });
-    });
-</script>

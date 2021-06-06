@@ -60,10 +60,10 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    /* 
+    /*
     * Get all categories from given user
     */
-    public function categories() 
+    public function categories()
     {
         return $this->hasMany(Category::class, 'user_id', 'id')->orderBy('order');
     }
@@ -76,10 +76,13 @@ class User extends Authenticatable
         return $this->hasMany(Account::class, 'user_id', 'id')->orderBy('name');
     }
 
-    public function budgets($date)
+    public function budgets($date = null, $cumulative = false)
     {
-        return $this->hasMany(Budget::class)
-            ->where('date',$date)->get();
+        if ($date == null)
+            return $this->hasMany(Budget::class);
+        else
+            return $this->hasMany(Budget::class)
+                ->where('date',($cumulative ? '<=' : '='), $date)->get();
     }
 
     public function transactionsJournals($filter = null) {
