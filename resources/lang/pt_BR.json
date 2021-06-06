@@ -7,6 +7,7 @@
     "Manage Transactions":"Gerenciar Transações",
     "Date":"Data",
     "Amount":"Valor",
+    "There are expenses without categories. This may mess your budget. Fix it.":"Há despesas sem categorias. Isso pode bagunçar seu orçamento. Arrume isso!",
     "Source Account":"Conta Origem",
     "Destination Account":"Conta Destino",
     "Category":"Categoria",

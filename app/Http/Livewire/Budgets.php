@@ -78,24 +78,75 @@ class Budgets extends Component
         //First we get all transactions up to today
         $this->getTransactions();
         //Then we get all the budgets on db
-        $cumulativeBudgets = Auth::user()->budgets($this->currentDate, true);
-        //Finally we discover when user first started budgeting
+        $this->databaseBudgets = Auth::user()->budgets($this->currentDate, true);
+        //Finally we've to discover when user first started budgeting
         //TODO: If user has been budgeting for 30 years, 300 transactions/30 budgets a month would it laggy this - should we check?
         //Meaning: 360 months and 10,800 transactions and 1,080 budgets - sounds fair?
         $dates = array_column(array_column($this->databaseTransactions,'transactions_journal'),'budget_date');
         $dates = array_merge($dates, array_column(array_column($this->databaseTransactions,'transactions_journal'),'date'));
-        $dates = array_merge($dates, array_column($cumulativeBudgets->toArray(),'date'));
+        $dates = array_merge($dates, array_column($this->databaseBudgets->toArray(),'date'));
         if (count($dates) > 0)
             $startDate = (new DateTime(min(array_filter($dates))));
         else
-            $startDate = (new DateTime('now'));
+            $startDate = (new DateTime('now')); //looks like there's no budget or transaction what so ever, there's nothing to calculate
 
         //Ok! We found our starting point, now the magic begins:
-
+        $loopDate = $startDate->modify('last day of this month');
+        while ($loopDate <= $this->currentDate) {
+            foreach ($this->databaseBudgets as $value) {
+                if ((new DateTime($value['date']))->format('Y-m-1') == $loopDate->format('Y-m-1')) {
+                    $this->available[$value['subcategory_id']]
+                        = ($this->available[$value['subcategory_id']] ?? 0) + $value['budget_value'];
+                    $this->budgetedCumulative
+                        = ($this->budgetedCumulative ?? 0) + $value['budget_value'];
+                    if ($loopDate == $this->currentDate) {
+                        $this->budgets[$value['subcategory_id']] = $value['budget_value'];
+                        $this->budgetedMonth = ($this->budgetedMonth ?? 0) + $value['budget_value'];
+                    }
+                }
+            }
+            foreach ($this->databaseTransactions as $value) {
+                $transactionDate = $value['transactions_journal']['budget_date'] ?? $value['transactions_journal']['date'];
+                if ((new DateTime($transactionDate))->format('Y-m-1') == $loopDate->format('Y-m-1')) {
+                    if ($value['type'] == array_search('expense',array_column($this->transactionTypes,'type'))) {
+                        $this->available[$value['subcategory_id']]
+                            = ($this->available[$value['subcategory_id']] ?? 0) - $value['amount'];
+                    }
+                }
+            }
+            //After looping all transactions on current month, let's check if there's no overspent category
+            //If there's any overspent and this is not the current month, we reset it and sum as overspent
+            //thus reducing amount available to budget:
+            foreach ($this->available as $key => $value) {
+                if ($value < 0) {
+                    if ($loopDate < $this->currentDate) {
+                        $this->overspentCumulative = ($this->overspentCumulative ?? 0) - $value;
+                        if ((new DateTime($loopDate->format('Y-m-d')))->modify('last day of next month')->format('Y-m-1') == $this->currentDate->format('Y-m-1')) {
+                            $this->overspentLMonth = ($this->overspentLMonth ?? 0) - $value;
+                        }
+                        $this->available[$key] = 0;
+                    }
+                }
+            }
+            $loopDate->modify('last day of next month');
+        }
+        //dd($this->budgets);
     }
 
     public function mount($year = null,$month = null) {
         $this->transactionTypes = config('dearbudget.transactionTypes');
+        $this->budgets = [];
+        $this->transactions = [];
+        $this->databaseBudgets = [];
+        $this->databaseTransactions = [];
+        $this->available = [];
+        $this->toBudget = 0;
+        $this->incomeCumulative = 0;
+        $this->incomeMonth = 0;
+        $this->overspentCumulative = 0;
+        $this->overspentLMonth = 0;
+        $this->budgetedCumulative = 0;
+        $this->budgetedMonth = 0;
         if ($year != null)
             $this->currentDate  = (new DateTime($year.'-'.$month.'-01'))->modify('last day of this month');
         else
@@ -105,13 +156,13 @@ class Budgets extends Component
 
         $this->items = Auth::user()->categories->where('expense',true);
 
-        foreach ($this->items as $item) {
-            foreach ($item->subcategories as $subcategory) {
-                $budgetValue = $subcategory->budgets($this->currentDate->format('Y-m-1'))->first()->budget_value ?? 0;
-                $this->budgets[$subcategory->id] = number_format($budgetValue,2,'.','');
-                $this->available[$subcategory->id] = number_format($budgetValue,2,'.','');
-            }
-        }
+        // foreach ($this->items as $item) {
+        //     foreach ($item->subcategories as $subcategory) {
+        //         $budgetValue = $subcategory->budgets($this->currentDate->format('Y-m-1'))->first()->budget_value ?? 0;
+        //         $this->budgets[$subcategory->id] = number_format($budgetValue,2,'.','');
+        //         $this->available[$subcategory->id] = number_format($budgetValue,2,'.','');
+        //     }
+        // }
         $this->toBudget = $this->incomeCumulative - $this->budgetedCumulative - $this->overspentCumulative;
     }
 
@@ -121,8 +172,9 @@ class Budgets extends Component
 
     public function updatedBudgets($value, $name)
     {
-        $this->modelClass::updateOrCreate(['date' => date('Y-m-1',$this->currentDate), 'subcategory_id' => $name, 'user_id' => Auth::user()->id],
+        $this->modelClass::updateOrCreate(['date' => $this->currentDate->format('Y-m-1'), 'subcategory_id' => $name, 'user_id' => Auth::user()->id],
          ['budget_value' => $value]);
+        $this->mount();
     }
 
     public function store()

@@ -38,6 +38,15 @@
                 <i class="text-gray-700 text-2xl far fa-arrow-alt-circle-right"></i>
             </a>
         </div>
+        @if (($available[null] ?? false) != null)
+        <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md my-3" role="alert">
+            <div class="flex">
+                <div>
+                <p class="text-sm">{{__('There are expenses without categories. This may mess your budget. Fix it.') }}</p>
+                </div>
+            </div>
+        </div>
+        @endif
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg px-4 py-4">
             @if (session()->has('message'))
                 <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
@@ -63,7 +72,7 @@
                     <?php
                         $sumOfSubcategoriesBudget = 0;
                         foreach ($item->subcategories as $value) {
-                            $sumOfSubcategoriesBudget += $budgets[$value->id];
+                            $sumOfSubcategoriesBudget += $budgets[$value->id] ?? 0;
                         }
                     ?>
                     <tr class="border bg-blue-50">
@@ -84,14 +93,14 @@
                             <td class="px-8 py-1 text-sm"> {{ $subcategory->name }}</td>
                             <td class="px-4 py-1 text-sm">
                                 <input type="number" step=".01" wire:model.lazy="budgets.{{$subcategory->id}}"
-                                    class="{{$budgets[$subcategory->id] == 0 ? 'text-gray-200' : 'text-gray-700'}} focus:text-blue-700 appearance-none border-none rounded w-full px-3 text-right leading-tight focus:outline-none focus:shadow-outline">
+                                    class="{{($budgets[$subcategory->id] ?? 0) == 0 ? 'text-gray-200' : 'text-gray-700'}} focus:text-blue-700 appearance-none border-none rounded w-full px-3 text-right leading-tight focus:outline-none focus:shadow-outline">
                             </td>
                             <td class="px-2 py-1 text-sm" style="text-align: right;">
                                 {{number_format($transactions[$subcategory->id] ?? 0,2)}}
                             </td>
                             <td class="px-2 py-1 text-sm" style="text-align: right;">
-                                <div class="inline-block px-2 py-1 rounded-full text-sm  {{$available[$subcategory->id] > 0 ? 'bg-green-500 text-white' : ($available[$subcategory->id] < 0 ? 'bg-red-500 text-white' : 'bg-gray-300 text-gray-700')}}">
-                                    {{$available[$subcategory->id]}}
+                                <div class="inline-block px-2 py-1 rounded-full text-sm  {{($available[$subcategory->id] ?? 0) > 0 ? 'bg-green-500 text-white' : (($available[$subcategory->id] ?? 0) < 0 ? 'bg-red-500 text-white' : 'bg-gray-300 text-gray-700')}}">
+                                    {{$available[$subcategory->id] ?? 0}}
                                 </div>
                             </td>
                         </tr>
