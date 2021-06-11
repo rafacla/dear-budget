@@ -4,7 +4,7 @@
         "title": "Dear Budget API",
         "description": "API Documentation",
         "contact": {
-            "email": "rafacla@github.com"
+            "email": "rafacla at github.com"
         },
         "license": {
             "name": "Apache 2.0",
@@ -15,7 +15,7 @@
     "servers": [
         {
             "url": "/api/",
-            "description": "Demo API Server"
+            "description": "Dear Budget API Server"
         }
     ],
     "paths": {
@@ -25,19 +25,44 @@
                     "Accounts"
                 ],
                 "summary": "Get list of user accounts",
-                "description": "Returns list of accounts",
-                "operationId": "getAccountsList",
+                "operationId": "App\\Http\\Controllers\\api\\AccountController::index",
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "403": {
-                        "description": "Forbidden"
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Accounts"
+                ],
+                "summary": "Create a new account",
+                "operationId": "App\\Http\\Controllers\\api\\AccountController::store",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
             }
         }
     },
@@ -47,6 +72,16 @@
             "description": "API Endpoints of Accounts"
         }
     ],
+    "components": {
+        "securitySchemes": {
+            "bearer_token": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
     "security": [
         []
     ]

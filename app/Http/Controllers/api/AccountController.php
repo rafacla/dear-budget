@@ -14,25 +14,17 @@ use Illuminate\Support\Facades\Validator;
 
 class AccountController extends Controller
 {
-        /**
+    /**
      * @OA\Get(
      *      path="/accounts",
-     *      operationId="getAccountsList",
      *      tags={"Accounts"},
      *      summary="Get list of user accounts",
-     *      description="Returns list of accounts",
+     *      security={{"bearer_token":{}}},
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
+     *          @OA\JsonContent()
      *       ),
-     *      @OA\Response(
-     *          response=401,
-     *          description="Unauthenticated",
-     *      ),
-     *      @OA\Response(
-     *          response=403,
-     *          description="Forbidden"
-     *      )
      *     )
      */
     public function index()
@@ -42,12 +34,25 @@ class AccountController extends Controller
         foreach ($accounts as $key => $value) {
             $transaction = Transaction::where('type',array_search('initialBalance',array_column($transactionTypes,'type')))
                 ->where('debit_account_id',$value->id)->get()->first();
-            $accounts[$key]['initial_balance_amount'] = $transaction->amount;
-            $accounts[$key]['initial_balance_date'] = $transaction->transactionsJournal->date;
+            $accounts[$key]['initial_balance_amount'] = $transaction->amount ?? 0;
+            $accounts[$key]['initial_balance_date'] = $transaction->transactionsJournal->date ?? 'not found';
         }
         return $accounts;
     }
 
+    /**
+     * @OA\Post(
+     *      path="/accounts",
+     *      tags={"Accounts"},
+     *      summary="Create a new account",
+     *      security={{"bearer_token":{}}},
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent()
+     *       ),
+     *     )
+     */
     public function store(Request $request)
     {
         $accountRoles = config('dearbudget.accountRoles');

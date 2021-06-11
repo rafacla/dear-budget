@@ -8,7 +8,7 @@ class Controller
      *      title="Dear Budget API",
      *      description="API Documentation",
      *      @OA\Contact(
-     *          email="rafacla@github.com"
+     *          email="rafacla at github.com"
      *      ),
      *      @OA\License(
      *          name="Apache 2.0",
@@ -18,9 +18,14 @@ class Controller
      *
      * @OA\Server(
      *      url="/api/",
-     *      description="Demo API Server"
+     *      description="Dear Budget API Server"
      * )
-
+     *
+     * @OAS\SecurityScheme(
+     *      securityScheme="bearer_token",
+     *      type="http",
+     *      scheme="bearer"
+     * )
      *
      * @OA\Tag(
      *     name="Accounts",
