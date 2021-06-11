@@ -14,6 +14,27 @@ use Illuminate\Support\Facades\Validator;
 
 class AccountController extends Controller
 {
+        /**
+     * @OA\Get(
+     *      path="/accounts",
+     *      operationId="getAccountsList",
+     *      tags={"Accounts"},
+     *      summary="Get list of user accounts",
+     *      description="Returns list of accounts",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *     )
+     */
     public function index()
     {
         $transactionTypes = config('dearbudget.transactionTypes');
