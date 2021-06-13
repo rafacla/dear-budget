@@ -44,7 +44,7 @@
                                     @popper({{ __('Use this field whenever a transaction is meant to be taken in budget in a different month than when it happened') }})
                                     class="block text-gray-700 text-sm font-bold mb-2 underline">{{ __('Budget Date') }}:
                                     ❔</label>
-                                <input type="text"
+                                <input type="date"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     placeholder="{{ __('Budget Date') }}" wire:model="form.budget_date">
                                 @error('form.budget_date') <span
