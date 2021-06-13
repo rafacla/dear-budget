@@ -59,7 +59,6 @@ class Budgets extends Component
             } elseif (
                 $value['type'] == array_search('income',array_column($this->transactionTypes,'type'))
                 || ($value['type'] == array_search('initialBalance',array_column($this->transactionTypes,'type'))
-                    && $value['amount'] > 0
                     )
                 ) {
                 $this->incomeCumulative += $value['amount'];
