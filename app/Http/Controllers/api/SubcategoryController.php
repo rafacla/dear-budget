@@ -29,7 +29,7 @@ class SubcategoryController extends Controller
     {
         $items = $this->itemClass::whereHas('category', function ($builder) {
             $builder->where('user_id', Auth::user()->id);
-        })->get();
+        })->with('category')->get();
         return $items;
     }
 
