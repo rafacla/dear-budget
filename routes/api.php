@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\AccountController;
+use App\Http\Controllers\api\CategoryController;
+use App\Http\Controllers\api\SubcategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +18,8 @@ use App\Http\Controllers\api\AccountController;
 */
 
 Route::apiResource('accounts', AccountController::class)->middleware('auth:sanctum');
+Route::apiResource('categories', CategoryController::class)->middleware('auth:sanctum');
+Route::apiResource('subcategories', SubcategoryController::class)->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

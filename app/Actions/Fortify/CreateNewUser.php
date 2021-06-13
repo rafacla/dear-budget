@@ -29,7 +29,7 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['required', 'accepted'] : '',
         ])->validate();
-        
+
         $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
@@ -39,7 +39,7 @@ class CreateNewUser implements CreatesNewUsers
 
         $category_order = 0;
         app()->setLocale($input['language']);
-        
+
         $category = Category::create([
             'name' => __('Monthly Expenses'),
             'expense' => true,
@@ -78,6 +78,8 @@ class CreateNewUser implements CreatesNewUsers
         $subcategory_order = 0;
         Subcategory::create(['name' => __('Vacation saving'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
         Subcategory::create(['name' => __('Saving for later expenses'), 'description' => '', 'order' => $subcategory_order++, 'category_id' => $category->id]);
+        //resets category order back to zero because now we are going to create income categories
+        $category_order = 0;
         $category = Category::create([
             'name' => __('Incomes'),
             'description' => __('Category for income transactions'),
