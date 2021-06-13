@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/rafacla/dear-budget">
-    <img src="public/assets/full-logo.png" alt="Logo">
+    <img src="public/assets/full-logo.png" alt="Logo" style="max-width:50%;">
   </a>
 
   <p align="center">

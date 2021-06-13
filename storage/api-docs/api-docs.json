@@ -631,6 +631,255 @@
                     }
                 ]
             }
+        },
+        "/transactions": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Get list of transactions",
+                "operationId": "App\\Http\\Controllers\\api\\TransactionController::index",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Create a new transaction",
+                "operationId": "App\\Http\\Controllers\\api\\TransactionController::store",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "date",
+                                    "description"
+                                ],
+                                "properties": {
+                                    "date": {
+                                        "type": "date"
+                                    },
+                                    "budget_date": {
+                                        "type": "date"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "transaction_number": {
+                                        "type": "string"
+                                    },
+                                    "transactions": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "credit_account_name": {
+                                                    "description": "Name of an existing account or a new income account one",
+                                                    "type": "string"
+                                                },
+                                                "debit_account_name": {
+                                                    "description": "Name of and existing account or a new debit account one",
+                                                    "type": "string"
+                                                },
+                                                "amount": {
+                                                    "description": "Value of Transaction",
+                                                    "type": "number"
+                                                },
+                                                "subcategory_name": {
+                                                    "description": "Name of subcategory, if it doesn't exist or if this is a transfer, it'll be created without one",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/transactions/{transactionID}": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Get a specific transaction",
+                "operationId": "App\\Http\\Controllers\\api\\TransactionController::show",
+                "parameters": [
+                    {
+                        "name": "transactionID",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Update a transaction",
+                "operationId": "App\\Http\\Controllers\\api\\TransactionController::update",
+                "parameters": [
+                    {
+                        "name": "transactionID",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "required": [
+                                    "date",
+                                    "description"
+                                ],
+                                "properties": {
+                                    "date": {
+                                        "type": "date"
+                                    },
+                                    "budget_date": {
+                                        "type": "date"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "transaction_number": {
+                                        "type": "string"
+                                    },
+                                    "transactions": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "credit_account_name": {
+                                                    "description": "Name of an existing account or a new income account one",
+                                                    "type": "string"
+                                                },
+                                                "debit_account_name": {
+                                                    "description": "Name of and existing account or a new debit account one",
+                                                    "type": "string"
+                                                },
+                                                "amount": {
+                                                    "description": "Value of Transaction",
+                                                    "type": "number"
+                                                },
+                                                "subcategory_name": {
+                                                    "description": "Name of subcategory, if it doesn't exist or if this is a transfer, it'll be created without one",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Delete a specific item",
+                "operationId": "App\\Http\\Controllers\\api\\TransactionController::destroy",
+                "parameters": [
+                    {
+                        "name": "transactionID",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
         }
     },
     "tags": [
