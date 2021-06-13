@@ -128,7 +128,6 @@ class Budgets extends Component
                     }
                 }
             }
-            \Debugbar::info($loopDate);
             $loopDate->modify('last day of next month');
         }
     }
