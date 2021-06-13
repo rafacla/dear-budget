@@ -53,7 +53,7 @@ class Budgets extends Component
                             && (new DateTime($value['transactions_journal']['date']))->format('Y-m-1') == $this->currentDate->format('Y-m-1'))
                     ) {
                         if ($value['subcategory_id'] != null) {
-                            $this->transactions[$value['subcategory_id']] = ($this->transactions[$value['subcategory_id']] ?? 0) + $value['amount'];
+                            $this->transactions[$value['subcategory_id']] = ($this->transactions[$value['subcategory_id']] ?? 0) + ($value['amount'] ?? 0);
                         }
                 }
             } elseif (
@@ -91,17 +91,17 @@ class Budgets extends Component
             $startDate = (new DateTime('now')); //looks like there's no budget or transaction what so ever, there's nothing to calculate
 
         //Ok! We found our starting point, now the magic begins:
-        $loopDate = $startDate->modify('last day of this month');
+        $loopDate = $startDate->modify('last day of last month');
         while ($loopDate <= $this->currentDate) {
             foreach ($this->databaseBudgets as $value) {
                 if ((new DateTime($value['date']))->format('Y-m-1') == $loopDate->format('Y-m-1')) {
                     $this->available[$value['subcategory_id']]
-                        = ($this->available[$value['subcategory_id']] ?? 0) + $value['budget_value'];
+                        = ($this->available[$value['subcategory_id']] ?? 0) + ($value['budget_value'] ?? 0);
                     $this->budgetedCumulative
-                        = ($this->budgetedCumulative ?? 0) + $value['budget_value'];
+                        = ($this->budgetedCumulative ?? 0) + ($value['budget_value'] ?? 0);
                     if ($loopDate == $this->currentDate) {
-                        $this->budgets[$value['subcategory_id']] = $value['budget_value'];
-                        $this->budgetedMonth = ($this->budgetedMonth ?? 0) + $value['budget_value'];
+                        $this->budgets[$value['subcategory_id']] = $value['budget_value'] ?? 0;
+                        $this->budgetedMonth = ($this->budgetedMonth ?? 0) + ($value['budget_value'] ?? 0);
                     }
                 }
             }
@@ -110,7 +110,7 @@ class Budgets extends Component
                 if ((new DateTime($transactionDate))->format('Y-m-1') == $loopDate->format('Y-m-1')) {
                     if ($value['type'] == array_search('expense',array_column($this->transactionTypes,'type'))) {
                         $this->available[$value['subcategory_id']]
-                            = ($this->available[$value['subcategory_id']] ?? 0) - $value['amount'];
+                            = ($this->available[$value['subcategory_id']] ?? 0) - ($value['amount'] ?? 0);
                     }
                 }
             }
@@ -128,9 +128,9 @@ class Budgets extends Component
                     }
                 }
             }
+            \Debugbar::info($loopDate);
             $loopDate->modify('last day of next month');
         }
-        //dd($this->budgets);
     }
 
     public function mount($year = null,$month = null) {
@@ -147,14 +147,16 @@ class Budgets extends Component
         $this->overspentLMonth = 0;
         $this->budgetedCumulative = 0;
         $this->budgetedMonth = 0;
-        if ($year != null)
-            $this->currentDate  = (new DateTime($year.'-'.$month.'-01'))->modify('last day of this month');
-        else
-            $this->currentDate = new DateTime('last day of this month');
+        if ($year == null)
+            $year = (new DateTime('last day of this month'))->format('Y');
+        if ($month == null)
+            $month = (new DateTime('last day of this month'))->format('m');
+        $this->currentDate  = (new DateTime($year.'-'.$month.'-01'))->modify('last day of this month');
+
+        $this->items = Auth::user()->categories->where('expense',true);
 
         $this->getBudgets();
 
-        $this->items = Auth::user()->categories->where('expense',true);
 
         $this->toBudget = $this->incomeCumulative - $this->budgetedCumulative - $this->overspentCumulative;
     }

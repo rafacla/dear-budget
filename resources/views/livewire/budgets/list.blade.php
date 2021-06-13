@@ -71,8 +71,12 @@
                     @foreach($items as $item)
                     <?php
                         $sumOfSubcategoriesBudget = 0;
+                        $sumOfSubcategoriesTransactions = 0;
+                        $sumOfSubcategoriesAvailable = 0;
                         foreach ($item->subcategories as $value) {
                             $sumOfSubcategoriesBudget += $budgets[$value->id] ?? 0;
+                            $sumOfSubcategoriesTransactions += $transactions[$value->id] ?? 0;
+                            $sumOfSubcategoriesAvailable += $available[$value->id] ?? 0;
                         }
                     ?>
                     <tr class="border bg-blue-50">
@@ -82,10 +86,10 @@
                                     class="appearance-none border-none rounded w-full px-3 text-blue-800 bg-blue-50 text-right leading-tight focus:outline-none focus:shadow-outline" disabled>
                         </td>
                         <td class="px-2 py-1 text-sm font-bold">
-
+                            <div class="text-blue-800 text-right w-full font-normal">{{number_format($sumOfSubcategoriesTransactions,2,".",",")}}</div>
                         </td>
                         <td class="px-2 py-1 text-sm font-bold">
-
+                            <div class="text-blue-800 text-right w-full pr-2 font-normal">{{number_format($sumOfSubcategoriesAvailable,2,".",",")}}</div>
                         </td>
                     </tr>
                         @foreach($item->subcategories as $subcategory)
@@ -100,7 +104,7 @@
                             </td>
                             <td class="px-2 py-1 text-sm" style="text-align: right;">
                                 <div class="inline-block px-2 py-1 rounded-full text-sm  {{($available[$subcategory->id] ?? 0) > 0 ? 'bg-green-500 text-white' : (($available[$subcategory->id] ?? 0) < 0 ? 'bg-red-500 text-white' : 'bg-gray-300 text-gray-700')}}">
-                                    {{$available[$subcategory->id] ?? 0}}
+                                    {{number_format($available[$subcategory->id] ?? 0,2)}}
                                 </div>
                             </td>
                         </tr>
