@@ -15,6 +15,7 @@ class Budgets extends Component
     public $modelClass = Budget::class;
     public $itemClassName = 'Budget';
     public $transactionTypes;
+    public $accountRoles;
     public $currentDate;
     public $items;
     public $toBudget = 0;
@@ -25,6 +26,8 @@ class Budgets extends Component
     public $budgetedCumulative = 0;
     public $budgetedMonth = 0;
     public $budgets = [];
+    public $investmentCumulative = 0;
+    public $investmentMonth = 0;
     public $transactions = [];
     public $databaseBudgets = [];
     public $databaseTransactions = [];
@@ -38,14 +41,15 @@ class Budgets extends Component
 
     public function getTransactions() {
         $this->transactionTypes = config('dearbudget.transactionTypes');
+        $this->accountRoles = config('dearbudget.accountRoles');
         $this->databaseTransactions = Transaction::whereHas('transactionsJournal', function($q) {
             $q->where('budget_date', '<=',$this->currentDate)
               ->where('budget_date','null')
                 ->orWhere('date','<=',$this->currentDate);
         })
-            ->with('transactionsJournal')->get()->toArray();
+            ->with('transactionsJournal')->with('subcategory')->with('creditAccount')->with('debitAccount')
+            ->get()->toArray();
         $this->incomeCumulative = 0;
-
         foreach ($this->databaseTransactions as $value) {
             if ($value['type'] == array_search('expense',array_column($this->transactionTypes,'type'))) {
                 if (
@@ -54,7 +58,9 @@ class Budgets extends Component
                             && (new DateTime($value['transactions_journal']['date']))->format('Y-m-1') == $this->currentDate->format('Y-m-1'))
                     ) {
                         if ($value['subcategory_id'] != null) {
-                            $this->transactions[$value['subcategory_id']] = ($this->transactions[$value['subcategory_id']] ?? 0) + ($value['amount'] ?? 0);
+                            if ($this->accountRoles[$value['credit_account']['role']]['budget']  == 'on') {
+                                $this->transactions[$value['subcategory_id']] = ($this->transactions[$value['subcategory_id']] ?? 0) + ($value['amount'] ?? 0);
+                            }
                         }
                 }
             } elseif (
@@ -62,14 +68,38 @@ class Budgets extends Component
                 || ($value['type'] == array_search('initialBalance',array_column($this->transactionTypes,'type'))
                     )
                 ) {
-                $this->incomeCumulative += $value['amount'];
+                if ($this->accountRoles[$value['debit_account']['role']]['budget'] == 'on') {
+                    $this->incomeCumulative += $value['amount'];
+                    if (
+                        $value['transactions_journal']['budget_date'] != null && (new DateTime($value['transactions_journal']['budget_date']))->format('Y-m-1') == $this->currentDate->format('Y-m-1')
+                            || ($value['transactions_journal']['budget_date'] == null
+                                && (new DateTime($value['transactions_journal']['date']))->format('Y-m-1') == $this->currentDate->format('Y-m-1'))
+                        ) {
+                        $this->incomeMonth += $value['amount'];
+                    }
+                }
+            }
+            //Here we calculate the automatically investment budget:
+            if ($value['credit_account'] != null && $this->accountRoles[$value['credit_account']['role']]['budget']  == 'investment') {
+                //money is moving out of investment budget
+                $this->investmentCumulative -= $value['amount'];
                 if (
                     $value['transactions_journal']['budget_date'] != null && (new DateTime($value['transactions_journal']['budget_date']))->format('Y-m-1') == $this->currentDate->format('Y-m-1')
                         || ($value['transactions_journal']['budget_date'] == null
                             && (new DateTime($value['transactions_journal']['date']))->format('Y-m-1') == $this->currentDate->format('Y-m-1'))
                     ) {
-                    $this->incomeMonth += $value['amount'];
-                }
+                        $this->investmentMonth -= $value['amount'];
+                    }
+            } elseif ($value['debit_account'] != null && $this->accountRoles[$value['debit_account']['role']]['budget']  == 'investment') {
+                //money is moving in investment budget
+                $this->investmentCumulative += $value['amount'];
+                if (
+                    $value['transactions_journal']['budget_date'] != null && (new DateTime($value['transactions_journal']['budget_date']))->format('Y-m-1') == $this->currentDate->format('Y-m-1')
+                        || ($value['transactions_journal']['budget_date'] == null
+                            && (new DateTime($value['transactions_journal']['date']))->format('Y-m-1') == $this->currentDate->format('Y-m-1'))
+                    ) {
+                        $this->investmentMonth += $value['amount'];
+                    }
             }
         }
     }

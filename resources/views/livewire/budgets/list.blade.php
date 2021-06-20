@@ -67,7 +67,19 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                    <!-- First we show investment header, then the rest -->
+                    <tr class="border">
+                        <td class="px-2 py-1 text-sm font-bold"> {{ __('Investments') }}</td>
+                        <td class="px-4 py-1 text-sm"></td>
+                        <td class="px-2 py-1 text-sm" style="text-align: right;">
+                            {{number_format($investmentMonth,2,".",",")}}
+                        </td>
+                        <td class="px-2 py-1 text-sm" style="text-align: right;">
+                            <div class="inline-block px-2 py-1 rounded-full text-sm  {{($investmentCumulative ?? 0) > 0 ? 'bg-green-500 text-white' : (($investmentCumulative ?? 0) < 0 ? 'bg-red-500 text-white' : 'bg-gray-300 text-gray-700')}}">
+                                {{number_format($investmentCumulative ?? 0,2)}}
+                            </div>
+                        </td>
+                    </tr>
                     @foreach($items as $item)
                     <?php
                         $sumOfSubcategoriesBudget = 0;
