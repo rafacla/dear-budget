@@ -42,7 +42,8 @@ class Budgets extends Component
             $q->where('budget_date', '<=',$this->currentDate)
               ->where('budget_date','null')
                 ->orWhere('date','<=',$this->currentDate);
-        })->with('transactionsJournal')->get()->toArray();
+        })
+            ->with('transactionsJournal')->get()->toArray();
         $this->incomeCumulative = 0;
 
         foreach ($this->databaseTransactions as $value) {

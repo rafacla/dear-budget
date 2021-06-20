@@ -2,7 +2,7 @@
     declare(strict_types=1);
 
     /* Not for editing
-     * Things you change here can break application for good 
+     * Things you change here can break application for good
      * Proceed with caution
      */
 
@@ -11,7 +11,7 @@
             'en'    =>  'English',
             'pt_BR' =>  'Brazilian Portuguese',
         ],
-        /* 
+        /*
         * Checking Account for your account where you make debit transactions
         * Credit Card for your credit transactions
         * Wallet Cash for transactions on cash
@@ -20,12 +20,12 @@
         * Income Account for credits (accounts that pay/give you money off budget like 3rd parts)
         */
         'accountRoles'            => [
-            'checkingAccount'       => ['name' => '🏦 Checking Account', 'icon' => '🏦'],  
-            'walletCash'            => ['name' => '👛 Cash Wallet', 'icon' => '👛'], 
-            'investmentAccount'     => ['name' => '📈 Investment Account', 'icon' => '📈'],
-            'creditCard'            => ['name' => '💳 Credit Card', 'icon' => '💳'],
-            'expenseAccount'        => ['name' => '📤 Expense Account', 'icon' => '📤'],
-            'incomeAccount'         => ['name' => '📥 Income Account', 'icon' => '📥'],
+            'checkingAccount'       => ['name' => '🏦 Checking Account', 'icon' => '🏦', 'budget' => 'on'],
+            'walletCash'            => ['name' => '👛 Cash Wallet', 'icon' => '👛', 'budget' => 'on'],
+            'investmentAccount'     => ['name' => '📈 Investment Account', 'icon' => '📈', 'budget' => 'investment'],
+            'creditCard'            => ['name' => '💳 Credit Card', 'icon' => '💳', 'budget' => 'on'],
+            'expenseAccount'        => ['name' => '📤 Expense Account', 'icon' => '📤', 'budget' => 'off'],
+            'incomeAccount'         => ['name' => '📥 Income Account', 'icon' => '📥', 'budget' => 'off'],
         ],
         /*
         * Transaction types
