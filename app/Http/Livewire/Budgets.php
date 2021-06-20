@@ -175,6 +175,8 @@ class Budgets extends Component
         $this->overspentCumulative = 0;
         $this->overspentLMonth = 0;
         $this->budgetedCumulative = 0;
+        $this->investmentMonth = 0;
+        $this->investmentCumulative = 0;
         $this->budgetedMonth = 0;
         if ($year == null)
             $year = (new DateTime('last day of this month'))->format('Y');
