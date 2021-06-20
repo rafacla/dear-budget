@@ -92,6 +92,6 @@ class User extends Authenticatable
                 $transactions->where($value['filterField'],$value['filterAs'],$value['filterTo']);
             }
         }
-        return $transactions->get();
+        return $transactions->orderBy('date')->get();
     }
 }
