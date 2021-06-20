@@ -7,23 +7,27 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="flex">
             <div class="flex divide-x divide-white text-center -mt-8 mb-5 py-4 px-3 rounded-lg {{$toBudget > 0 ? 'bg-green-500 text-white' : ($toBudget < 0 ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700')}}">
-                <div class="px-2">
+                <div class="px-2 justify-center hfull m-auto">
                     <p class="text-3xl">{{number_format($toBudget,2,'.',',')}}</p>
-                    <p class="text-green-900">{{__('To be budgeted')}}</p>
+                    <p class="text-gray-900 italic">{{__('(to be budgeted)')}}</p>
                 </div>
                 <div class="px-2 text-gray-900">
                     <table>
                         <tr>
-                            <td class="py-0 text-sm">{{number_format($incomeMonth,2,".",",")}}</td>
-                            <td class="py-0 text-sm text-left italic">{{__('Income this Month')}}</td>
+                            <td class="py-0 text-sm text-right {{round($toBudget,2) <> 0 ? 'text-white' : ''}}">{{number_format($incomeMonth,2,".",",")}}</td>
+                            <td class="px-1 py-0 text-sm text-left italic">{{__('Income this Month')}}</td>
                         </tr>
                         <tr>
-                            <td class="py-0 text-sm">{{number_format($overspentLMonth,2,".",",")}}</td>
-                            <td class="py-0 text-sm text-left italic">{{__('Overspent last Month')}}</td>
+                            <td class="py-0 text-sm text-right {{round($toBudget,2) <> 0 ? 'text-white' : ''}}">{{number_format($overspentLMonth,2,".",",")}}</td>
+                            <td class="px-1 py-0 text-sm text-left italic">{{__('Overspent last Month')}}</td>
                         </tr>
                         <tr>
-                            <td class="py-0 text-sm">{{number_format($budgetedMonth,2,".",",")}}</td>
-                            <td class="py-0 text-sm text-left italic">{{__('Budgeted this Month')}}</td>
+                            <td class="py-0 text-sm text-right {{round($toBudget,2) <> 0 ? 'text-white' : ''}}">{{number_format($budgetedMonth,2,".",",")}}</td>
+                            <td class="px-1 py-0 text-sm text-left italic">{{__('Budgeted this Month')}}</td>
+                        </tr>
+                        <tr>
+                            <td class="py-0 text-sm text-right {{round($toBudget,2) <> 0 ? 'text-white' : ''}}">{{number_format(abs($transferredFromToInvestmentAccount),2,".",",")}}</td>
+                            <td class="px-1 py-0 text-sm text-left italic">{{$transferredFromToInvestmentAccount > 0 ? __('Transfer from Investment') : __('Transfer to Investment')}}</td>
                         </tr>
                     </table>
                 </div>

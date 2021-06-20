@@ -33,6 +33,7 @@ class Budgets extends Component
     public $databaseTransactions = [];
     public $available = [];
     public $itemID;
+    public $transferredFromToInvestmentAccount = 0;
     public $form = array(
         'budget_value'          => '',
         'subcategory_id'        => '',
@@ -79,9 +80,21 @@ class Budgets extends Component
                     }
                 }
             }
-            //Here we calculate the automatically investment budget:
+            //Here we calculate the automatically investment budget and fixes deposits and withdrawals from the budget:
             if ($value['credit_account'] != null && $this->accountRoles[$value['credit_account']['role']]['budget']  == 'investment') {
                 //money is moving out of investment budget
+                //before we calculate the investment budget, we have to check if this is going for a on-budget account:
+                if ($value['debit_account'] != null && $this->accountRoles[$value['debit_account']['role']]['budget']  == 'on') {
+                    $this->incomeCumulative += $value['amount'];
+                    if (
+                        $value['transactions_journal']['budget_date'] != null && (new DateTime($value['transactions_journal']['budget_date']))->format('Y-m-1') == $this->currentDate->format('Y-m-1')
+                            || ($value['transactions_journal']['budget_date'] == null
+                                && (new DateTime($value['transactions_journal']['date']))->format('Y-m-1') == $this->currentDate->format('Y-m-1'))
+                        ) {
+                            $this->transferredFromToInvestmentAccount += $value['amount'];
+                        }
+                }
+                //right, now we calculate the budget
                 $this->investmentCumulative -= $value['amount'];
                 if (
                     $value['transactions_journal']['budget_date'] != null && (new DateTime($value['transactions_journal']['budget_date']))->format('Y-m-1') == $this->currentDate->format('Y-m-1')
@@ -92,6 +105,18 @@ class Budgets extends Component
                     }
             } elseif ($value['debit_account'] != null && $this->accountRoles[$value['debit_account']['role']]['budget']  == 'investment') {
                 //money is moving in investment budget
+                //before we calculate the investment budget, we have to check if this is coming from on-budget account:
+                if ($value['credit_account'] != null && $this->accountRoles[$value['credit_account']['role']]['budget']  == 'on') {
+                    $this->incomeCumulative -= $value['amount'];
+                    if (
+                        $value['transactions_journal']['budget_date'] != null && (new DateTime($value['transactions_journal']['budget_date']))->format('Y-m-1') == $this->currentDate->format('Y-m-1')
+                            || ($value['transactions_journal']['budget_date'] == null
+                                && (new DateTime($value['transactions_journal']['date']))->format('Y-m-1') == $this->currentDate->format('Y-m-1'))
+                        ) {
+                            $this->transferredFromToInvestmentAccount -= $value['amount'];
+                        }
+                }
+                //right, now we calculate the budget
                 $this->investmentCumulative += $value['amount'];
                 if (
                     $value['transactions_journal']['budget_date'] != null && (new DateTime($value['transactions_journal']['budget_date']))->format('Y-m-1') == $this->currentDate->format('Y-m-1')
@@ -139,8 +164,10 @@ class Budgets extends Component
                 $transactionDate = $value['transactions_journal']['budget_date'] ?? $value['transactions_journal']['date'];
                 if ((new DateTime($transactionDate))->format('Y-m-1') == $loopDate->format('Y-m-1')) {
                     if ($value['type'] == array_search('expense',array_column($this->transactionTypes,'type'))) {
-                        $this->available[$value['subcategory_id']]
-                            = ($this->available[$value['subcategory_id']] ?? 0) - ($value['amount'] ?? 0);
+                        if ($this->accountRoles[$value['credit_account']['role']]['budget']  == 'on') {
+                            $this->available[$value['subcategory_id']]
+                                = ($this->available[$value['subcategory_id']] ?? 0) - ($value['amount'] ?? 0);
+                        }
                     }
                 }
             }
@@ -170,6 +197,7 @@ class Budgets extends Component
         $this->databaseTransactions = [];
         $this->available = [];
         $this->toBudget = 0;
+        $this->transferredFromToInvestmentAccount = 0;
         $this->incomeCumulative = 0;
         $this->incomeMonth = 0;
         $this->overspentCumulative = 0;
