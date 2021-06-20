@@ -29,9 +29,11 @@
                     </select>
                 </div>
             </div>
-            @if($isOpen)
-                @include('livewire.accounts.create')
-            @endif
+            <div x-data="{ isOpen: @entangle('isOpen') }">
+                <div x-show.transition="isOpen">
+                    @include('livewire.accounts.create')
+                </div>
+            </div>
             <table class="table-auto w-full">
                 <thead>
                     <tr class="bg-gray-100">

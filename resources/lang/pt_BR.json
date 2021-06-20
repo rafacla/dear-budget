@@ -27,6 +27,11 @@
     "There are expenses without categories. This may mess your budget. Fix it.":"Há despesas sem categorias. Isso pode bagunçar seu orçamento. Arrume isso!",
     "Source Account":"Conta Origem",
     "Destination Account":"Conta Destino",
+    "On budget accounts means that every expense should be categorized and it'll be summarized while off budget accounts won't. Investment accounts are automatically summarized.":
+      "Contas no Orçamento são aquelas em que cada despeda deve ser classificada e serão sumarizadas, enquanto contas fora do orçamento não são sumarizadas. Contas Investimento são automaticamente sumarizadas",
+    "On budget accounts": "Contas no Orçamento",
+    "Investment accounts":"Contas Investimento",
+    "Out of budget accounts":"Contas fora do Orçamento",
     "Category":"Categoria",
     "Multiple Accounts":"Várias Contas",
     "This transaction has been splitted, it has more than one account assigned.":"Esta transação foi dividida e possui mais de uma conta.",

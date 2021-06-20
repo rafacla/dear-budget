@@ -23,7 +23,10 @@
                 @error('form.description') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
             </div>
             <div class="mb-4">
-              <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">{{__('Account Role')}}:</label>
+              <label for="exampleFormControlInput1"
+                class="block text-gray-700 text-sm font-bold mb-2"
+                {{Popper::pop(__('On budget accounts means that every expense should be categorized and it\'ll be summarized while off budget accounts won\'t. Investment accounts are automatically summarized.'))}}
+              >{{__('Account Role')}}: ❔</label>
               <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1" placeholder="{{__('Account Role')}}" wire:model="form.role">
                 <optgroup label="{{__('On budget accounts')}}">
                     @foreach ($accountRoles as $key => $value)
