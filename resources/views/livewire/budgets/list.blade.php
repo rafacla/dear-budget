@@ -79,7 +79,7 @@
                             {{number_format($investmentMonth,2,".",",")}}
                         </td>
                         <td class="px-2 py-1 text-sm" style="text-align: right;">
-                            <div class="inline-block px-2 py-1 rounded-full text-sm  {{($investmentCumulative ?? 0) > 0 ? 'bg-green-500 text-white' : (($investmentCumulative ?? 0) < 0 ? 'bg-red-500 text-white' : 'bg-gray-300 text-gray-700')}}">
+                            <div class="inline-block px-2 py-1 rounded-full text-sm  {{(round($investmentCumulative,2) ?? 0) > 0 ? 'bg-green-500 text-white' : ((round($investmentCumulative,2) ?? 0) < 0 ? 'bg-red-500 text-white' : 'bg-gray-300 text-gray-700')}}">
                                 {{number_format($investmentCumulative ?? 0,2)}}
                             </div>
                         </td>
@@ -119,7 +119,7 @@
                                 {{number_format($transactions[$subcategory->id] ?? 0,2)}}
                             </td>
                             <td class="px-2 py-1 text-sm" style="text-align: right;">
-                                <div class="inline-block px-2 py-1 rounded-full text-sm  {{($available[$subcategory->id] ?? 0) > 0 ? 'bg-green-500 text-white' : (($available[$subcategory->id] ?? 0) < 0 ? 'bg-red-500 text-white' : 'bg-gray-300 text-gray-700')}}">
+                                <div class="inline-block px-2 py-1 rounded-full text-sm  {{(round($available[$subcategory->id],2) ?? 0) > 0 ? 'bg-green-500 text-white' : ((round($available[$subcategory->id],2) ?? 0) < 0 ? 'bg-red-500 text-white' : 'bg-gray-300 text-gray-700')}}">
                                     {{number_format($available[$subcategory->id] ?? 0,2)}}
                                 </div>
                             </td>
