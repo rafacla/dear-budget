@@ -17,4 +17,8 @@
     ·
     <a href="https://github.com/rafacla/dear-budget/issues">Request Feature</a>
   </p>
+
+  ## Features:
+  Zero Based Budget with Automatic Investment Budget (temporary layout)
+  <img src="public/assets/github/budgetview.png" style="max-width:50%;">
 </p>
