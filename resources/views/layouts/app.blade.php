@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: localStorage.getItem('dark') === 'true'} "
+    x-init="$watch('darkMode', val => localStorage.setItem('dark', val))"
+    x-bind:class="{ 'dark': darkMode }">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,17 +19,17 @@
 
         <!-- Scripts -->
         <script src="{{ mix('js/app.js') }}" defer></script>
-        <script src="https://kit.fontawesome.com/63eade88da.js" crossorigin="anonymous"></script>        
+        <script src="https://kit.fontawesome.com/63eade88da.js" crossorigin="anonymous"></script>
     </head>
     <body class="font-sans antialiased">
         <x-jet-banner />
 
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen bg-gray-100 dark:bg-gray-400">
             @livewire('navigation-menu')
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="bg-white shadow">
+                <header class="bg-white shadow dark:bg-gray-800">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
@@ -43,6 +45,17 @@
         @stack('modals')
 
         @livewireScripts
-        @include('popper::assets')        
+        @include('popper::assets')
+        <script>
+            function toggleDarkMode() {
+                if (localStorage.dark === 'true' || (!('dark' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('dark', true);
+                } else {
+                    document.documentElement.classList.remove('dark')
+                    localStorage.setItem('dark', false);
+                }
+            }
+        </script>
     </body>
 </html>

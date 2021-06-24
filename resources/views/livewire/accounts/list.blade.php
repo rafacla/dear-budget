@@ -1,11 +1,11 @@
 <x-slot name="header">
-    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight dark:text-gray-200">
         {{__('Manage Accounts')}}
     </h2>
 </x-slot>
 <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg px-4 py-4">
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg px-4 py-4 dark:bg-gray-600">
             @if (session()->has('message'))
                 <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
                   <div class="flex">
@@ -17,10 +17,10 @@
             @endif
             <div class="grid grid-flow-col auto-cols-max">
                 <div class="self-center">
-                    <button wire:click="create()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">{{__('Create New Account')}}</button>
+                    <button wire:click="create()" class="dark:bg-green-500 dark:hover:bg-green-700 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">{{__('Create New Account')}}</button>
                 </div>
                 <div class="self-center mx-2">
-                    <select class="shadow appearance-none border rounded w-full py-2 px-12 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1"  wire:model="accountFilter">
+                    <select class="dark:bg-gray-300 shadow appearance-none border rounded w-full py-2 px-12 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1"  wire:model="accountFilter">
                         <option value="assetLiabilityAccount">{{__('Asset and Liability accounts')}}</option>
                         <option value="assetAccount">{{__('Asset accounts')}}</option>
                         <option value="liabilityAccount">{{__('Liability accounts')}}</option>
@@ -36,7 +36,7 @@
             </div>
             <table class="table-auto w-full">
                 <thead>
-                    <tr class="bg-gray-100">
+                    <tr class="bg-gray-100 dark:bg-gray-700 dark:text-gray-200 rounded-lg">
                         <th class="px-4 py-2 text-sm">{{__('Name')}}</th>
                         <th class="px-4 py-2 text-sm">{{__('Account Role')}}</th>
                         <th class="px-2 py-2 text-sm">{{__('Account Number')}}</th>
@@ -47,13 +47,13 @@
                 </thead>
                 <tbody>
                     @foreach($items as $item)
-                    <tr>
-                        <td class="border px-4 py-0.5 text-sm">{{ $item->name }}</td>
-                        <td class="border px-4 py-0.5 text-sm">{{ __($accountRoles[$item->role]['name']) }}</td>
-                        <td class="border px-2 py-0.5 text-sm">{{ $item->number }}</td>
-                        <td class="border px-4 py-0.5 text-sm text-right">{{ number_format($item->balance(), 2) }}</td>
-                        <td class="border px-4 py-0.5 text-sm text-center">{{ $item->lastTransactionDate() }}</td>
-                        <td class="border px-4 py-0.5 text-sm" style="text-align: right;">
+                    <tr class="dark:text-gray-200">
+                        <td class="px-4 py-0.5 text-sm">{{ $item->name }}</td>
+                        <td class="px-4 py-0.5 text-sm">{{ __($accountRoles[$item->role]['name']) }}</td>
+                        <td class="px-2 py-0.5 text-sm">{{ $item->number }}</td>
+                        <td class="px-4 py-0.5 text-sm text-right">{{ number_format($item->balance(), 2) }}</td>
+                        <td class="px-4 py-0.5 text-sm text-center">{{ $item->lastTransactionDate() }}</td>
+                        <td class="px-4 py-0.5 text-sm" style="text-align: right;">
                             <button wire:click="edit({{ $item->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-0.5 px-1 rounded">{{__('Edit')}}</button>
                             <button wire:click="delete({{ $item->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-0.5 px-1 rounded">{{__('Delete')}}</button>
                         </td>

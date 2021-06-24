@@ -1,5 +1,5 @@
 <x-slot name="header">
-    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight dark:text-gray-200">
         {{__('Manage Transactions')}}
     </h2>
 </x-slot>
@@ -11,7 +11,7 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="self-center">
             <button wire:click="new()"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
+                class="dark:bg-green-500 dark:hover:bg-green-700 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
                 {{__('Create New Transaction')}}
             </button>
             @if (count(array_filter($selected, function($item) {
@@ -25,14 +25,14 @@
         </div>
         <div class="w-full -mt-12 text-right">
             <a href="{{route('transaction.date',['year' => date("Y",$currentDate), 'month'=>(date("m",$currentDate)-1)])}}">
-                <i class="text-gray-700 text-2xl far fa-arrow-alt-circle-left"></i>
+                <i class="dark:text-gray-800 dark:hover:text-gray-200 hover:text-gray-900 text-gray-700 text-2xl far fa-arrow-alt-circle-left"></i>
             </a>
-            <input class="text-gray-700 text-xl w-36 outline-none bg-transparent border-none" type="text" value="{{date('M-Y',$currentDate)}}" disabled>
+            <input class="dark:text-gray-800 text-gray-700 text-xl w-36 outline-none bg-transparent border-none" type="text" value="{{date('M-Y',$currentDate)}}" disabled>
             <a href="{{route('transaction.date',['year' => date("Y",$currentDate), 'month'=>(date("m",$currentDate)+1)])}}">
-                <i class="text-gray-700 text-2xl far fa-arrow-alt-circle-right"></i>
+                <i class="dark:text-gray-800 dark:hover:text-gray-200 hover:text-gray-900 text-gray-700 text-2xl far fa-arrow-alt-circle-right"></i>
             </a>
         </div>
-        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg px-4 py-4">
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg px-4 py-4 dark:bg-gray-600">
             @if (session()->has('message'))
                 <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
                   <div class="flex">
@@ -44,7 +44,7 @@
             @endif
             <table class="table-fixed w-full">
                 <thead>
-                    <tr class="border">
+                    <tr class="border-b border-t dark:border-gray-800 dark:text-gray-100 dark:bg-gray-500">
                         <th class="px-1 py-0.5 w-4 text-xs"><input type="checkbox" wire:model="selectedAll"></th>
                         <th class="px-2 py-1 w-24 text-xs text-left">{{__('Date')}}</th>
                         <th class="px-4 py-1  text-xs text-left">{{__('Description')}}</th>
@@ -72,7 +72,7 @@
                         $noTransactions = false;
                     @endphp
                     <tr
-                        class="border hover:bg-blue-50
+                        class="dark:hover:bg-green-500 border-b hover:bg-blue-50 dark:border-gray-800 dark:text-gray-100
                             {{ ($transactionTypes[$item->transactions->first()->type]['type']=='initialBalance') ? 'cursor-not-allowed' : 'cursor-pointer' }}
                         "
                         @if($transactionTypes[$item->transactions->first()->type]['type']=='initialBalance')

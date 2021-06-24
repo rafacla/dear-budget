@@ -1,5 +1,5 @@
 <x-slot name="header">
-    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight dark:text-gray-200">
         {{__('Manage Budgets')}}
     </h2>
 </x-slot>
@@ -51,7 +51,7 @@
             </div>
         </div>
         @endif
-        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg px-4 py-4">
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg px-4 py-4 dark:bg-gray-600">
             @if (session()->has('message'))
                 <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
                   <div class="flex">
@@ -63,7 +63,7 @@
             @endif
             <table class="table-fixed w-full">
                 <thead>
-                    <tr class="border">
+                    <tr class="border-b border-t dark:text-gray-200 dark:border-gray-800 dark:bg-gray-500">
                         <th class="px-2 py-1 text-sm text-left">{{__('Name')}}</th>
                         <th class="px-4 py-1 w-36 text-sm">{{__('Budgeted')}}</th>
                         <th class="px-2 py-1 w-36 text-sm">{{__('Transactions')}}</th>
@@ -72,7 +72,7 @@
                 </thead>
                 <tbody>
                     <!-- First we show investment header, then the rest -->
-                    <tr class="border">
+                    <tr class="border-b py-16 dark:text-gray-200 dark:border-gray-800 dark:bg-green-700">
                         <td class="px-2 py-1 text-sm font-bold"> {{ __('Investments') }}</td>
                         <td class="px-4 py-1 text-sm"></td>
                         <td class="px-2 py-1 text-sm" style="text-align: right;">
@@ -95,31 +95,31 @@
                             $sumOfSubcategoriesAvailable += $available[$value->id] ?? 0;
                         }
                     ?>
-                    <tr class="border bg-blue-50">
+                    <tr class="border-b bg-blue-50 dark:border-gray-800 dark:bg-green-700 dark:text-gray-200">
                         <td class="px-2 py-1 text-sm font-bold">{{ $item->name }}</td>
                         <td class="px-4 py-1 text-sm font-bold">
                             <input type="number" step=".01" value="{{number_format($sumOfSubcategoriesBudget,2,".","")}}"
-                                    class="appearance-none border-none rounded w-full px-3 text-blue-800 bg-blue-50 text-right leading-tight focus:outline-none focus:shadow-outline" disabled>
+                                    class="dark:bg-green-700 dark:text-gray-200 appearance-none border-none rounded w-full px-3 text-blue-800 bg-blue-50 text-right leading-tight focus:outline-none focus:shadow-outline" disabled>
                         </td>
                         <td class="px-2 py-1 text-sm font-bold">
-                            <div class="text-blue-800 text-right w-full font-normal">{{number_format($sumOfSubcategoriesTransactions,2,".",",")}}</div>
+                            <div class="dark:text-gray-200 text-blue-800 text-right w-full font-normal">{{number_format($sumOfSubcategoriesTransactions,2,".",",")}}</div>
                         </td>
                         <td class="px-2 py-1 text-sm font-bold">
-                            <div class="text-blue-800 text-right w-full pr-2 font-normal">{{number_format($sumOfSubcategoriesAvailable,2,".",",")}}</div>
+                            <div class="dark:text-gray-200 text-blue-800 text-right w-full pr-2 font-normal">{{number_format($sumOfSubcategoriesAvailable,2,".",",")}}</div>
                         </td>
                     </tr>
                         @foreach($item->subcategories as $subcategory)
-                        <tr class="border">
+                        <tr class="border-b dark:border-gray-800 dark:text-gray-200">
                             <td class="px-8 py-1 text-sm"> {{ $subcategory->name }}</td>
                             <td class="px-4 py-1 text-sm">
                                 <input type="number" step=".01" wire:model.lazy="budgets.{{$subcategory->id}}"
-                                    class="{{($budgets[$subcategory->id] ?? 0) == 0 ? 'text-gray-200' : 'text-gray-700'}} focus:text-blue-700 appearance-none border-none rounded w-full px-3 text-right leading-tight focus:outline-none focus:shadow-outline">
+                                    class="dark:bg-gray-400 {{($budgets[$subcategory->id] ?? 0) == 0 ? 'text-gray-200' : 'text-gray-700'}} focus:text-blue-700 dark:focus:text-green-700 appearance-none border-none rounded w-full px-3 text-right leading-tight focus:outline-none focus:shadow-outline">
                             </td>
                             <td class="px-2 py-1 text-sm" style="text-align: right;">
                                 {{number_format($transactions[$subcategory->id] ?? 0,2)}}
                             </td>
                             <td class="px-2 py-1 text-sm" style="text-align: right;">
-                                <div class="inline-block px-2 py-1 rounded-full text-sm  {{(round($available[$subcategory->id],2) ?? 0) > 0 ? 'bg-green-500 text-white' : ((round($available[$subcategory->id],2) ?? 0) < 0 ? 'bg-red-500 text-white' : 'bg-gray-300 text-gray-700')}}">
+                                <div class="inline-block px-2 py-1 rounded-full text-sm  {{(round($available[$subcategory->id] ?? 0,2) ?? 0) > 0 ? 'bg-green-500 text-white' : ((round($available[$subcategory->id] ?? 0,2) ?? 0) < 0 ? 'bg-red-500 text-white' : 'bg-gray-300 text-gray-700')}}">
                                     {{number_format($available[$subcategory->id] ?? 0,2)}}
                                 </div>
                             </td>
