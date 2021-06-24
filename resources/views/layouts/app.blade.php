@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: localStorage.getItem('dark') === 'true'} "
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: (localStorage.getItem('dark') === 'true' || localStorage.getItem('dark') === null)} "
     x-init="$watch('darkMode', val => localStorage.setItem('dark', val))"
     x-bind:class="{ 'dark': darkMode }">
     <head>
@@ -48,7 +48,7 @@
         @include('popper::assets')
         <script>
             function toggleDarkMode() {
-                if (localStorage.dark === 'true' || (!('dark' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                if (localStorage.dark === 'true') {
                     document.documentElement.classList.add('dark');
                     localStorage.setItem('dark', true);
                 } else {
