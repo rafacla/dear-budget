@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: (localStorage.getItem('dark') === 'true' || localStorage.getItem('dark') === null)} "
-    x-init="$watch('darkMode', val => localStorage.setItem('dark', val))"
-    x-bind:class="{ 'dark': darkMode }">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,6 +16,23 @@
         @livewireStyles
 
         <!-- Scripts -->
+        <script>
+            if (localStorage.dark === 'true' || localStorage.dark === null) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            function toggleDarkMode() {
+                if (localStorage.dark === 'true') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('dark', true);
+                } else {
+                    document.documentElement.classList.remove('dark')
+                    localStorage.setItem('dark', false);
+                }
+            }
+        </script>
+
         <script src="{{ mix('js/app.js') }}" defer></script>
         <script src="https://kit.fontawesome.com/63eade88da.js" crossorigin="anonymous"></script>
     </head>
@@ -46,16 +61,5 @@
 
         @livewireScripts
         @include('popper::assets')
-        <script>
-            function toggleDarkMode() {
-                if (localStorage.dark === 'true') {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('dark', true);
-                } else {
-                    document.documentElement.classList.remove('dark')
-                    localStorage.setItem('dark', false);
-                }
-            }
-        </script>
     </body>
 </html>
