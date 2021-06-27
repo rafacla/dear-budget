@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
-                    <a href="{{ route('categories') }}">
+                    <a href="{{ route('account') }}">
                         <x-jet-application-mark class="block h-9 w-auto" />
                     </a>
                 </div>
@@ -17,9 +17,6 @@
                             {{ __('Banks') }}
                         </x-jet-nav-link>
                     @endif
-                    <x-jet-nav-link href="{{ route('category') }}" :active="request()->routeIs('category')" class="active:text-white">
-                        {{ __('Categories') }}
-                    </x-jet-nav-link>
                     <x-jet-nav-link href="{{ route('account') }}" :active="request()->routeIs('account')">
                         {{ __('Accounts') }}
                     </x-jet-nav-link>
@@ -30,6 +27,9 @@
                     <x-jet-nav-link href="{{ route('budget') }}"
                         :active="request()->routeIs('budget') || request()->routeIs('budget.date')">
                         {{ __('Budgets') }}
+                    </x-jet-nav-link>
+                    <x-jet-nav-link href="{{ route('category') }}" :active="request()->routeIs('category')" class="active:text-white">
+                        {{ __('Categories') }}
                     </x-jet-nav-link>
                 </div>
             </div>
@@ -175,7 +175,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-jet-responsive-nav-link href="{{ route('categories') }}" :active="request()->routeIs('/')">
+            <x-jet-responsive-nav-link href="{{ route('account') }}" :active="request()->routeIs('/')">
                 {{ __('Home') }}
             </x-jet-responsive-nav-link>
         </div>

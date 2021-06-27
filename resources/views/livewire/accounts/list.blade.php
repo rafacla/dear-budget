@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div x-data="{ isOpen: @entangle('isOpen') }">
-                <div x-show.transition="isOpen">
+                <div x-show.transition="isOpen === true" style="display:none">
                     @include('livewire.accounts.create')
                 </div>
             </div>

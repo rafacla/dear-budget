@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/', App\Http\Livewire\Categories::class)->name('categories');
+Route::middleware(['auth:sanctum', 'verified'])->get('/', App\Http\Livewire\Accounts::class)->name('account');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/bank', App\Http\Livewire\Banks::class)->name('bank');
 Route::middleware(['auth:sanctum', 'verified'])->get('/category', App\Http\Livewire\Categories::class)->name('category');

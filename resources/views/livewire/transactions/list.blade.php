@@ -4,7 +4,7 @@
     </h2>
 </x-slot>
 <div class="py-12" x-data="{ isOpen: @entangle('isOpen') }">
-    <div x-show.transition="isOpen">
+    <div x-show.transition="isOpen" style="display:none">
         @include('livewire.transactions.create')
     </div>
 </div>
