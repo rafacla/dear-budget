@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/rafacla/dear-budget">
-    <img src="public/assets/full-logo.png" alt="Logo" style="max-width:50%;">
+    <img src="source/public/assets/full-logo.png" alt="Logo" style="max-width:50%;">
   </a>
 
   <p align="center">
@@ -20,5 +20,5 @@
 
   ## Features:
   Zero Based Budget with Automatic Investment Budget (temporary layout)
-  <img src="public/assets/github/budgetview.png" style="max-width:50%;">
+  <img src="source/public/assets/github/budgetview.png" style="max-width:50%;">
 </p>
