@@ -17,7 +17,7 @@
             <select 
                 class="dark:bg-gray-300 shadow appearance-none border rounded py-2 pr-8 w-auto text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                 wire:change="openBalance($event.target.value)" wire:model="accountFilter">
-                <option value="">{{__('All Transactions')}}</option>
+                <option value="">{{__('All Accounts')}}</option>
                 @foreach (json_decode($assetAccounts) as $item)
                     <option value="{{$item->id}}">{{$item->name}}</option>
                 @endforeach
@@ -197,7 +197,7 @@
                         $runningBalance = $cumulativeBalanceLastMonth;
                     @endphp
                     <tr class="dark:hover:bg-green-500 border-b hover:bg-blue-50 dark:border-gray-800 dark:text-gray-100 cursor-not-allowed"
-                        {{Popper::delay(500,0)->pop(__('Balance of last month of selected Account.'))}}>
+                        {{Popper::delay(500,0)->pop(__('Last Month balance of selected account'))}}>
                         <td class="px-1 py-0.5 text-xs" onclick="event.cancelBubble=true;"><input type="checkbox" disabled class="cursor-not-allowed"></td>
                         <td></td>
                         <td class="px-4 py-1 text-xs">{{__('Last Month balance of selected account')}}</td>
