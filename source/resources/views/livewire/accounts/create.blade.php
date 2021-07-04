@@ -14,12 +14,12 @@
           <div class="" style="width: 48%;">
             <div class="mb-4">
                 <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">{{__('Name')}}:</label>
-                <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1" placeholder="{{__('Name')}}" wire:model.lazy="form.name">
+                <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" placeholder="{{__('Name')}}" wire:model.lazy="form.name">
                 @error('form.name') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
             </div>
             <div class="mb-4">
                 <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">{{__('Description')}}:</label>
-                <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1" placeholder="{{__('Description')}}" wire:model.lazy="form.description">
+                <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="description" placeholder="{{__('Description')}}" wire:model.lazy="form.description">
                 @error('form.description') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
             </div>
             <div class="mb-4">
@@ -27,7 +27,7 @@
                 class="block text-gray-700 text-sm font-bold mb-2"
                 {{Popper::pop(__('On budget accounts means that every expense should be categorized and it\'ll be summarized while off budget accounts won\'t. Investment accounts are automatically summarized.'))}}
               >{{__('Account Role')}}: ❔</label>
-              <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1" placeholder="{{__('Account Role')}}" wire:model.lazy="form.role">
+              <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="role" placeholder="{{__('Account Role')}}" wire:model.debounce.500ms="form.role">
                 <optgroup label="{{__('On budget accounts')}}">
                     @foreach ($accountRoles as $key => $value)
                         @if ($value['budget'] == 'on')
@@ -53,8 +53,8 @@
               @error('form.role') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
             </div>
             <div class="mb-4">
-              <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">{{__('Account Currency')}}:</label>
-              <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1" placeholder="{{__('Currency')}}" wire:model.lazy="form.currency_id">
+              <label class="block text-gray-700 text-sm font-bold mb-2">{{__('Account Currency')}}:</label>
+              <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="currency_id" placeholder="{{__('Currency')}}" wire:model.debounce.500ms="form.currency_id">
                 @foreach ($currencies as $item)
                     <option value="{{$item->id}}">{{$item->name}}</option>
                 @endforeach
@@ -62,8 +62,8 @@
               @error('form.currency_id') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
             </div>
             <div class="mb-4">
-              <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">{{__('Account Number')}}:</label>
-              <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1" placeholder="{{__('Account Number')}}" wire:model="form.number">
+              <label for="number" class="block text-gray-700 text-sm font-bold mb-2">{{__('Account Number')}}:</label>
+              <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="number" placeholder="{{__('Account Number')}}" wire:model="form.number">
               @error('form.number') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
             </div>
           </div>
@@ -71,8 +71,8 @@
           </div>
           <div class="" style="width: 48%;">
             <div class="mb-4">
-              <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">{{__('Bank')}}:</label>
-              <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1" placeholder="{{__('Bank')}}" wire:model.lazy="form.bank_id">
+              <label for="bank_id" class="block text-gray-700 text-sm font-bold mb-2">{{__('Bank')}}:</label>
+              <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="bank_id" placeholder="{{__('Bank')}}" wire:model.debounce.500ms="form.bank_id">
                   <option value="" selected>{{__('None')}}</option>
                 @foreach ($banks as $item)
                     <option value="{{$item->id}}">{{$item->short_name}}</option>
@@ -81,25 +81,25 @@
               @error('form.bank_id') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
             </div>
             <div class="mb-4">
-              <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">{{__('Opening Balance')}}:</label>
-              <input type="number" step="0.01" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1" placeholder="{{__('Opening Balance')}}" wire:model="form.openingbalance">
+              <label for="openingbalance" class="block text-gray-700 text-sm font-bold mb-2">{{__('Opening Balance')}}:</label>
+              <input type="number" step="0.01" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="openingbalance" placeholder="{{__('Opening Balance')}}" wire:model="form.openingbalance">
               @error('form.openingbalance') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
             </div>
             <div class="mb-4">
-              <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">{{__('Opening Balance Date')}}:</label>
-              <input type="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1" placeholder="{{__('Opening Balance Date')}}" wire:model.lazy="form.openingbalancedate">
+              <label for="openingbalancedate" class="block text-gray-700 text-sm font-bold mb-2">{{__('Opening Balance Date')}}:</label>
+              <input type="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="openingbalancedate" placeholder="{{__('Opening Balance Date')}}" wire:model.lazy="form.openingbalancedate">
               @error('form.openingbalancedate') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
             </div>
             @if ($form['role'] == 'creditCard')
             <div>
               <div class="mb-4">
-                <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">{{__('Statement Closing Day')}}:</label>
-                <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1" placeholder="{{__('Statement Closing Day')}}" wire:model.lazy="form.statementClosingDay">
+                <label for="statementClosingDay" class="block text-gray-700 text-sm font-bold mb-2">{{__('Statement Closing Day')}}:</label>
+                <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="statementClosingDay" placeholder="{{__('Statement Closing Day')}}" wire:model.lazy="form.statementClosingDay">
                 @error('form.statementClosingDay') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
             </div>
             <div class="mb-4">
-                <label for="exampleFormControlInput1" class="block text-gray-700 text-sm font-bold mb-2">{{__('Statement Due Day')}}:</label>
-                <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="{{__('Statement Due Day')}}" wire:model.lazy="form.statementDueDay">
+                <label for="statementDueDay" class="block text-gray-700 text-sm font-bold mb-2">{{__('Statement Due Day')}}:</label>
+                <input type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="statementDueDay" placeholder="{{__('Statement Due Day')}}" wire:model.lazy="form.statementDueDay">
                 @error('form.statementDueDay') <span class="text-red-500 text-xs">{{ __($message) }}</span>@enderror
             </div>
             </div>
