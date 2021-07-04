@@ -329,7 +329,7 @@ class Transactions extends Component
 
             session()->flash('message',
                 $this->itemID ? __($this->itemClassName.' updated successfully.') : __($this->itemClassName.' created successfully.'));
-            $this->mount();
+            $this->mount(date('Y',$this->currentDate), date('m',$this->currentDate), $this->accountFilter);
             $this->closeModal();
             $this->resetInputFields();
         }
