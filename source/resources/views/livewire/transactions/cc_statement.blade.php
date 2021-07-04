@@ -83,12 +83,12 @@
                     <span class="float-right">{{number_format($creditCard['total'] ?? 0,2)}}</span>
                     @endif
                 </div>
-                <div class="w-full grid grid-flow-col grid-rows-4 px-4">
+                <div class="w-full grid grid-cols-4 px-4">
                     @foreach ($statementTransactions as $item)
                         @if ($item['credit_card_id'] == $creditCard['id'])    
                         <div class="group text-sm px-2">
                             <span class="pr-1">{{ date('d/m', strtotime($item['transactions_journal']['date']))}}</span>
-                            <span>{{ $item['transactions_journal']['description'] }}</span>
+                            <span title="{{$item['transactions_journal']['description']}}">{{ mb_strimwidth($item['transactions_journal']['description'], 0, 35, '...') }}</span>
                             <span class="float-right opacity-0 group-hover:opacity-100">
                                 <button wire:click.prevent="pickBudgetDate({{$item['id']}},{{$currentDate}})"><i class="far fa-calendar-alt"></i></button>
                                 <button wire:click.prevent="pickCreditCard({{$item['id']}},{{$creditCard['id']}})"><i class="far fa-credit-card"></i></button>
