@@ -102,7 +102,7 @@ class TransactionController extends Controller
             'description' => 'required',
             'transactions.0.credit_account_name' => 'required',
             'transactions.0.debit_account_name' => 'required',
-            'transactions.0.amount' => 'required'
+            'transactions.0.amount' => 'required|numeric'
         ]);
 
         if ($validation->fails()) {
