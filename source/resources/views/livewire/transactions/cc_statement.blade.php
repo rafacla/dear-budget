@@ -9,7 +9,7 @@
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>​
 
         <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all
-            sm:my-8 sm:align-middle sm:max-w-full xl:w-1/2 sm:w-11/12" role="dialog" aria-modal="true"
+            sm:my-8 sm:align-middle sm:max-w-full sm:w-11/12" role="dialog" aria-modal="true"
             aria-labelledby="modal-headline">
             @if ($pickTransactionId != '' && $pickTransactionId != null)    
             <div class="rounded bg-white shadow p-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
