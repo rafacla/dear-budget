@@ -28,6 +28,7 @@ class Transactions extends Component
     public $selected = [];
     public $selectedAll;
     public $currentDate;
+    public $cumulativeBalanceLastMonth = 0;
     public $items;
     public $itemID;
     public $accountFilter = '';
@@ -142,6 +143,31 @@ class Transactions extends Component
             ],
             ];
         $this->items = Auth::user()->transactionsJournals($filter, $accountID);
+        if ($accountID != null && $accountID != '') {
+            $filterLastMonth = [
+                [
+                    'filterField'   => 'deleted_at',
+                    'filterAs'      => '=',
+                    'filterTo'      => null
+                ],
+                [
+                    'filterField'   => 'date',
+                    'filterAs'      => '<',
+                    'filterTo'      => date('Y-m-01',$this->currentDate)
+                ],
+                ];
+            $itensUpToLastMonth = Auth::user()->transactionsJournals($filterLastMonth, $accountID);
+            $this->cumulativeBalanceLastMonth = 0;
+            foreach ($itensUpToLastMonth as $item) {
+                foreach ($item->transactions as $transaction) {
+                    if ($transaction->creditAccount != null && $transaction->creditAccount->id == $accountID) {
+                        $this->cumulativeBalanceLastMonth -= $transaction->amount;
+                    } elseif ($transaction->debitAccount != null && $transaction->debitAccount->id == $accountID) {
+                        $this->cumulativeBalanceLastMonth += $transaction->amount;
+                    }
+                }
+            }
+        } 
         foreach ($this->items as $item) {
             $this->selected[$item->id] = false;
         }

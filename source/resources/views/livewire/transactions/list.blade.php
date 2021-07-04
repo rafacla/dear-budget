@@ -58,6 +58,7 @@
                   </div>
                 </div>
             @endif
+            @if ($accountFilter == null || $accountFilter == '')
             <table class="table-fixed w-full">
                 <thead>
                     <tr class="border-b border-t dark:border-gray-800 dark:text-gray-100 dark:bg-gray-500">
@@ -178,6 +179,120 @@
                     @endif
                 </tbody>
             </table>
+            @else
+            <table class="table-fixed w-full">
+                <thead>
+                    <tr class="border-b border-t dark:border-gray-800 dark:text-gray-100 dark:bg-gray-500">
+                        <th class="px-1 py-0.5 w-4 text-xs"><input type="checkbox" wire:model="selectedAll"></th>
+                        <th class="px-2 py-1 w-24 text-xs text-left">{{__('Date')}}</th>
+                        <th class="px-4 py-1  text-xs text-left">{{__('Description')}}</th>
+                        <th class="px-2 py-1 w-56 text-xs text-left">{{__('Category')}}</th>
+                        <th class="px-2 py-1 w-36 text-xs">{{__('Amount')}}</th>
+                        <th class="px-2 py-1 w-36 text-xs">{{__('Balance')}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $noTransactions = true;
+                        $runningBalance = $cumulativeBalanceLastMonth;
+                    @endphp
+                    <tr class="dark:hover:bg-green-500 border-b hover:bg-blue-50 dark:border-gray-800 dark:text-gray-100 cursor-not-allowed"
+                        {{Popper::delay(500,0)->pop(__('Balance of last month of selected Account.'))}}>
+                        <td class="px-1 py-0.5 text-xs" onclick="event.cancelBubble=true;"><input type="checkbox" disabled class="cursor-not-allowed"></td>
+                        <td></td>
+                        <td class="px-4 py-1 text-xs">{{__('Last Month balance of selected account')}}</td>
+                        <td colspan="2"></td>
+                        <td class="px-2 py-1 text-xs text-right">
+                            {{number_format($runningBalance,2)}}
+                        </td>
+                    </tr>
+                    @foreach($items as $item)
+                    @if (sizeof($item->transactions)>0 && $item->deleted_at == null
+                        && ($transactionTypes[$item->transactions->first()->type]['type']!='initialBalance'
+                            || ($item->transactions->first()->debitAccount != null
+                                && ($item->transactions->first()->debitAccount->role != 'incomeAccount'
+                                    && $item->transactions->first()->debitAccount->role != 'expenseAccount')
+                                )
+                            )
+                        )
+                    @php
+
+                        $noTransactions = false;
+                    @endphp
+                    <tr
+                        class="dark:hover:bg-green-500 border-b hover:bg-blue-50 dark:border-gray-800 dark:text-gray-100
+                            {{ ($transactionTypes[$item->transactions->first()->type]['type']=='initialBalance') ? 'cursor-not-allowed' : 'cursor-pointer' }}
+                        "
+                        @if($transactionTypes[$item->transactions->first()->type]['type']=='initialBalance')
+                            {{Popper::delay(500,0)->pop(__('To edit this initial balance transaction, please edit the account.'))}}
+                        @else
+                            wire:click="edit({{ $item->id }})")
+                        @endif
+                        >
+                        <td class="px-1 py-0.5 text-xs" onclick="event.cancelBubble=true;"><input type="checkbox" wire:model="selected.{{$item->id}}"></td>
+                        <td class="px-2 py-1 text-xs">{{ $item->date }}</td>
+                        <td class="px-4 py-1 text-xs">{{ $item->description }}</td>
+                        <td class="px-2 py-1 text-xs">
+                            @if (sizeof($item->transactions) > 1)
+                            <span>{{__('Multiple Items')}}</span>
+                            @else
+                                @if ($transactionTypes[$item->transactions->first()->type]['type']=='transfer')
+                                <span class="bg-gray-400 text-white rounded-full text-xs py-0.5 px-2"
+                                    @popper({{__('This is a Transfer! As you are just moving funds between accounts, it doesn\'t affect your budget!')}})
+                                >
+                                    <i class="fas fa-exchange-alt"></i> {{__('Transfer')}}
+                                </span>
+                                @elseif($transactionTypes[$item->transactions->first()->type]['type']=='initialBalance')
+                                <span class="bg-gray-400 text-white rounded-full text-xs py-0.5 px-2"
+                                @popper({{__('This is the initial transaction of the destination account, you don\'t have to pick a category for this.')}})
+                                >
+                                    <i class="fas fa-certificate"></i> {{__('Opening Balance')}}
+                                </span>
+                                @else
+                                    @if ($item->transactions->first()->subcategory==null)
+                                        <span class="bg-red-500 text-white rounded-full text-xs py-0.5 px-2"
+                                            @popper({{__('For any expense transaction, you have to pick a category, otherwise your budget will not be accurate!')}})
+                                        >
+                                            <i class="fas fa-exclamation-triangle"></i> {{__('No category defined!')}}
+                                        </span>
+                                    @else
+                                        <span class="text-xs py-1">
+                                            {{$item->transactions->first()->subcategory->name}}
+                                        </span>
+                                    @endif
+                                @endif
+                            @endif
+                        </td>
+                        <td class="px-2 py-1 text-xs text-right">
+                            <?php
+                                $sumAmount =0;
+                                foreach ($item->transactions as $transaction) {
+                                    if ($transaction->creditAccount != null && $transaction->creditAccount->id == $accountFilter) {
+                                        $sumAmount -= $transaction->amount;
+                                    } elseif ($transaction->debitAccount != null && $transaction->debitAccount->id == $accountFilter) {
+                                        $sumAmount += $transaction->amount;
+                                    }
+                                }
+                                $runningBalance += $sumAmount;
+                            ?>
+                            {{number_format($sumAmount,2)}}
+                        </td>
+                        <td class="px-2 py-1 text-xs text-right">
+                            {{number_format($runningBalance,2)}}
+                        </td>
+                    </tr>
+                    @endif
+                    @endforeach
+                    @if ($noTransactions)
+                    <tr class="border">
+                        <td colspan="7" class="px-2">
+                            {{__('No items found to show')}}
+                        </td>
+                    </tr>
+                    @endif
+                </tbody>
+            </table>
+            @endif
         </div>
     </div>
 </div>
