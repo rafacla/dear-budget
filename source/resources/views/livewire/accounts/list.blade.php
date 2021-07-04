@@ -20,7 +20,7 @@
                     <button wire:click="create()" class="dark:bg-green-500 dark:hover:bg-green-700 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">{{__('Create New Account')}}</button>
                 </div>
                 <div class="self-center mx-2">
-                    <select class="dark:bg-gray-300 shadow appearance-none border rounded w-full py-2 px-12 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1"  wire:model="accountFilter">
+                    <select class="dark:bg-gray-300 shadow appearance-none border rounded w-full py-2 pr-8 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="exampleFormControlInput1"  wire:model="accountFilter">
                         <option value="assetLiabilityAccount">{{__('Asset and Liability accounts')}}</option>
                         <option value="assetAccount">{{__('Asset accounts')}}</option>
                         <option value="liabilityAccount">{{__('Liability accounts')}}</option>
@@ -32,6 +32,11 @@
             <div x-data="{ isOpen: @entangle('isOpen') }">
                 <div x-show.transition="isOpen === true" style="display:none">
                     @include('livewire.accounts.create')
+                </div>
+            </div>
+            <div x-data="{ creditCardModal: @entangle('creditCardModal') }">
+                <div x-show.transition="creditCardModal === true" style="display:none">
+                    @include('livewire.accounts.credit_card')
                 </div>
             </div>
             <table class="table-auto w-full">
@@ -54,6 +59,9 @@
                         <td class="px-4 py-0.5 text-sm text-right">{{ number_format($item->balance(), 2) }}</td>
                         <td class="px-4 py-0.5 text-sm text-center">{{ $item->lastTransactionDate() }}</td>
                         <td class="px-4 py-0.5 text-sm" style="text-align: right;">
+                            @if ($item->role == 'creditCard')
+                            <button wire:click="cards({{ $item->id }})" class="bg-green-500 hover:bg-green-700 text-white font-bold py-0.5 px-1 rounded">{{__('Cards')}}</button>
+                            @endif
                             <button wire:click="edit({{ $item->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-0.5 px-1 rounded">{{__('Edit')}}</button>
                             <button wire:click="delete({{ $item->id }})" class="bg-red-500 hover:bg-red-700 text-white font-bold py-0.5 px-1 rounded">{{__('Delete')}}</button>
                         </td>

@@ -3,16 +3,21 @@
         {{__('Manage Transactions')}}
     </h2>
 </x-slot>
-<div class="py-12" x-data="{ isOpen: @entangle('isOpen') }">
+<div  x-data="{ isOpen: @entangle('isOpen') }">
     <div x-show.transition="isOpen" style="display:none">
         @include('livewire.transactions.create')
+    </div>
+</div>
+<div x-data="{ isStatementOpen: @entangle('isStatementOpen') }">
+    <div x-show.transition="isStatementOpen" style="display:none">
+        @include('livewire.transactions.cc_statement')
     </div>
 </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="self-center">
             <button wire:click="new()"
                 class="dark:bg-green-500 dark:hover:bg-green-700 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
-                {{__('Create New Transaction')}}
+                <i class="far fa-plus-square"></i> {{__('Create New Transaction')}}
             </button>
             <select 
                 class="dark:bg-gray-300 shadow appearance-none border rounded py-2 pr-8 w-auto text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
@@ -22,12 +27,18 @@
                     <option value="{{$item->id}}">{{$item->name}}</option>
                 @endforeach
             </select>
+            @if ($accountFilterRole == 'creditCard')
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-2 rounded inline-flex items-center"
+                    wire:click="showStatement({{$accountFilter}})">
+                    <i class="far fa-file-alt px-1"></i> {{__('Credit Card Statement')}}
+                </button>
+            @endif
             @if (count(array_filter($selected, function($item) {
                 return $item;
             })) > 0)
             <button wire:click="deleteSelected()"
                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded my-3">
-                {{__('Delete Selected Transactions')}}
+                <i class="far fa-minus-square"></i> {{__('Delete Selected Transactions')}}
             </button>
             @endif
         </div>

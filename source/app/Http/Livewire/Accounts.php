@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Bank;
 use App\Models\Currency;
 use App\Models\Account;
+use App\Models\CreditCard;
 use App\Models\TransactionsJournal;
 use App\Models\Transaction;
 
@@ -22,6 +23,13 @@ class Accounts extends Component
     public $items;
     public $itemID;
     public $openingBalanceTransactionId;
+    public $formCC = array(
+        'id'            => '',
+        'name'          => '',
+        'number'        => '',
+        'description'   => '',
+        'account_id'    => ''
+    );
     public $form = array(
         'name'                  => '',
         'description'           => '',
@@ -36,6 +44,8 @@ class Accounts extends Component
         'openingbalancedate'    => ''
     );
     public $isOpen = 0;
+    public $creditCardModal = 0;
+    public $creditCardsFromAccount;
 
     public function render()
     {
@@ -85,9 +95,31 @@ class Accounts extends Component
         $this->isOpen = true;
     }
 
+    public function openCreditCardModal() {
+        $this->creditCardModal = true;;
+    }
+
     public function closeModal()
     {
+        $this->creditCardModal = false;
         $this->isOpen = false;
+    }
+
+    public function storeCC() {
+        if ($this->formCC['id'] == null || $this->formCC['id'] == '') {
+            CreditCard::create([
+                'name' => $this->formCC['name'],
+                'number' => $this->formCC['number'],
+                'description' => $this->formCC['description'],
+                'account_id'  => $this->formCC['account_id'],
+            ]);
+        } else {
+            $creditCard = CreditCard::findOrFail($this->formCC['id']);
+            $creditCard->name = $this->formCC['name'];
+            $creditCard->number = $this->formCC['number'];
+            $creditCard->description = $this->formCC['description'];
+            $creditCard->save();
+        }
     }
 
     private function resetInputFields(){
@@ -186,6 +218,35 @@ class Accounts extends Component
         }
 
         $this->openModal();
+    }
+
+    public function cards($id)
+    {
+        $this->formCC['account_id'] = $id;
+        $this->creditCardsFromAccount = CreditCard::where('account_id',$id)->get();
+        $this->openCreditCardModal(true);
+    }
+
+    public function editCC($cardID) {
+        $card = CreditCard::findOrFail($cardID);
+        if ($card->account->user->id != Auth::user()->id) {
+            die('Unauthorized');
+        }
+        if ($card != null) {
+            $this->formCC['id'] = $card->id;
+            $this->formCC['name'] = $card->name;
+            $this->formCC['number'] = $card->number;
+            $this->formCC['description'] = $card->description;
+        }
+    }
+
+    public function deleteCC($cardID) {
+        $card = CreditCard::findOrFail($cardID);
+        if ($card->account->user->id != Auth::user()->id) {
+            die('Unauthorized');
+        }
+        $card->delete();
+        $this->closeModal();
     }
 
     public function delete($id)

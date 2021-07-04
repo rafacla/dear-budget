@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\TransactionsJournal;
 use App\Models\Account;
 use App\Helpers\Helper;
+use App\Models\CreditCard;
 use App\Models\Subcategory;
 use App\Models\Transaction;
 use App\Models\Currency;
@@ -32,6 +33,10 @@ class Transactions extends Component
     public $items;
     public $itemID;
     public $accountFilter = '';
+    public $accountFilterRole = '';
+    public $statementTransactions = [];
+    public $accountCreditCards = [];
+    public $statementBudgetDate;
     public $form = array(
         'date'                   => '',
         'user_id'                => '',
@@ -42,6 +47,27 @@ class Transactions extends Component
     );
     public $transactionsValidation;
     public $isOpen = 0;
+    public $isStatementOpen = 0;
+
+    public $pickCreditCardId;
+    public $pickTransactionId;
+
+    public $pickBudgetTransactionId;
+    public $pickBudgetDate;
+    
+    public function pickCreditCard($transactionId, $creditCardId = null) {
+        $this->pickCreditCardId = $creditCardId;
+        $this->pickTransactionId = $transactionId;
+    }
+
+    public function selectStatementBudgetDate() {
+        $this->showStatement($this->accountFilter);
+    }
+
+    public function pickBudgetDate($transactionId, $budgetDate = null) {
+        $this->pickBudgetTransactionId = $transactionId;
+        $this->pickBudgetDate = date('Y-m',$budgetDate);
+    }
 
     public function openBalance($accountID) {
         if ($accountID != null && $accountID != '') {
@@ -107,13 +133,16 @@ class Transactions extends Component
     public function mount($year = null, $month = null, $accountID = null) {
         if ($accountID != null) {
             $this->accountFilter = $accountID;
+            $this->accountFilterRole = Account::findOrFail($accountID)->role;
         } else {
             $this->accountFilter = '';
+            $this->accountFilterRole = '';
         }
         if ($year != null)
             $this->currentDate  = mktime(0,0,0,$month,1,$year);
         else
             $this->currentDate = time();
+        $this->statementBudgetDate = date('Y-m',$this->currentDate);
         $this->transactionsValidation = '';
         $this->accountRoles = config('dearbudget.accountRoles');
         $this->transactionTypes = config('dearbudget.transactionTypes');
@@ -308,6 +337,62 @@ class Transactions extends Component
 
     public function closeModal() {
         $this->isOpen = false;
+        $this->isStatementOpen = false;
+    }
+
+    public function updateCreditCard() {
+        $transaction = Transaction::findOrFail($this->pickTransactionId);
+        if ($transaction->transactionsJournal->user->id != Auth::user()->id) {
+            die('Unauthorized');
+        }
+        $transaction->credit_card_id = ($this->pickCreditCardId == '' ? null : $this->pickCreditCardId);
+        $transaction->save();
+        $this->pickTransactionId = null;
+        $this->showStatement($this->accountFilter);
+    }
+
+    public function updateBudgetDate() {
+        $transaction = Transaction::findOrFail($this->pickBudgetTransactionId)->transactionsJournal;
+        if ($transaction->user->id != Auth::user()->id) {
+            die('Unauthorized');
+        }
+        $transaction->budget_date = ($this->pickBudgetDate == '' ? null : $this->pickBudgetDate . '-01');
+        $transaction->save();
+        
+        $this->pickBudgetTransactionId = null;
+        $this->showStatement($this->accountFilter);
+    }
+
+    public function showStatement($accountID) {
+        $this->accountCreditCards = CreditCard::where('account_id','=',$accountID)->get()->toArray();
+        array_unshift($this->accountCreditCards, ['id' => '','name'=> __('No Card'), 'total' => 0]);
+        
+        $this->statementTransactions = Transaction::where(function($query0) use ($accountID) {
+            $query0->where('credit_account_id','=',$accountID)->orWhere('debit_account_id','=',$accountID);
+            })
+            ->whereHas('transactionsJournal', function($q) {
+            $q->where(function($query1) {
+                $query1->where('budget_date', '<=',date('Y-m-t',strtotime($this->statementBudgetDate.'-01')))
+                    ->where('budget_date','>=',date('Y-m-01',strtotime($this->statementBudgetDate.'-01')));
+                })
+                ->orWhere(function($query2) {
+                    $query2->where('budget_date','=',null)
+                    ->where('date', '<=',date('Y-m-t',strtotime($this->statementBudgetDate.'-01')))
+                    ->where('date','>=',date('Y-m-01',strtotime($this->statementBudgetDate.'-01')));
+                });
+            })
+            ->with('transactionsJournal')->with('subcategory')->with('creditAccount')->with('debitAccount')
+            ->get()->toArray();
+        foreach ($this->accountCreditCards as $ccKey => $creditCard) {
+            foreach ($this->statementTransactions as $item) {
+                if (($item['credit_card_id']) == ($creditCard['id'])) {
+                    $this->accountCreditCards[$ccKey]['total'] =
+                        ($this->accountCreditCards[$ccKey]['total'] ?? 0) 
+                            + ($item['amount'] * ($item['credit_account_id'] == $accountID ? 1 : 0));
+                }
+            }
+        }
+        $this->isStatementOpen = true;
     }
 
     public function new() {
