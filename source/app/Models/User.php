@@ -85,12 +85,18 @@ class User extends Authenticatable
                 ->where('date',($cumulative ? '<=' : '='), $date)->get();
     }
 
-    public function transactionsJournals($filter = null) {
+    public function transactionsJournals($filter = null, $accountID = null) {
         $transactions = $this->hasMany(TransactionsJournal::class);
         if ($filter != null){
             foreach ($filter as $value) {
                 $transactions->where($value['filterField'],$value['filterAs'],$value['filterTo']);
             }
+        }
+        if ($accountID != null) {
+            $transactions->whereHas('transactions', function ($query) use ($accountID) {
+                $query->where('credit_account_id', '=', $accountID)
+                      ->orWhere('debit_account_id', '=', $accountID); 
+                });
         }
         return $transactions->orderBy('date')->get();
     }

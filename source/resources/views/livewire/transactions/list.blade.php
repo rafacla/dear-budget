@@ -14,6 +14,14 @@
                 class="dark:bg-green-500 dark:hover:bg-green-700 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
                 {{__('Create New Transaction')}}
             </button>
+            <select 
+                class="dark:bg-gray-300 shadow appearance-none border rounded py-2 pr-8 w-auto text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                wire:change="openBalance($event.target.value)" wire:model="accountFilter">
+                <option value="">{{__('All Transactions')}}</option>
+                @foreach (json_decode($assetAccounts) as $item)
+                    <option value="{{$item->id}}">{{$item->name}}</option>
+                @endforeach
+            </select>
             @if (count(array_filter($selected, function($item) {
                 return $item;
             })) > 0)
@@ -24,11 +32,19 @@
             @endif
         </div>
         <div class="w-full -mt-12 text-right">
-            <a href="{{route('transaction.date',['year' => date("Y",$currentDate), 'month'=>(date("m",$currentDate)-1)])}}">
+            <a href="{{
+                    $accountFilter != '' ? 
+                        route('transaction.account.date',['accountID' => $accountFilter, 'year' => date("Y",$currentDate), 'month'=>(date("m",$currentDate)-1)])
+                        : route('transaction.date',['year' => date("Y",$currentDate), 'month'=>(date("m",$currentDate)-1)])
+                }}">
                 <i class="dark:text-gray-800 dark:hover:text-gray-200 hover:text-gray-900 text-gray-700 text-2xl far fa-arrow-alt-circle-left"></i>
             </a>
             <input class="dark:text-gray-800 text-gray-700 text-xl w-36 outline-none bg-transparent border-none" type="text" value="{{date('M-Y',$currentDate)}}" disabled>
-            <a href="{{route('transaction.date',['year' => date("Y",$currentDate), 'month'=>(date("m",$currentDate)+1)])}}">
+            <a href="{{
+                    $accountFilter != '' ?
+                    route('transaction.account.date',['accountID' => $accountFilter, 'year' => date("Y",$currentDate), 'month'=>(date("m",$currentDate)+1)])
+                    : route('transaction.date',['year' => date("Y",$currentDate), 'month'=>(date("m",$currentDate)+1)])
+                }}">
                 <i class="dark:text-gray-800 dark:hover:text-gray-200 hover:text-gray-900 text-gray-700 text-2xl far fa-arrow-alt-circle-right"></i>
             </a>
         </div>

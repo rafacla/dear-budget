@@ -30,6 +30,7 @@ class Transactions extends Component
     public $currentDate;
     public $items;
     public $itemID;
+    public $accountFilter = '';
     public $form = array(
         'date'                   => '',
         'user_id'                => '',
@@ -40,6 +41,14 @@ class Transactions extends Component
     );
     public $transactionsValidation;
     public $isOpen = 0;
+
+    public function openBalance($accountID) {
+        if ($accountID != null && $accountID != '') {
+            redirect()->to('/transaction/' . $accountID . '/' . date('Y',$this->currentDate) . '/' . date('m',$this->currentDate));
+        } else {
+            redirect()->to('/transaction/' . date('Y',$this->currentDate) . '/' . date('m',$this->currentDate));
+        }
+    }
 
     //Function to receive from AutoComplete component selected Value and update $form Object
     public function updateSubcategory($field) {
@@ -94,7 +103,12 @@ class Transactions extends Component
         $this->selectedAll = $allSelected;
     }
 
-    public function mount($year = null,$month = null) {
+    public function mount($year = null, $month = null, $accountID = null) {
+        if ($accountID != null) {
+            $this->accountFilter = $accountID;
+        } else {
+            $this->accountFilter = '';
+        }
         if ($year != null)
             $this->currentDate  = mktime(0,0,0,$month,1,$year);
         else
@@ -127,7 +141,7 @@ class Transactions extends Component
                 'filterTo'      => date('Y-m-t',$this->currentDate)
             ],
             ];
-        $this->items = Auth::user()->transactionsJournals($filter);
+        $this->items = Auth::user()->transactionsJournals($filter, $accountID);
         foreach ($this->items as $item) {
             $this->selected[$item->id] = false;
         }
