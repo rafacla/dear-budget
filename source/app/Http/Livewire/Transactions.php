@@ -379,10 +379,13 @@ class Transactions extends Component
                     $query2->where('budget_date','=',null)
                     ->where('date', '<=',date('Y-m-t',strtotime($this->statementBudgetDate.'-01')))
                     ->where('date','>=',date('Y-m-01',strtotime($this->statementBudgetDate.'-01')));
-                })->orderBy('date');
+                });
             })
-            ->with('transactionsJournal')->with('subcategory')->with('creditAccount')->with('debitAccount')
-            ->get()->toArray();
+            ->with(['transactionsJournal'])->with('subcategory')->with('creditAccount')->with('debitAccount')
+            ->get()->sortBy('transactionsJournal.date')->toArray();
+            usort($this->statementTransactions, function ($a, $b) {
+                return strtotime($a['transactions_journal']['date']) - strtotime($b['transactions_journal']['date']);
+            });
         foreach ($this->accountCreditCards as $ccKey => $creditCard) {
             foreach ($this->statementTransactions as $item) {
                 if (($item['credit_card_id']) == ($creditCard['id'])) {
