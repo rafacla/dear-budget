@@ -379,7 +379,7 @@ class Transactions extends Component
                     $query2->where('budget_date','=',null)
                     ->where('date', '<=',date('Y-m-t',strtotime($this->statementBudgetDate.'-01')))
                     ->where('date','>=',date('Y-m-01',strtotime($this->statementBudgetDate.'-01')));
-                });
+                })->orderBy('date');
             })
             ->with('transactionsJournal')->with('subcategory')->with('creditAccount')->with('debitAccount')
             ->get()->toArray();

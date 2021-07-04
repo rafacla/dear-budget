@@ -88,7 +88,7 @@
                         @if ($item['credit_card_id'] == $creditCard['id'])    
                         <div class="group text-sm px-2">
                             <span class="pr-1">{{ date('d/m', strtotime($item['transactions_journal']['date']))}}</span>
-                            <span title="{{$item['transactions_journal']['description']}}">{{ mb_strimwidth($item['transactions_journal']['description'], 0, 35, '...') }}</span>
+                            <span title="{{$item['transactions_journal']['description']}}">{{ mb_strimwidth($item['transactions_journal']['description'], 0, 30, '...') }}</span>
                             <span class="float-right opacity-0 group-hover:opacity-100">
                                 <button wire:click.prevent="pickBudgetDate({{$item['id']}},{{$currentDate}})"><i class="far fa-calendar-alt"></i></button>
                                 <button wire:click.prevent="pickCreditCard({{$item['id']}},{{$creditCard['id']}})"><i class="far fa-credit-card"></i></button>
