@@ -215,10 +215,6 @@
                                 )
                             )
                         )
-                    @php
-
-                        $noTransactions = false;
-                    @endphp
                     <tr
                         class="dark:hover:bg-green-500 border-b hover:bg-blue-50 dark:border-gray-800 dark:text-gray-100
                             {{ ($transactionTypes[$item->transactions->first()->type]['type']=='initialBalance') ? 'cursor-not-allowed' : 'cursor-pointer' }}
@@ -283,13 +279,6 @@
                     </tr>
                     @endif
                     @endforeach
-                    @if ($noTransactions)
-                    <tr class="border">
-                        <td colspan="7" class="px-2">
-                            {{__('No items found to show')}}
-                        </td>
-                    </tr>
-                    @endif
                 </tbody>
             </table>
             @endif
