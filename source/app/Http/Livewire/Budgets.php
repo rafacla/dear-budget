@@ -43,11 +43,14 @@ class Budgets extends Component
     public function getTransactions() {
         $this->transactionTypes = config('dearbudget.transactionTypes');
         $this->accountRoles = config('dearbudget.accountRoles');
-        $this->databaseTransactions = Transaction::whereHas('transactionsJournal', function($q) {
+        $this->databaseTransactions = 
+        Transaction::whereHas('transactionsJournal', function($q) {
             $q->where('budget_date', '<=',$this->currentDate)
-              ->where('budget_date','null')
-                ->orWhere('date','<=',$this->currentDate);
-        })
+                ->orWhere(function($query2) {
+                    $query2->where('budget_date','=',null)
+                    ->where('date', '<=',$this->currentDate);
+                });
+            })
             ->with('transactionsJournal')->with('subcategory')->with('creditAccount')->with('debitAccount')
             ->get()->toArray();
         $this->incomeCumulative = 0;
