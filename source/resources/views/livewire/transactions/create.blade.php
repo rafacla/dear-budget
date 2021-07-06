@@ -18,7 +18,7 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">{{ __('Date') }}:</label>
                                 <input type="date"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    placeholder="{{ __('Date') }}" wire:model="form.date">
+                                    placeholder="{{ __('Date') }}" wire:model.lazy="form.date">
                                 @error('form.date') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                             <div class="mb-4">
@@ -26,7 +26,7 @@
                                     class="block text-gray-700 text-sm font-bold mb-2">{{ __('Description') }}:</label>
                                 <input type="text"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    placeholder="{{ __('Description') }}" wire:model="form.description">
+                                    placeholder="{{ __('Description') }}" wire:model.lazy="form.description">
                                 @error('form.description') <span
                                     class="text-red-500">{{ $message }}</span>@enderror
                             </div>
@@ -35,7 +35,7 @@
                                     class="block text-gray-700 text-sm font-bold mb-2">{{ __('Transaction Number') }}:</label>
                                 <input type="text"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    placeholder="{{ __('Transaction Number') }}" wire:model="form.transaction_number">
+                                    placeholder="{{ __('Transaction Number') }}" wire:model.lazy="form.transaction_number">
                                 @error('form.transaction_number') <span
                                     class="text-red-500">{{ $message }}</span>@enderror
                             </div>
@@ -46,7 +46,7 @@
                                     ❔</label>
                                 <input type="date"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    placeholder="{{ __('Budget Date') }}" wire:model="form.budget_date">
+                                    placeholder="{{ __('Budget Date') }}" wire:model.lazy="form.budget_date">
                                 @error('form.budget_date') <span
                                     class="text-red-500">{{ $message }}</span>@enderror
                             </div>
@@ -73,7 +73,7 @@
                                                 [
                                                 'wiredTo' => 'transactions-'.$key.'-credit_account',
                                                 'initialQuery' => ($item != null && $item['credit_account'] != null) ?
-                                                $item['credit_account']['name'] : '',
+                                                $form[$key]['credit_account']['name'] : '',
                                                 'showExpenseAccounts' => false
                                                 ],
                                                 key('transactions-'.$key.'-credit_account')
@@ -94,7 +94,7 @@
                                                 <input
                                                     class="text-right shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                                     type="number" step="0.01"
-                                                    wire:model="form.transactions.{{ $key }}.amount">
+                                                    wire:model.lazy="form.transactions.{{ $key }}.amount">
                                             </td>
                                             <td>
                                                 @php

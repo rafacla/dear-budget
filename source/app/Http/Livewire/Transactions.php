@@ -330,8 +330,9 @@ class Transactions extends Component
             session()->flash('message',
                 $this->itemID ? __($this->itemClassName.' updated successfully.') : __($this->itemClassName.' created successfully.'));
             $this->mount(date('Y',$this->currentDate), date('m',$this->currentDate), $this->accountFilter);
-            $this->closeModal();
             $this->resetInputFields();
+            $this->closeModal();
+            
         }
     }
 
@@ -407,7 +408,7 @@ class Transactions extends Component
         foreach ($this->form as $key => $value) {
             if (is_array($this->form[$key])) {
                 if ($key == 'transactions') {
-                    $value = [];
+                    $this->form[$key] = [];
                     $this->form[$key] = [[
                         'credit_account'         => null,
                         'debit_account'          => null,
@@ -417,6 +418,9 @@ class Transactions extends Component
                         'amount'                    => 0,
                         'subcategory'            => ''
                     ]];
+                    $this->emit('updatedSelectedAccount', ['nestedPath'  => 'transactions-0-debit_account' , 'value' => null]);
+                    $this->emit('updatedSelectedAccount', ['nestedPath'  => 'transactions-0-credit_account' , 'value' => null]);
+                    $this->emit('updatedSelectedCategory', ['nestedPath' => 'transactions-0-subcategory' , 'value' => null]);
                 } else {
                     $this->form[$key] = [];
                 }
@@ -459,6 +463,8 @@ class Transactions extends Component
             [
                 'credit_account'         => null,
                 'debit_account'          => null,
+                'credit_account_name'    => '',
+                'debit_account_name'     => '',
                 'transactions_journal_id'   => '',
                 'amount'                    => 0,
                 'subcategory'            => ''

@@ -7,6 +7,10 @@ use App\Models\Subcategory;
 
 class CategoryAutoComplete extends Component
 {
+    protected $listeners = [
+        'updatedSelectedCategory' => 'updatedSelectedCategory'
+    ];
+
     public $initialQuery;
     public $query;
     public $subcategories;
@@ -69,6 +73,12 @@ class CategoryAutoComplete extends Component
             ->get()
             ->toArray();
         $this->openSuggestions = true;
+    }
+
+    public function updatedSelectedCategory($field) {
+        if ($field['nestedPath'] == $this->wiredTo) {
+            $this->query = $field['value'];
+        }
     }
 
     public function render()
