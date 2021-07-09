@@ -27,6 +27,7 @@ class Transactions extends Component
     public $accountRoles;
     public $transactionTypes;
     public $selected = [];
+    public $selectedCC = [];
     public $selectedAll;
     public $currentDate;
     public $cumulativeBalanceLastMonth = 0;
@@ -52,7 +53,7 @@ class Transactions extends Component
     public $pickCreditCardId;
     public $pickTransactionId;
 
-    public $pickBudgetTransactionId;
+    public $pickBudgetTransactionId = [];
     public $pickBudgetDate;
     
     public function pickCreditCard($transactionId, $creditCardId = null) {
@@ -65,7 +66,7 @@ class Transactions extends Component
     }
 
     public function pickBudgetDate($transactionId, $budgetDate = null) {
-        $this->pickBudgetTransactionId = $transactionId;
+        $this->pickBudgetTransactionId = [$transactionId => true];
         $this->pickBudgetDate = date('Y-m',$budgetDate);
     }
 
@@ -353,14 +354,18 @@ class Transactions extends Component
     }
 
     public function updateBudgetDate() {
-        $transaction = Transaction::findOrFail($this->pickBudgetTransactionId)->transactionsJournal;
-        if ($transaction->user->id != Auth::user()->id) {
-            die('Unauthorized');
+        foreach ($this->pickBudgetTransactionId as $key => $value) {
+            if ($value) {
+                $transaction = Transaction::findOrFail($key)->transactionsJournal;
+                if ($transaction->user->id != Auth::user()->id) {
+                    die('Unauthorized');
+                }
+                $transaction->budget_date = ($this->pickBudgetDate == '' ? null : $this->pickBudgetDate . '-01');
+                $transaction->save();
+                
+            }
         }
-        $transaction->budget_date = ($this->pickBudgetDate == '' ? null : $this->pickBudgetDate . '-01');
-        $transaction->save();
-        
-        $this->pickBudgetTransactionId = null;
+        $this->pickBudgetTransactionId = [];
         $this->showStatement($this->accountFilter);
     }
 
@@ -389,6 +394,7 @@ class Transactions extends Component
             });
         foreach ($this->accountCreditCards as $ccKey => $creditCard) {
             foreach ($this->statementTransactions as $item) {
+                $this->selectedCC[$item['id']] = false;
                 if (($item['credit_card_id']) == ($creditCard['id'])) {
                     $this->accountCreditCards[$ccKey]['total'] =
                         ($this->accountCreditCards[$ccKey]['total'] ?? 0) 
@@ -479,6 +485,14 @@ class Transactions extends Component
     public function delete($id) {
         $this->modelClass::find($id)->delete();
         session()->flash('message', $this->itemClassName.' deleted successfully.');
+    }
+
+    public function changeSelectedStatementDate() {
+        foreach ($this->selectedCC as $key => $value) {
+            if ($value) {
+                $this->pickBudgetTransactionId[$key] = $value;
+            }
+        }
     }
 
     public function deleteSelected() {
