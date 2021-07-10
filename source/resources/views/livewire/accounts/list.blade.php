@@ -52,8 +52,13 @@
                 </thead>
                 <tbody>
                     @foreach($items as $item)
-                    <tr class="dark:text-gray-200">
-                        <td class="px-4 py-0.5 text-sm">{{ $item->name }}</td>
+                    <tr class="dark:text-gray-200 group">
+                        <td class="px-4 py-0.5 text-sm group-hover:underline">
+                            <a href="{{route('transaction.account',['accountID' => $item->id])}}">
+                                {{ $item->name }}
+                                <i class="fas fa-external-link-alt ml-2 opacity-0 group-hover:opacity-100"></i>
+                            </a>
+                        </td>
                         <td class="px-4 py-0.5 text-sm">{{ __($accountRoles[$item->role]['name']) }}</td>
                         <td class="px-2 py-0.5 text-sm">{{ $item->number }}</td>
                         <td class="px-4 py-0.5 text-sm text-right">{{ number_format($item->balance(), 2) }}</td>
