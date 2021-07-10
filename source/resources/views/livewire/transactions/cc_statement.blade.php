@@ -84,7 +84,7 @@
                 @endif
 
                 @foreach ($accountCreditCards as $creditCard)
-                    <div class="border-b-1 border-gray-600 px-4 w-full font-bold">
+                    <div class="px-4 w-full font-bold border-b-2 border-gray-800">
                         @if ($creditCard['id'] == '' && ($creditCard['total'] ?? 0) != 0)
                             <span>{{ __('General') }}</span>
                             <span class="float-right">{{ number_format($creditCard['total'] ?? 0, 2) }}</span>
@@ -102,7 +102,7 @@
                                     <span
                                         class="pr-1">{{ date('d/m', strtotime($item['transactions_journal']['date'])) }}</span>
                                     <span
-                                        title="{{ $item['transactions_journal']['description'] }}">{{ mb_strimwidth($item['transactions_journal']['description'], 0, 25, '...') }}</span>
+                                        title="{{ $item['transactions_journal']['description'] }}">{{ mb_strimwidth($item['transactions_journal']['description'], 0, 20, '...') }}</span>
                                     <span class="float-right opacity-0 group-hover:opacity-100">
                                         <button
                                             wire:click.prevent="pickBudgetDate({{ $item['id'] }},{{ $currentDate }})"><i

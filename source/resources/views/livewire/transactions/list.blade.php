@@ -28,7 +28,7 @@
                 @endforeach
             </select>
             @if ($accountFilterRole == 'creditCard')
-                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-2 rounded inline-flex items-center"
+                <button class="dark:bg-yellow-300 dark:hover:bg-yellow-400 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-2 rounded inline-flex items-center"
                     wire:click="showStatement({{$accountFilter}})">
                     <i class="far fa-file-alt px-1"></i> {{__('Credit Card Statement')}}
                 </button>
