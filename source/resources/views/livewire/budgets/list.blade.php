@@ -3,7 +3,7 @@
         {{__('Manage Budgets')}}
     </h2>
 </x-slot>
-<div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8 h-full flex flex-col">
+<div class="pt-12 max-w-7xl mx-auto sm:px-6 lg:px-8 h-full flex flex-col">
     <div class="flex-none">
         <div class="flex">
             <div class="flex divide-x divide-white text-center -mt-8 mb-5 py-4 px-3 rounded-lg {{$toBudget > 0 ? 'bg-green-500 text-white' : ($toBudget < 0 ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700')}}">
@@ -52,7 +52,7 @@
         </div>
         @endif
     </div>
-    <div class="flex-1 bg-white overflow-hidden shadow-xl sm:rounded-lg px-4 py-4 dark:bg-gray-600">
+    <div class="flex-1 bg-white overflow-hidden shadow-xl sm:rounded-lg px-4 pt-4 dark:bg-gray-600">
         <div class="h-full overflow-y-auto">
             @if (session()->has('message'))
                 <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
