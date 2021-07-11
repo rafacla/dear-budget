@@ -3,8 +3,8 @@
         {{__('Manage Budgets')}}
     </h2>
 </x-slot>
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+<div class="pt-12 max-w-7xl mx-auto sm:px-6 lg:px-8 h-full flex flex-col">
+    <div class="flex-none">
         <div class="flex">
             <div class="flex divide-x divide-white text-center -mt-8 mb-5 py-4 px-3 rounded-lg {{$toBudget > 0 ? 'bg-green-500 text-white' : ($toBudget < 0 ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700')}}">
                 <div class="px-2 justify-center hfull m-auto">
@@ -43,7 +43,7 @@
             </a>
         </div>
         @if (($available[null] ?? false) != null)
-        <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md my-3" role="alert">
+        <div class="flex-none bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md my-3" role="alert">
             <div class="flex">
                 <div>
                 <p class="text-sm">{{__('There are expenses without categories. This may mess your budget. Fix it.') }}</p>
@@ -51,23 +51,25 @@
             </div>
         </div>
         @endif
-        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg px-4 py-4 dark:bg-gray-600">
+    </div>
+    <div class="flex-1 bg-white overflow-hidden shadow-xl sm:rounded-lg px-4 pt-4 dark:bg-gray-600">
+        <div class="h-full overflow-y-auto">
             @if (session()->has('message'))
                 <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md my-3" role="alert">
-                  <div class="flex">
+                    <div class="flex">
                     <div>
-                      <p class="text-sm">{{ session('message') }}</p>
+                        <p class="text-sm">{{ session('message') }}</p>
                     </div>
-                  </div>
+                    </div>
                 </div>
             @endif
             <table class="table-fixed w-full">
                 <thead>
-                    <tr class="border-b border-t dark:text-gray-200 dark:border-gray-800 dark:bg-gray-500">
-                        <th class="px-2 py-1 text-sm text-left">{{__('Name')}}</th>
-                        <th class="px-4 py-1 w-36 text-sm">{{__('Budgeted')}}</th>
-                        <th class="px-2 py-1 w-36 text-sm">{{__('Transactions')}}</th>
-                        <th class="px-2 py-1 w-36 text-sm">{{__('Available')}}</th>
+                    <tr class="">
+                        <th class="sticky top-0 border-b border-t px-2 py-1 text-sm text-left dark:text-gray-200 dark:border-gray-800 dark:bg-gray-500">{{__('Name')}}</th>
+                        <th class="sticky top-0 border-b border-t px-4 py-1 w-36 text-sm dark:text-gray-200 dark:border-gray-800 dark:bg-gray-500">{{__('Budgeted')}}</th>
+                        <th class="sticky top-0 border-b border-t px-2 py-1 w-36 text-sm dark:text-gray-200 dark:border-gray-800 dark:bg-gray-500">{{__('Transactions')}}</th>
+                        <th class="sticky top-0 border-b border-t px-2 py-1 w-36 text-sm dark:text-gray-200 dark:border-gray-800 dark:bg-gray-500">{{__('Available')}}</th>
                     </tr>
                 </thead>
                 <tbody>

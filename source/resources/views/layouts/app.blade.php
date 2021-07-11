@@ -40,21 +40,22 @@
         <x-jet-banner />
 
         <div class="min-h-screen bg-gray-100 dark:bg-gray-400">
-            @livewire('navigation-menu')
+            <div class="fixed w-full h-screen flex flex-col">
+                @livewire('navigation-menu')
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white shadow dark:bg-gray-800">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
-
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                <!-- Page Heading -->
+                @if (isset($header))
+                    <header class="bg-white shadow dark:bg-gray-800 flex-none">
+                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                            {{ $header }}
+                        </div>
+                    </header>
+                @endif
+                <!-- Page Content -->
+                <main class="h-full flex-1 overflow-y-auto">
+                    {{ $slot }}
+                </main>
+            </div>
         </div>
 
         @stack('modals')
