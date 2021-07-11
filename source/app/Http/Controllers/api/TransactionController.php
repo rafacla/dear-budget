@@ -109,8 +109,27 @@ class TransactionController extends Controller
             return response('Missing parameters: ' . $validation->errors());
         } else {
             $request['user_id'] = Auth::user()->id;
-            $items = $this->itemClass::where('date', $request['date'])
+            if ($request['transaction_number'] != null && ($request['filter_duplicated'] == null || $request['filter_duplicated'] == 'no')) {
+                $items = TransactionsJournal::where('transaction_number', $request['transaction_number'])->get();
+            } elseif ($request['filter_duplicated'] == null || $request['filter_duplicated'] == 'no' ) {
+                $items = $this->itemClass::where('date', $request['date'])
                 ->where('description', $request['description'])->get();
+                $amountRequest = 0;
+                foreach ($request['transactions'] as $value) {
+                    $amountRequest += $value['amount'];
+                }
+                foreach ($items as $key => $value) {
+                    $amount = 0;
+                    foreach ($value->transactions as $transactionValue) {
+                        $amount += $transactionValue->amount;
+                    }
+                    if ($amount != $amountRequest) {
+                        unset($items[$key]);
+                    }
+                }
+            } else {
+                $items = [];
+            }
             if (count($items) > 0) {
                 return response('Duplicated with TransactionJournal ' . $items->first()->id . '.', 403);
             } else {
