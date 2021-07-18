@@ -115,7 +115,7 @@ class TransactionController extends Controller
                 $items = $this->itemClass::where('date', $request['date'])
                 ->where('description', $request['description'])->get();
                 $amountRequest = 0;
-                $transactions = $request['transactions'];
+                $transactions = $transactionJournal['transactions'];
                 if (is_string($transactions)) {
                     $transactions = json_decode($transactions, true);
                 }
