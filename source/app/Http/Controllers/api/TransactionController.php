@@ -115,7 +115,11 @@ class TransactionController extends Controller
                 $items = $this->itemClass::where('date', $request['date'])
                 ->where('description', $request['description'])->get();
                 $amountRequest = 0;
-                foreach ($request['transactions'] as $value) {
+                $transactions = $transactionJournal['transactions'];
+                if (is_string($transactions)) {
+                    $transactions = json_decode($transactions, true);
+                }
+                foreach ($transactions as $value) {
                     $amountRequest += $value['amount'];
                 }
                 foreach ($items as $key => $value) {
@@ -191,7 +195,7 @@ class TransactionController extends Controller
                                 }
                             }
                         } else {
-                            if ($debit_account->role == 'expenseAccount') {
+                            if ($debit_account == null || $debit_account->role == 'expenseAccount') {
                                 $error .= 'Transaction ' . $key . ' can\'t have both accounts as income and expense account.';
                             } else {
                                 //this is an income transaction

@@ -73,7 +73,7 @@
                                                 [
                                                 'wiredTo' => 'transactions-'.$key.'-credit_account',
                                                 'initialQuery' => ($item != null && $item['credit_account'] != null) ?
-                                                $form[$key]['credit_account']['name'] : '',
+                                                $item['credit_account']['name'] : '',
                                                 'showExpenseAccounts' => false
                                                 ],
                                                 key('transactions-'.$key.'-credit_account')
