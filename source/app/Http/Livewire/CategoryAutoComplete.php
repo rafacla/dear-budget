@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Subcategory;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryAutoComplete extends Component
 {
@@ -65,7 +66,8 @@ class CategoryAutoComplete extends Component
         $this->subcategories = Subcategory::where('name', 'like', '%' . $this->query . '%');
         $this->subcategories = $this->subcategories
             ->whereHas('category', function($q) {
-                $q->where('expense', $this->expenseCategories);
+                $q->where('expense', $this->expenseCategories)
+                    ->where('user_id', Auth::user()->id);
             })
             ->with('category')
             ->orderBy('category_id')
