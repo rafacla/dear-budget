@@ -230,7 +230,7 @@ class Budgets extends Component
     public function updatedBudgets($value, $name)
     {
         $this->modelClass::updateOrCreate(['date' => $this->currentDate->format('Y-m-1'), 'subcategory_id' => $name, 'user_id' => Auth::user()->id],
-         ['budget_value' => $value]);
+         ['budget_value' => floatval($value)]);
         $this->mount($this->currentDate->format('Y'), $this->currentDate->format('m'));
     }
 
